@@ -31,18 +31,6 @@ class CollectionController extends KuzzleController {
     return response.result as Map<String, dynamic>;
   }
 
-  /// Deletes a [collection]
-  Future<bool> delete(String index, String collection) async {
-    final response = await kuzzle.query(KuzzleRequest(
-      controller: name,
-      action: 'delete',
-      index: index,
-      collection: collection,
-    ));
-
-    return response.status == 200 && response.result == null;
-  }
-
   /// Deletes validation specifications for a data collection.
   ///
   /// The request succeeds even if no specification
@@ -50,7 +38,8 @@ class CollectionController extends KuzzleController {
   ///
   /// Note: an empty specification is implicitly applied to all collections.
   /// In a way, "no specification set" means "all documents are valid".
-  Future<Map<String, dynamic>> deleteSpecifications(String index, String collection) async {
+  Future<Map<String, dynamic>> deleteSpecifications(
+    String index, String collection) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'deleteSpecifications',
@@ -79,7 +68,7 @@ class CollectionController extends KuzzleController {
 
   /// Returns a data [collection] mapping.
   Future<Map<String, dynamic>> getMapping(String index, String collection,
-      [bool includeKuzzleMeta = false]) async {
+      {bool includeKuzzleMeta = false}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getMapping',
@@ -92,7 +81,8 @@ class CollectionController extends KuzzleController {
   }
 
   /// Returns the validation specifications associated to the [collection].
-  Future<Map<String, dynamic>> getSpecifications(String index, String collection) async {
+  Future<Map<String, dynamic>> getSpecifications(
+    String index, String collection) async {
     final request = KuzzleRequest(
       controller: name,
       action: 'getSpecifications',
@@ -108,7 +98,8 @@ class CollectionController extends KuzzleController {
   /// Returns the list of data collections associated to a provided data index.
   ///
   /// The returned list is sorted in alphanumerical order.
-  Future<Map<String, dynamic>> list(String index, {int from, int size, String type}) async {
+  Future<Map<String, dynamic>> list(
+    String index, {int from, int size, String type}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'list',
