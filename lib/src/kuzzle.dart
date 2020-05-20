@@ -347,9 +347,11 @@ class Kuzzle extends KuzzleEventEmitter {
       // todo: implement queueFilter
     }
 
+
     // check queueing
     if (_queuing) {
       if (queueable) {
+
         final completer = Completer<KuzzleResponse>();
         final queuedRequest = _KuzzleQueuedRequest(
           completer: completer,

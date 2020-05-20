@@ -2,7 +2,7 @@ import '../kuzzle.dart';
 import '../kuzzle/errors.dart';
 import '../kuzzle/request.dart';
 
-import '../search_result/documents.dart';
+import '../search_result/abstract.dart';
 
 import 'abstract.dart';
 
@@ -304,7 +304,7 @@ class DocumentController extends KuzzleController {
   /// To handle larger result sets, you have to either create a cursor
   /// by providing a value to the scroll option or,
   /// if you sort the results, by using the Elasticsearch search_after command.
-  Future<DocumentsSearchResult> search(
+  Future<SearchResult> search(
     String index,
     String collection, {
     Map<String, dynamic> query,
@@ -324,7 +324,7 @@ class DocumentController extends KuzzleController {
     );
     final response = await kuzzle.query(request);
 
-    return DocumentsSearchResult(kuzzle, request: request, response: response);
+    return SearchResult(kuzzle, request: request, response: response);
   }
 
   /// ####Updates a document content.

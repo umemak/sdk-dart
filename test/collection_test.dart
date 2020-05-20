@@ -36,15 +36,6 @@ void main() {
       );
       expect(response['acknowledged'], true);
     });
-    test('delete', () async {
-      final response = await kuzzle.collection.delete(
-        defaultIndex,
-        defaultCollection,
-      );
-
-      expect(response, true);
-      await reCreate();
-    });
 
     test('delete specification', () async {
       final response = await kuzzle.collection.deleteSpecifications(
@@ -114,11 +105,9 @@ void main() {
       final response = await kuzzle.collection.updateSpecifications(
         defaultIndex,
         defaultCollection,
-        false,
         {},
       );
       expect(response, <String, dynamic>{
-        'strict': false,
         'fields': {},
       });
     });
@@ -147,7 +136,6 @@ void main() {
       final response = await kuzzle.collection.validateSpecifications(
         defaultIndex,
         defaultCollection,
-        false,
         {},
       );
       expect(response, true);

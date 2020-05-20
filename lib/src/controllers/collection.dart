@@ -1,6 +1,5 @@
 import '../kuzzle.dart';
 import '../kuzzle/errors.dart';
-import '../kuzzle/errors.dart';
 import '../kuzzle/request.dart';
 
 import '../search_result/specifications.dart';
@@ -180,7 +179,10 @@ class CollectionController extends KuzzleController {
     );
     final response = await kuzzle.query(request);
 
-    return SpecificationSearchResult(kuzzle, request: request, response: response);
+    return SpecificationSearchResult(
+      kuzzle, 
+      request: request, 
+      response: response);
   }
 
   /// Empties a [collection] by removing all its documents,
@@ -261,19 +263,18 @@ class CollectionController extends KuzzleController {
   Future<Map<String, dynamic>> updateSpecifications(
     String index,
     String collection,
-    bool strict,
-    Map<String, dynamic> fields,
+    Map<String, dynamic> specifications,
   ) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       index: index,
       collection: collection,
       action: 'updateSpecifications',
-      body: <String, dynamic>{'strict': strict, 'fields': fields},
+      body: specifications,
     ));
 
     final result = response.result as Map<String, dynamic>;
-    if (result['strict'] is bool && result['fields'] is Map) {
+    if (result['fields'] is Map) {
       return result;
     }
 
@@ -289,15 +290,14 @@ class CollectionController extends KuzzleController {
   Future<bool> validateSpecifications(
     String index,
     String collection,
-    bool strict,
-    Map<String, dynamic> fields,
+    Map<String, dynamic> specifications,
   ) async {
     final response = await kuzzle.query(KuzzleRequest(
         controller: name,
         collection: collection,
         index: index,
         action: 'validateSpecifications',
-        body: {'strict': strict, 'fields': fields}));
+        body: specifications));
 
     return (response.result as Map<String, dynamic>)['valid'] as bool;
   }

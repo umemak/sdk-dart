@@ -6,8 +6,8 @@ import '../kuzzle/errors.dart';
 import '../kuzzle/request.dart';
 import '../kuzzle/response.dart';
 
-abstract class KuzzleSearchResult {
-  KuzzleSearchResult(
+class SearchResult {
+  SearchResult(
     this.kuzzle, {
     this.request,
     this.response,
@@ -56,9 +56,9 @@ abstract class KuzzleSearchResult {
   int fetched = 0;
   int total = 0;
 
-  Future<List<dynamic>> next() async {
+  Future<SearchResult> next() async {
     if (fetched >= total) {
-      return <dynamic>[];
+      return null;
     }
 
     if (request.scroll != null && request.scroll.isNotEmpty) {
@@ -78,10 +78,10 @@ abstract class KuzzleSearchResult {
         }
         if (result.containsKey('hits')) {
           hits = result['hits'] as List<dynamic>;
-          fetched = hits.length;
+          fetched = fetched;
         }
 
-        return hits;
+        return _buildNextSearchResult(response);
       });
     } else if (request.size != null && request.sort != null) {
       final _request = KuzzleRequest.clone(request)..action = searchAction;
@@ -114,11 +114,12 @@ abstract class KuzzleSearchResult {
           fetched = hits.length;
         }
 
-        return hits;
+        return _buildNextSearchResult(response);;
       });
     } else if (request.size != null) {
+
       if (request.from >= total) {
-        return <dynamic>[];
+        return null;
       }
 
       return await kuzzle
@@ -135,10 +136,10 @@ abstract class KuzzleSearchResult {
         }
         if (result.containsKey('hits')) {
           hits = result['hits'] as List<dynamic>;
-          fetched = hits.length;
+          fetched = fetched;
         }
 
-        return hits;
+        return _buildNextSearchResult(response);
       });
     }
 
@@ -159,5 +160,15 @@ abstract class KuzzleSearchResult {
     path.removeAt(0);
 
     return _get(object[key] as Map<String, dynamic>, path);
+  }
+
+  SearchResult _buildNextSearchResult (KuzzleResponse response) {
+    final nextSearchResult = SearchResult(
+      kuzzle, 
+      request: request, 
+      response: response);
+    nextSearchResult.fetched += fetched;
+
+    return nextSearchResult;
   }
 }

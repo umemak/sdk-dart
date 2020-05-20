@@ -1,0 +1,7 @@
+name: collection#list
+description: Returns the collection list of an index
+hooks:
+  before: curl -X POST kuzzle:7512/nyc-open-data/_create && curl -X PUT kuzzle:7512/nyc-open-data/pink-taxi && curl -X PUT kuzzle:7512/nyc-open-data/dark-taxi
+  after:
+template: print-result
+expected: ^{collections:\ \[{name:\ dark-taxi,\ type:\ stored},\ {name:\ pink-taxi,\ type:\ stored},\ {name:\ yellow-taxi,\ type:\ stored}\],\ type:\ all,\ from:\ 0,\ size:\ 10}$
