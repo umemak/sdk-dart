@@ -274,6 +274,7 @@ class CollectionController extends KuzzleController {
     ));
 
     final result = response.result as Map<String, dynamic>;
+
     if (result['fields'] is Map) {
       return result;
     }

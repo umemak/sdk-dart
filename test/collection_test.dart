@@ -11,7 +11,7 @@ void main() {
 
   setUpAll(() async {
     await connectKuzzle(kuzzle);
-    await kuzzle.auth.login('local', adminCredentials);
+    // await kuzzle.auth.login('local', adminCredentials);
     defaultIndex = Uuid().v1();
     defaultCollection = 'posts';
   });
@@ -59,7 +59,7 @@ void main() {
         defaultCollection,
       );
       expect(response, <String, dynamic>{
-        'dynamic': 'false',
+        'dynamic': 'true',
         'properties': {},
       });
     });
@@ -105,10 +105,22 @@ void main() {
       final response = await kuzzle.collection.updateSpecifications(
         defaultIndex,
         defaultCollection,
-        {},
+        {
+          'fields': {
+            'title': {
+              'mandatory': false,
+              'type': 'string'
+            },
+          },
+        },
       );
       expect(response, <String, dynamic>{
-        'fields': {},
+        'fields': {
+          'title': {
+            'mandatory': false,
+            'type': 'string',
+          },
+        },
       });
     });
 
