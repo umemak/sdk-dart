@@ -11,7 +11,7 @@ class KuzzleRequest {
       this.index,
       this.jwt,
       this.requestId,
-      this.waitForRefresh,
+      this.waitForRefresh = false,
       this.uid,
       this.volatile,
       this.startTime,
@@ -73,7 +73,7 @@ class KuzzleRequest {
     jwt = data['jwt'] as String;
     requestId = data['requestId'] as String;
     requestId ??= _uuid.v4();
-    waitForRefresh = data['refresh'] as bool;
+    waitForRefresh = (data['refresh'] as String) == 'wait_for' ? true : false;
     uid = data['_id'] as String;
     volatile = data['volatile'] as Map<String, dynamic>;
     startTime = data['startTime'] == null
@@ -123,9 +123,7 @@ class KuzzleRequest {
     if (requestId != null) {
       map['requestId'] = requestId;
     }
-    if (waitForRefresh) {
-      // we follow the api but allow some more logical "mistakes"
-      // (the only allowed value for refresh arg is "wait_for")
+    if (waitForRefresh == true) {
       map['refresh'] = 'wait_for';
     }
     if (uid != null) {

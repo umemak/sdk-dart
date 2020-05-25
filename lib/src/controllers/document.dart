@@ -34,7 +34,7 @@ class DocumentController extends KuzzleController {
     String collection,
     Map<String, dynamic> document, {
     String id,
-    bool waitForRefresh,
+    bool waitForRefresh = false,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,

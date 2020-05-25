@@ -37,28 +37,16 @@ Future<Map<String, dynamic>> create(
 
 ---
 
-### options
-
-A [CreateOptions](/sdk/java/3/core-classes/create-options) object.
-
-The following options can be set:
-
-| Arguments          | Type                                         | Description                       |
-| ------------------ | -------------------------------------------- | --------------------------------- |
-| `id`               | <pre>String</pre> (optional)                 | Document identifier. Auto-generated if not specified              |
-| `waitForRefresh`   | <pre>Boolean</pre> (optional)                | If set to `true`, Kuzzle will wait for the persistence layer to finish indexing|
-
-
 ## Return
 
-A `ConcurrentHashMap` which has the following properties:
+A `Map<String, dynamic>` which has the following properties:
 
 | Property     | Type                         | Description                      |
 |------------- |----------------------------- |--------------------------------- |
-| `_source`    | <pre>ConcurrentHashMap</pre> | Created document                 |
+| `_source`    | <pre>Map<String, dynamic></pre> | Created document                 |
 | `_id`        | <pre>String</pre>            | ID of the newly created document                       |
-| `_version`   | <pre>Integer</pre>           | Version of the document in the persistent data storage |
+| `_version`   | <pre>int</pre>           | Version of the document in the persistent data storage |
 
 ## Usage
 
-<<< ./snippets/create.java
+<<< ./snippets/create.dart

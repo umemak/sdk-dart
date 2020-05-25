@@ -85,6 +85,11 @@ class WebSocketProtocol extends KuzzleProtocol {
   @override
   void send(KuzzleRequest request) {
     if (_webSocket != null && _webSocket.readyState == WebSocket.open) {
+      try {
+        final j = json.encode(request);
+      } catch (e) {
+        print(e);
+      }
       _webSocket.add(json.encode(request));
     }
   }
