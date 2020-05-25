@@ -59,7 +59,7 @@ void main() {
         defaultCollection,
       );
       expect(response, <String, dynamic>{
-        'dynamic': 'true',
+        'dynamic': 'false',
         'properties': {},
       });
     });
