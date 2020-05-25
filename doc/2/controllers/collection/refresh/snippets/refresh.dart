@@ -1,1 +1,3 @@
-kuzzle.collection.refresh('nyc-open-data', 'yellow-taxi');
+kuzzle
+  .collection
+  .refresh('nyc-open-data', 'yellow-taxi');

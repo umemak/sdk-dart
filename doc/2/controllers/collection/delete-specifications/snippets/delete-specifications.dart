@@ -1,1 +1,3 @@
-await kuzzle.collection.deleteSpecifications('nyc-open-data', 'yellow-taxi');
+await kuzzle
+  .collection
+  .deleteSpecifications('nyc-open-data', 'yellow-taxi');

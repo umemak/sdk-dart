@@ -1,1 +1,3 @@
-await kuzzle.collection.truncate('nyc-open-data', 'yellow-taxi');
+await kuzzle
+  .collection
+  .truncate('nyc-open-data', 'yellow-taxi');

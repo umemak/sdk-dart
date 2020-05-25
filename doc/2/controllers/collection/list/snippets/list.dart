@@ -1,1 +1,3 @@
-final result = await kuzzle.collection.list('nyc-open-data');
+final result = await kuzzle
+  .collection
+  .list('nyc-open-data');
