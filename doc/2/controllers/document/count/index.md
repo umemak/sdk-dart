@@ -30,7 +30,7 @@ Future<int> count(
 | ------------------ | -------------------------------------------- | --------------- |
 | `index`            | <pre>String</pre>                            | Index name      |
 | `collection`       | <pre>String</pre>                            | Collection name |
-| `query`      | <pre>Map<String, dynamic></pre> | Query to match  |
+| `query`      | <pre>Map<String, dynamic></pre><br>(`{}`) | Query to match  |
 
 ---
 

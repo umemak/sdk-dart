@@ -33,17 +33,17 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     Map<String, dynamic> document, {
-    String uid,
-    String refresh,
+    String id,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'create',
       index: index,
       collection: collection,
-      uid: uid,
+      uid: id,
       body: document,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -56,7 +56,7 @@ class DocumentController extends KuzzleController {
     String collection,
     String uid,
     Map<String, dynamic> document, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -65,7 +65,7 @@ class DocumentController extends KuzzleController {
       collection: collection,
       uid: uid,
       body: document,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -76,7 +76,7 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     String uid, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -84,7 +84,7 @@ class DocumentController extends KuzzleController {
       index: index,
       collection: collection,
       uid: uid,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -95,7 +95,7 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     Map<String, dynamic> query, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -103,7 +103,7 @@ class DocumentController extends KuzzleController {
       index: index,
       collection: collection,
       body: query,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -146,14 +146,14 @@ class DocumentController extends KuzzleController {
   /// Creates multiple documents.
   Future<Map<String, dynamic>> mCreate(
       String index, String collection, List<Map<String, dynamic>> documents,
-      {String refresh}) async {
+      {bool waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'mCreate',
       index: index,
       collection: collection,
       body: <String, dynamic>{'documents': documents},
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -164,7 +164,7 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     List<Map<String, dynamic>> documents, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -172,7 +172,7 @@ class DocumentController extends KuzzleController {
       index: index,
       collection: collection,
       body: <String, dynamic>{'documents': documents},
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -183,7 +183,7 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     List<String> ids, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -191,7 +191,7 @@ class DocumentController extends KuzzleController {
       index: index,
       collection: collection,
       body: <String, dynamic>{'ids': ids},
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -219,7 +219,7 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     List<Map<String, dynamic>> documents, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -227,7 +227,7 @@ class DocumentController extends KuzzleController {
       index: index,
       collection: collection,
       body: <String, dynamic>{'documents': documents},
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -236,14 +236,14 @@ class DocumentController extends KuzzleController {
   /// Updates multiple documents.
   Future<Map<String, dynamic>> mUpdate(
       String index, String collection, List<Map<String, dynamic>> documents,
-      {String refresh, bool retryOnConflict}) async {
+      {bool waitForRefresh, bool retryOnConflict}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'mUpdate',
       index: index,
       collection: collection,
       body: <String, dynamic>{'documents': documents},
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -255,7 +255,7 @@ class DocumentController extends KuzzleController {
     String collection,
     String uid,
     Map<String, dynamic> document, {
-    String refresh,
+    bool waitForRefresh,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -264,7 +264,7 @@ class DocumentController extends KuzzleController {
       collection: collection,
       uid: uid,
       body: document,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
     ));
 
     return response.result as Map<String, dynamic>;
@@ -349,7 +349,7 @@ class DocumentController extends KuzzleController {
     String collection,
     String uid,
     Map<String, dynamic> document, {
-    String refresh,
+    bool waitForRefresh,
     int retryOnConflict,
     bool source,
   }) async {
@@ -360,7 +360,7 @@ class DocumentController extends KuzzleController {
       collection: collection,
       uid: uid,
       body: document,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
       source: source,
       retryOnConflict: retryOnConflict,
     ));
@@ -399,7 +399,7 @@ class DocumentController extends KuzzleController {
     String index,
     String collection,
     Map<String, dynamic> body, {
-    String refresh,
+    bool waitForRefresh,
     bool source,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
@@ -408,7 +408,7 @@ class DocumentController extends KuzzleController {
       index: index,
       collection: collection,
       body: body,
-      refresh: refresh,
+      waitForRefresh: waitForRefresh,
       source: source,
     ));
 
