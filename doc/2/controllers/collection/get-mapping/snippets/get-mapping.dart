@@ -1,1 +1,3 @@
-final result = await kuzzle.collection.getMapping('nyc-open-data', 'yellow-taxi');
+final result = await kuzzle
+  .collection
+  .getMapping('nyc-open-data', 'yellow-taxi');

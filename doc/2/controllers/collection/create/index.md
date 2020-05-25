@@ -32,7 +32,7 @@ Future<Map<String, dynamic>> create(
 | ------------------ | -------------------------------------------- | --------------------------------- |
 | `index`            | <pre>String</pre>                            | Index                             |
 | `collection`       | <pre>String</pre>                            | Collection                        |
-| `mapping`          | <pre>Map<String, dynamic><String, Object></pre> | Describes the data mapping to associate to the new collection, using Elasticsearch [mapping format](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/mapping.html) |
+| `mapping`          | <pre>Map<String, dynamic><String, Object></pre><br>(`{}`) | Describes the data mapping to associate to the new collection, using Elasticsearch [mapping format](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/mapping.html) |
 
 ---
 
