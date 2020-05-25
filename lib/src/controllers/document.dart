@@ -13,7 +13,10 @@ class DocumentController extends KuzzleController {
   ///
   /// A [query] can be provided to alter the count result,
   /// otherwise returns the total number of documents in the data collection.
-  Future<int> count(String index, String collection, {Map<String, dynamic> query}) async {
+  Future<int> count(
+    String index,
+    String collection,
+    {Map<String, dynamic> query}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'count',
