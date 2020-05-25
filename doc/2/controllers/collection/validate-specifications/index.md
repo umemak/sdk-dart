@@ -9,7 +9,7 @@ description: Validate specifications format
 
 The validateSpecifications method checks if a validation specification is well formatted. It does not store or modify the existing specification.
 
-When the validation specification is not formatted correctly, a detailed error message is returned to help you to debug.
+When the validation specification is not formatted correctly, a detailed error message is returned to help you fix it.
 
 <br/>
 

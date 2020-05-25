@@ -10,7 +10,7 @@ description: Search for specifications
 
 Searches collection specifications.
 
-There is a limit to how many items can be returned by a single search query.
+There is a limit on how many items can be returned by a single search query.
 That limit is by default set at 10000, and you can't get over it even with the from and size pagination options.
 
 :::info

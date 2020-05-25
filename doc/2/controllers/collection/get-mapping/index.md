@@ -2,7 +2,7 @@
 code: true
 type: page
 title: getMapping
-description: Return collection mapping
+description: Returns the collection mapping
 ---
 
 # getMapping
