@@ -1,9 +1,9 @@
 ---
-  env:
-    global:
-      - AWS_ACCESS_KEY_ID=AKIAIYAXFUAHXOWP2MJA
-      # AWS_SECRET_ACCESS_KEY
-      - secure: "FIM+xcgUwD+QeG4L5bRosa+sPO++A4oYubcIHmN1WzWrrnpZaz6vL9jhbWrBD0mma7EpvuUDUgl7PWj/MzIdAz0TxoQ0fiK+Ur1wrweDU3WFyb1eoqADau+5QZ0smtkIpFbZ+3Timcem11SknpSBDGC+5+N1lkk61hi7Wpaf7r3QVtj7jr0Zg6+Qc+YmtQvOo3lzInt5eE1zL6lBukYiT552PjPx6T2/OsBsO1XHZFvrL3eeLnEH34FuxDVQtcZ/U9Mlmwf3X2skor4fvar0UhwbgdSRtmYZnqtofNtc6/owgf+IfLZHbC60TinUV9EOZG16z3oH+L3x2/QnAFIOn76RRUxTGvbDv35Z0h5Yd8hDbQAuQ3+EmoIOigrSeIGY/t7NRN6okX7elbyN0j9F6D9gK8CjEvVSuDOcbOUaqnVsoDdZQEHFQk32wdmvKED4Ce1XLfmm4FAYwbZzyBpusBJ9oM5931OOZvo1wjmyPp2Qf+Cv4s73Zgh8HcUyI4njH3YDMxxijlfQ+L4xpmdDMduQHCJ/5ue5CorNiGKoVr/LjYQ4sasjOKIZkV6T2FrrQnEensv2KqjiIqxwOTDJJelYq+1Tp9KaHtbWyTHobjBKDRQfU3xTm1II5wtICEFBlXs4GZAewvRDK6L2ezLjztQ3l0DI/VzUQP0mK6qY18U="
+env:
+  global:
+    - AWS_ACCESS_KEY_ID=AKIAIYAXFUAHXOWP2MJA
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "A8bt3NmCComxsPRg3J1wiPZg4n3GgAWl45NIGQjllE2jd0CiOwznTNrvCjnABC6lJ6rLSsPC+CSbTIiYm2XwDIZYcuynKUtJbBYEgSIbkPE7FpvcG3/yd4QaWPxngTTc3LjcLzNqyo3eQ0sjF+s8KZdpo32sf06rHplm6puJ1gB78GXvfhh7kvVEAvAZP+vKBRy45Oe09174Tvh//okuUoGDe7Ehqzd0EhN3XgSfJ/sQCjjByQiwQ12m4FLvlurDUBhlcyok0YxXqpJsuhPV5U2tc+Hsts1UKqphIlEPNui5sgblytXK5DqSpD5tesbfdxvC63cLyTsptxVtuZ3+/gy8EeuRZ5065af1niG404adzcp5g3jXhANOfr9GMFJf0C0oZ+qrR/CClQP8HjdADYQgH6QRIZhfnVriuZBHsH3KWB9h+arcW2MC0L8Su1+8zfw8INkxqkVRILR167nRMjW0B+QpvABhqhCILSzcagi78sdmclhkUdrVW7g7lWo3JxpmiqCkB4Ybzs4vkZsIw+zX/jf5O2URVWRdjGZKUux1JeuaVC0Qscvlo9WwgVY7s0zReAfuaXA0kfU6qEn+f/kaI/O4KWQEpw8bmAcT7z8F/IhcT13twsuRhFA0C9rgaGaJzaEcRSDezVg++3oCyVvXNwufOiCFrCiH9yi88mU=" 
   # ------------------------
   # Jobs configuration
   # ------------------------
@@ -21,12 +21,12 @@
           - npm run doc-prepare
           - $(npm bin)/kuzdoc iterate-repos:install --repos_path doc/framework/.repos/
           - $(npm bin)/kuzdoc framework:link -d /sdk/dart/2/ -v 2
-  
+ 
         script:
           - gem install typhoeus
           - cd doc/framework/ && HYDRA_MAX_CONCURRENCY=20 ruby .ci/dead-links.rb -p src/sdk/java/3/
-  
-  
+ 
+ 
       - stage: Tests
         name: Documentation Snippets
         if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
@@ -125,19 +125,19 @@
             all_branches: true
         after_deploy:
           - npm run doc-cloudfront
-  
-  stages:
-    - name: Tests
-      if: type =~ /(push)/ AND branch =~ /^master|[0-9]+-(dev|stable)$/
-    - name: Builds
-      if: type =~ /(push)/ AND branch =~ /^master|[0-9]+-(dev|stable)$/
-    - name: Deployments
-      if: type =~ /(push)/ AND branch =~ /^master|[0-9]+-(dev|stable)$/
-  
-  notifications:
-    slack:
-      rooms:
-        - secure: ACjz4TJEYBEzmwVOYrCNnr4+jC0FaX+qh150QacYGIgaQYL+U3xLEQmWNlZ3oxaPPMDAk42m+diHolqNwh6qsOWaPSWRlGfLKhHLSzRI98bhF7HQ+3eLMYmx7y7SKwRzyRjus0jgxp0Kc2mq0nhKqv+7rarQtIgWlC1PLrzZ35CUbUlqYSoeYAlXoyDB1eZgYsvjt+eC5yCvGePsfKbupWC2/hIVl+qZ+9AhVmOfiMv7daFW29Vu300aoY+0IqwX7jHGcmHn/7QCRsx0IBy/SL24TzfSV9SUSnbjK4fTrcrhjYDEZdH1lpvDtvr50GgkrTjy1wPVz8XIyCZ7LZolylkx+nR1MWyvum20QRFub2Qhz/+rS+OFiQZ8H01BPuklLUTSQhBksfpGBck3d2yNLiTqGEVWYTnZ9mkCnMQ3BzJXEF04KLHG7wYn2rk6wjPghVmFQH5GMsxM5v33CFgcNzp6lRJOX9CmjZosck6o9SA0WlazHH/CLWWKk1wrQ1ygDayW5m+N/o58UIxgW2LIUlp4tV1z/bRtO2yTd020yWchlKPVmf1A5OMfigJNMRsQGNZNadS7qA2M394OJw3/Hg+0EVF8gai/V8FRijmkxmhYyCIYMcjaGwx8JxfoMrRKcM76haBAhg0JQxsSVKzyXfONGzd5DXjcxSGZ2wuEdu0=
-      on_success: never
-      on_failure: always
+
+stages:
+  - name: Tests
+    if: type =~ /(push)/ AND branch =~ /^master|[0-9]+-(dev|stable)$/
+  - name: Builds
+    if: type =~ /(push)/ AND branch =~ /^master|[0-9]+-(dev|stable)$/
+  - name: Deployments
+    if: type =~ /(push)/ AND branch =~ /^master|[0-9]+-(dev|stable)$/
+
+notifications:
+  slack:
+    rooms:
+      - secure: ACjz4TJEYBEzmwVOYrCNnr4+jC0FaX+qh150QacYGIgaQYL+U3xLEQmWNlZ3oxaPPMDAk42m+diHolqNwh6qsOWaPSWRlGfLKhHLSzRI98bhF7HQ+3eLMYmx7y7SKwRzyRjus0jgxp0Kc2mq0nhKqv+7rarQtIgWlC1PLrzZ35CUbUlqYSoeYAlXoyDB1eZgYsvjt+eC5yCvGePsfKbupWC2/hIVl+qZ+9AhVmOfiMv7daFW29Vu300aoY+0IqwX7jHGcmHn/7QCRsx0IBy/SL24TzfSV9SUSnbjK4fTrcrhjYDEZdH1lpvDtvr50GgkrTjy1wPVz8XIyCZ7LZolylkx+nR1MWyvum20QRFub2Qhz/+rS+OFiQZ8H01BPuklLUTSQhBksfpGBck3d2yNLiTqGEVWYTnZ9mkCnMQ3BzJXEF04KLHG7wYn2rk6wjPghVmFQH5GMsxM5v33CFgcNzp6lRJOX9CmjZosck6o9SA0WlazHH/CLWWKk1wrQ1ygDayW5m+N/o58UIxgW2LIUlp4tV1z/bRtO2yTd020yWchlKPVmf1A5OMfigJNMRsQGNZNadS7qA2M394OJw3/Hg+0EVF8gai/V8FRijmkxmhYyCIYMcjaGwx8JxfoMrRKcM76haBAhg0JQxsSVKzyXfONGzd5DXjcxSGZ2wuEdu0=
+    on_success: never
+    on_failure: always
   
