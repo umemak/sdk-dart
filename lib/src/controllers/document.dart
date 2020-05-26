@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import '../kuzzle.dart';
 import '../kuzzle/errors.dart';
 import '../kuzzle/request.dart';
@@ -383,32 +385,24 @@ class DocumentController extends KuzzleController {
   /// update a greater number of documents, either change the server
   /// configuration, or split the search query.
   ///
-  /// ---
-  /// Body:
-  /// ```dart
-  /// {
-  ///   "query": {
-  ///     // query to match documents
-  ///   },
-  ///   "changes": {
-  ///     // documents changes
-  ///   }
-  /// }
-  /// ```
-  ///
   Future<Map<String, dynamic>> updateByQuery(
     String index,
     String collection,
-    Map<String, dynamic> body, {
+    {
+    @required Map<String, dynamic> searchQuery,
+    @required Map<String, dynamic> changes,
     bool waitForRefresh = false,
-    bool source,
+    bool source = false,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'updateByQuery',
       index: index,
       collection: collection,
-      body: body,
+      body: {
+        'query': searchQuery,
+        'changes': changes
+      },
       waitForRefresh: waitForRefresh,
       source: source,
     ));
