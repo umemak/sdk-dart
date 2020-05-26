@@ -236,7 +236,7 @@ class DocumentController extends KuzzleController {
   /// Updates multiple documents.
   Future<Map<String, dynamic>> mUpdate(
       String index, String collection, List<Map<String, dynamic>> documents,
-      {bool waitForRefresh = false, bool retryOnConflict}) async {
+      {bool waitForRefresh = false, int retryOnConflict}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'mUpdate',
@@ -244,6 +244,7 @@ class DocumentController extends KuzzleController {
       collection: collection,
       body: <String, dynamic>{'documents': documents},
       waitForRefresh: waitForRefresh,
+      retryOnConflict: retryOnConflict,
     ));
 
     return response.result as Map<String, dynamic>;
