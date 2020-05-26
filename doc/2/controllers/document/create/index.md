@@ -33,7 +33,7 @@ Future<Map<String, dynamic>> create(
 | `collection`       | <pre>String</pre>                            | Collection                        |
 | `document`         | <pre>Map<String, dynamic></pre> | Document content |
 | `id`          | <pre>String</pre><br>(`null`)         | Document id               |
-| `waitForRefresh`          | <pre>bool</pre><br>(`false`)         | Make Kuzzle answer the query after the new document is indexed |
+| `waitForRefresh`   | <pre>bool</pre><br>(`false`)                           | If set to `true`, Kuzzle will wait for the persistence layer to finish indexing|
 
 ---
 

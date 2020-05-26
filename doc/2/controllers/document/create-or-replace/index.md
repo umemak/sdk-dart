@@ -29,7 +29,7 @@ Future<Map<String, dynamic>> createOrReplace(
 | `collection`       | <pre>String</pre>                            | Collection                        |
 | `id`               | <pre>String</pre>                            | Document ID                       |
 | `document`         | <pre>Map<String, dynamic></pre> | Document content                  |
-| `waitForRefresh`   | <pre>Boolean</pre><br>(`false`)                           | If set to `true`, Kuzzle will wait for the persistence layer to finish indexing|
+| `waitForRefresh`   | <pre>bool</pre><br>(`false`)                           | If set to `true`, Kuzzle will wait for the persistence layer to finish indexing|
 
 ---
 
