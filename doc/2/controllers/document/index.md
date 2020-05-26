@@ -1,7 +1,7 @@
 ---
 code: true
 type: branch
-title: Document
+title: document
 description: Document Controller
 ---
 
