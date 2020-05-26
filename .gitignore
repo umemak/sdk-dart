@@ -74,3 +74,4 @@ build/
 coverage
 
 doc/framework
+.ci/doc/project/*.dart

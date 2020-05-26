@@ -4,7 +4,7 @@ import '../kuzzle/response.dart';
 
 import 'abstract.dart';
 
-class SpecificationSearchResult extends KuzzleSearchResult {
+class SpecificationSearchResult extends SearchResult {
   SpecificationSearchResult(
     Kuzzle kuzzle, {
     KuzzleRequest request,

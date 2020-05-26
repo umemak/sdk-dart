@@ -331,7 +331,7 @@ class Kuzzle extends KuzzleEventEmitter {
     }
 
     request.volatile['sdkInstanceId'] = protocol.id;
-    request.volatile['sdkName'] = '2.0.0-alpha.1';
+    request.volatile['sdkName'] = '2.0.0';
 
     /*
      * Do not add the token for the checkToken route,
@@ -347,9 +347,11 @@ class Kuzzle extends KuzzleEventEmitter {
       // todo: implement queueFilter
     }
 
+
     // check queueing
     if (_queuing) {
       if (queueable) {
+
         final completer = Completer<KuzzleResponse>();
         final queuedRequest = _KuzzleQueuedRequest(
           completer: completer,

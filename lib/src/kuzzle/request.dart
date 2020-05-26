@@ -35,13 +35,13 @@ class KuzzleRequest {
   }
 
   KuzzleRequest.clone(KuzzleRequest request) {
+    requestId = _uuid.v4();
     action = request.action;
     body = request.body;
     collection = request.collection;
     controller = request.controller;
     index = request.index;
     jwt = request.jwt;
-    // requestId = request.requestId;
     refresh = request.refresh;
     uid = request.uid;
     volatile = request.volatile;
