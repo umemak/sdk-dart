@@ -352,7 +352,7 @@ class DocumentController extends KuzzleController {
     Map<String, dynamic> document, {
     bool waitForRefresh = false,
     int retryOnConflict,
-    bool source = false,
+    bool source,
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
