@@ -1,12 +1,12 @@
 ---
 env:
   global:
-    - AWS_ACCESS_KEY_ID=AKIARCVRUPNEOD5SV5OD
+    - AWS_ACCESS_KEY_ID=AKIAIYAXFUAHXOWP2MJA
     # AWS_SECRET_ACCESS_KEY
-    - secure: "I2DG7558Gx8vAcopARzGb/0elGG1bzpcsqcLeTLIi0ej/Sro+AKLv75I5ib4am0zEav95fR0SxFg3RCZVaS49eKrcOST7i3Zl+oimfZbzajADcb8Z73vYgiU/fox0AVe2x7kXMbJpfLjODUGQ8OWqT2L4yjqC7uF2vyw7h62fKnVG3lW9Rv1VsbaEs/aH48kIy3qHY+z+3tBbsloNEz4yOTgTCYIPrEo/bI1G3zn8x+10sDnxDlqCdJEDCQaJoWgI+YqIxbQQCs3ryjmG8pEMVLUpoYozGUoJnhEHGmgIgbkDeSacSONXPNDaejMOlN0l6A+sPRNow+P5KoN+PLodeo7U6YkYWyYYrt8EIIVLsjxamp+3eRMvW0sOFyKOlTvEiosGLDpD8i2CZV4WWu2lMRPerIpct49f9x9ESPRCxkV4omcFzBYrYPs9D7J7DiQ3d1KCinsumdsiDWM1f3PqIOtKygWacpnx5vBUgnmpAEKMvY8lJV2evkeY5Y0IsJjKfNCNTEaUMf8S9PLJawVMPLWKisEVXtBwn19WrRhN1x2bS08dg8AO7lNyMCZ0+xJ52wlEYR/fzd4HUXd59D2zIQWIp+KoRCD+pG/UZkEITnxS/oc26iCMVsV+I/i9sZKs3BkEK+aDZwAVn56l/WU7AEJPetugzKOIkul52OZxpo="
-  # ------------------------
-  # Jobs configuration
-  # ------------------------
+    - secure: "AD6LYeqGcWox9XquexlvLTZyEukB2pK9WXtM1v5S2epzddizUc8MNFZjsuUTZnNZIHj6lVr9oxNyGgrzdy3AyjcVi/N57PQD9DTWzkR7vdEd/W9Oh2JnQYKzp4dCrhsPtBGkcbGK3FQPxV7iWd/Ac4CPowx3cdCspfg00goipv2VOZvm06TEzwPkJ1uUoibGCNRmc1tvmg+1D4S5C4TGV5Iyglape4/WzHXrG3Pd8xAyAqwV/ANsw5qfeRH41Ll/rMaDrGIsS7gBxgqD9C2GvkYL4Y8t2ssGrz+7dc5jkRwdKzS4Ho9fN9TIDv7bBQOa1QwM4TJHcjm3TH0uEJENeeyqTbLKBjVSBGA1VY9aoYl5am40Oswg5YbWi5B1zXqHoT8XzrskHPAmVC2mJt3SSnqJG/RJE2jhZ4V1Sx47crF3kGGCLYLr6v4gxtWkxe2yFrT9BmnHV6MsGqySK4apYBQsgQIFXhVmcUTmTqjPKdYoUN9bOfeBitD+6LwNb08+NI/tIE3QEhGWlbCywH1gGwMAdseI0C1nG6tbeU0kafAkDRqrhvBg+peFD2UgI9efxOm/NkuJ4oRq03oHiBdyq+lXs/CTEGfWU6pIwOStrIF4qS12S2wcjCDcUGzofZuG+d4UOUapK/k959lFY9yZhBWfdpChfCJYVNogKLhNtE8="
+# ------------------------
+# Jobs configuration
+# ------------------------
 jobs:
   include:
     - stage: Tests
@@ -42,8 +42,8 @@ jobs:
       dart:
         - stable
       dart_task:
-      - test: --platform vm
-      - dartanalyzer: --fatal-warnings lib
+        - test: --platform vm
+        - dartanalyzer: --fatal-warnings lib
       services:
         - docker
       before_script:
@@ -53,7 +53,7 @@ jobs:
           - $HOME/.pub-cache
       after_success:
         - if [ "$TRAVIS_DART_VERSION" == "stable" ] && [ $TRAVIS_DART_TEST == true ]; then ./coverage.sh; fi
-        - if [ "$TRAVIS_DART_VERSION" == "stable" ] && [ $TRAVIS_DART_TEST == true ] && [ $TRAVIS_BRANCH == 'master' ]; then dartdoc; fi      
+        - if [ "$TRAVIS_DART_VERSION" == "stable" ] && [ $TRAVIS_DART_TEST == true ] && [ $TRAVIS_BRANCH == 'master' ]; then dartdoc; fi
 
 
     - stage: Deployments
@@ -140,4 +140,4 @@ notifications:
       - secure: ACjz4TJEYBEzmwVOYrCNnr4+jC0FaX+qh150QacYGIgaQYL+U3xLEQmWNlZ3oxaPPMDAk42m+diHolqNwh6qsOWaPSWRlGfLKhHLSzRI98bhF7HQ+3eLMYmx7y7SKwRzyRjus0jgxp0Kc2mq0nhKqv+7rarQtIgWlC1PLrzZ35CUbUlqYSoeYAlXoyDB1eZgYsvjt+eC5yCvGePsfKbupWC2/hIVl+qZ+9AhVmOfiMv7daFW29Vu300aoY+0IqwX7jHGcmHn/7QCRsx0IBy/SL24TzfSV9SUSnbjK4fTrcrhjYDEZdH1lpvDtvr50GgkrTjy1wPVz8XIyCZ7LZolylkx+nR1MWyvum20QRFub2Qhz/+rS+OFiQZ8H01BPuklLUTSQhBksfpGBck3d2yNLiTqGEVWYTnZ9mkCnMQ3BzJXEF04KLHG7wYn2rk6wjPghVmFQH5GMsxM5v33CFgcNzp6lRJOX9CmjZosck6o9SA0WlazHH/CLWWKk1wrQ1ygDayW5m+N/o58UIxgW2LIUlp4tV1z/bRtO2yTd020yWchlKPVmf1A5OMfigJNMRsQGNZNadS7qA2M394OJw3/Hg+0EVF8gai/V8FRijmkxmhYyCIYMcjaGwx8JxfoMrRKcM76haBAhg0JQxsSVKzyXfONGzd5DXjcxSGZ2wuEdu0=
     on_success: never
     on_failure: always
-  
+
