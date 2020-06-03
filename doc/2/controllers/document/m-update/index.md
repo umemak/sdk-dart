@@ -57,7 +57,7 @@ Each errored document is an object of the `errors` array with the following prop
 | Property     | Type                                         | Description                      |
 |------------- |--------------------------------------------- |--------------------------------- |
 | `document`   | <pre>Map<String, dynamic></pre> | Document that causes the error   |
-| `status`     | <pre>Integer</pre>                           | HTTP error status                |
+| `status`     | <pre>int</pre>                           | HTTP error status                |
 | `reason`     | <pre>int</pre>                            | Human readable reason |
 
 ## Usage

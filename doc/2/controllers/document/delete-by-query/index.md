@@ -16,7 +16,7 @@ An empty or null query will match all documents in the collection.
 <br/>
 
 ```dart
-Future<Map<String, dynamic>> deleteByQuery(
+Future<List<Map<String, dynamic>>> deleteByQuery(
     String index,
     String collection,
     Map<String, dynamic> query, {
@@ -35,7 +35,7 @@ Future<Map<String, dynamic>> deleteByQuery(
 
 ## Returns
 
-Returns a `Map<String, dynamic>` containing the deleted document ids.
+Returns a `List<Map<String, dynamic>>>` containing the deleted document ids.
 
 ## Usage
 
