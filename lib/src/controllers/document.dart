@@ -91,7 +91,7 @@ class DocumentController extends KuzzleController {
   }
 
   /// Deletes documents matching the provided search query.
-  Future<List<Map<String, dynamic>>> deleteByQuery(
+  Future<List<String>> deleteByQuery(
     String index,
     String collection,
     Map<String, dynamic> query, {
@@ -106,7 +106,9 @@ class DocumentController extends KuzzleController {
       waitForRefresh: waitForRefresh,
     ));
 
-    return response.result as List<Map<String, dynamic>>;
+    return List<String>.from(
+      response.result['ids'] as List<dynamic>
+    ) as List<String>;
   }
 
   /// Check if a document exists
