@@ -17,8 +17,10 @@ Updates multiple documents.
 Future<Map<String, dynamic>> mUpdate(
       String index, String collection, 
       List<Map<String, dynamic>> documents,
-      {bool waitForRefresh = false, int retryOnConflict})
-```
+      {
+      bool waitForRefresh = false, 
+      int retryOnConflict
+})
 
 | Arguments          | Type                                                    | Description                       |
 | ------------------ | ------------------------------------------------------- | --------------------------------- |
@@ -41,7 +43,7 @@ Each document has the following properties:
 
 ## Return
 
-A `ConcurrentHashMap<String, ArrayList<Object>>` which has a `successes` and `errors`:
+A `Map<String, dynamic>` which has a `successes` and `errors:
 Each created document is an object of the `successes` array with the following properties:
 
 | Property     | Type                                         | Description                      |
