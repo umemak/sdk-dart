@@ -10,6 +10,7 @@ order: 0
 
 `KuzzleResponse` is a **serializable** class representing a raw Kuzzle response.
 
+
 ## Properties
 
 | Property | Type | Description |
