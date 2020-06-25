@@ -29,7 +29,14 @@ void main() {
     group('user auth', () {
       test('register', () async {
         final saveduser = await kuzzle.security
-            .createUser({'local': credentials}, user.content);
+            .createUser(
+              'user',
+              {
+                'credentials': {
+                  'local': credentials
+                },
+                'content': user.content
+              });
         expect(saveduser.content['name'], user.content['name']);
         user = saveduser;
       });
@@ -114,10 +121,6 @@ void main() {
 
       test('signout', () async {
         await kuzzle.auth.logout();
-      });
-
-      test('admin login', () async {
-        await kuzzle.auth.login('local', adminCredentials);
       });
 
       test('search users', () async {
