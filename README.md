@@ -72,4 +72,4 @@ The compatibility of the SDK with Kuzzle v2 was done by @Manuelbaun.
 
 Given the growing interest of the Dart/Flutter community for Kuzzle, we proposed to take over the SDK to integrate it officially and that it be subject to the same quality controls as our other projects.
 
-Thanks you very much to our amazing contributors!
+Many thanks to our amazing contributors!
