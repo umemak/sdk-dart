@@ -1,4 +1,4 @@
-library kuzzle_dart;
+library sdk_kuzzle;
 
 export 'src/controllers/abstract.dart';
 export 'src/controllers/auth.dart';
@@ -15,7 +15,6 @@ export 'src/kuzzle/profile.dart';
 export 'src/kuzzle/request.dart';
 export 'src/kuzzle/response.dart';
 export 'src/kuzzle/role.dart';
-export 'src/kuzzle/room.dart';
 export 'src/kuzzle/user.dart';
 export 'src/protocols/abstract.dart';
 export 'src/protocols/websocket.dart';

@@ -5,7 +5,7 @@ import '../kuzzle/response.dart';
 
 import 'abstract.dart';
 
-class ProfileSearchResult extends KuzzleSearchResult {
+class ProfileSearchResult extends SearchResult {
   ProfileSearchResult(
     Kuzzle kuzzle, {
     KuzzleRequest request,
@@ -22,11 +22,11 @@ class ProfileSearchResult extends KuzzleSearchResult {
         .toList();
   }
 
-  @override
-  Future<List<dynamic>> next() => super.next().then((_) => hits =
-      (response.result['hits'] as List).map((hit) => KuzzleProfile(kuzzle,
-          uid: hit['_id'] as String,
-          policies: hit['_source']['policies'] as List)) as List<dynamic>);
+  // @override
+  // Future<List<dynamic>> next() => super.next().then((_) => hits =
+  //     (response.result['hits'] as List).map((hit) => KuzzleProfile(kuzzle,
+  //         uid: hit['_id'] as String,
+  //         policies: hit['_source']['policies'] as List)) as List<dynamic>);
 
   List<KuzzleProfile> getRoles() => List<KuzzleProfile>.from(hits);
 }

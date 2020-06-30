@@ -11,7 +11,8 @@ class KuzzleRequest {
       this.index,
       this.jwt,
       this.requestId,
-      this.refresh,
+      this.waitForRefresh,
+      this.force,
       this.uid,
       this.volatile,
       this.startTime,
@@ -35,14 +36,15 @@ class KuzzleRequest {
   }
 
   KuzzleRequest.clone(KuzzleRequest request) {
+    requestId = _uuid.v4();
     action = request.action;
     body = request.body;
     collection = request.collection;
     controller = request.controller;
     index = request.index;
     jwt = request.jwt;
-    // requestId = request.requestId;
-    refresh = request.refresh;
+    waitForRefresh = request.waitForRefresh;
+    force = request.force;
     uid = request.uid;
     volatile = request.volatile;
     startTime = request.startTime;
@@ -72,8 +74,9 @@ class KuzzleRequest {
     index = data['index'] as String;
     jwt = data['jwt'] as String;
     requestId = data['requestId'] as String;
-    requestId ??= _uuid.v4() as String;
-    refresh = data['refresh'] as String;
+    requestId ??= _uuid.v4();
+    waitForRefresh = (data['refresh'] as String) == 'wait_for' ? true : false;
+    force = data['force'] as bool;
     uid = data['_id'] as String;
     volatile = data['volatile'] as Map<String, dynamic>;
     startTime = data['startTime'] == null
@@ -123,10 +126,13 @@ class KuzzleRequest {
     if (requestId != null) {
       map['requestId'] = requestId;
     }
-    if (refresh != null) {
-      // we follow the api but allow some more logical "mistakes"
-      // (the only allowed value for refresh arg is "wait_for")
+    if (force != null) {
+      map['force'] = force;
+    }
+    if (waitForRefresh == true) {
       map['refresh'] = 'wait_for';
+    } else if (waitForRefresh == false) {
+      map['refresh'] = 'false';
     }
     if (uid != null) {
       map['_id'] = uid;
@@ -200,7 +206,8 @@ class KuzzleRequest {
   String index;
   String jwt;
   String requestId;
-  String refresh;
+  bool waitForRefresh;
+  bool force;
   String uid;
   Map<String, dynamic> volatile;
   DateTime startTime;

@@ -6,7 +6,7 @@ import '../kuzzle/role.dart';
 
 import 'abstract.dart';
 
-class RoleSearchResult extends KuzzleSearchResult {
+class RoleSearchResult extends SearchResult {
   RoleSearchResult(
     Kuzzle kuzzle, {
     KuzzleRequest request,
@@ -19,21 +19,21 @@ class RoleSearchResult extends KuzzleSearchResult {
     hits = (response.result['hits'] as List).map((hit) => KuzzleRole(kuzzle,
             uid: hit['_id'] as String,
             controllers: hit['_source']['controllers'] as Map<String, dynamic>))
-        as List<dynamic>;
+        .toList();
   }
 
-  @override
-  Future<List<dynamic>> next() {
-    if (request.scroll != null || request.sort != null) {
-      throw KuzzleError('only from/size params are allowed for role search');
-    }
+  // @override
+  // Future<List<dynamic>> next() {
+  //   if (request.scroll != null || request.sort != null) {
+  //     throw KuzzleError('only from/size params are allowed for role search');
+  //   }
 
-    return super.next().then((_) => hits = (response.result['hits'] as List)
-        .map((hit) => KuzzleRole(kuzzle,
-            uid: hit['_id'] as String,
-            controllers: hit['_source']['controllers']
-                as Map<String, dynamic>)) as List<dynamic>);
-  }
+  //   return super.next().then((_) => hits = (response.result['hits'] as List)
+  //       .map((hit) => KuzzleRole(kuzzle,
+  //           uid: hit['_id'] as String,
+  //           controllers: hit['_source']['controllers']
+  //               as Map<String, dynamic>)) as List<dynamic>);
+  // }
 
   List<KuzzleRole> getRoles() => List<KuzzleRole>.from(hits);
 }
