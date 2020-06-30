@@ -131,12 +131,8 @@ jobs:
       if: type = push AND branch =~ /^master|[0-9]+-stable$/
       language: dart
       dart: stable
-      deploy:
-        provider: script
-        dart_task:
-          - test: false
-        script:
-          - pub publish
+      script:
+        - pub publish
 
 stages:
   - name: Tests
