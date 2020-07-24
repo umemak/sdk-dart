@@ -71,7 +71,7 @@ So first let's write a method which will create the index/collection if it does 
 
 ### Get existing messages
 
-The method _fetchMessage()_ which will [search](/sdk/dart/2/controllers/document/search) for the first hundred newest messages.
+The method _fetchMessage()_ will [search](/sdk/dart/2/controllers/document/search) for the first hundred newest messages.
 It will then update the state of the widget to store those messages in the `messages` variable.
 
 <<< ./snippets/chat.dart.snippet:3[dart]
