@@ -125,7 +125,7 @@ _chat.dart:_
 
 <<< ./snippets/chat.dart.snippet:9[dart]
 
-For this we simply [create](/sdk/dart/2/controllers/document/create)
+For this we simply [create](/sdk/dart/2/controllers/document/create) a document in our `messages` collection with a `username` and a `value`. Once this document is created it will trigger a notification to all clients which subscribed to this collection and receive the message.
 
 ## Where do we go from here?
 
