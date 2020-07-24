@@ -60,11 +60,11 @@ In our _chat.dart_ let's import the sdk:
 
 <<< ./snippets/chat.dart.snippet:1[dart]
 
-Then we will [establish the connection](/sdk/dart/2/core-classes/kuzzle/connect) to kuzzle and create, if they don't [exist](/sdk/dart/2/controllers/index/exists/), the [index](/sdk/dart/2/controllers/index/create) and [collection](/sdk/dart/2/controllers/collection/create) of our chat, as well as fetching messages sorted by creation date and also subscribing to the same collection to receive new message in realtime.
+Then we will [establish the connection](/sdk/dart/2/core-classes/kuzzle/connect) to kuzzle and create, if they don't [exist](/sdk/dart/2/controllers/index/exists/), the [index](/sdk/dart/2/controllers/index/create) and [collection](/sdk/dart/2/controllers/collection/create) of our chat. We will also fetch messages sorted by creation date, and  subscribe to the same collection to receive new messages in realtime.
 
 ### Create index and collection
 
-So first let's write a method which will create the index/collection if it does not exists:
+So first let's write a method which will create the index/collection if it does not exist:
 
 <<< ./snippets/chat.dart.snippet:2[dart]
 
@@ -79,13 +79,13 @@ It will then update the state of the widget to store those messages in the `mess
 ### Receive new messages in realtime
 
 And finally the method to subscribe to our collection.
-It will call the Kuzzle's realtime controller to allow us to receive [real-time notifications](/core/2/api/essentials/notifications) on message creations, then add it to our list of previously fetched `messages` to render it in our list by updating the state.
+It will call the Kuzzle's realtime controller to allow us to receive [real-time notifications](/core/2/api/essentials/notifications) on message creations. New messages received that way will then be added to our list of previously fetched `messages`, and rendered in our list, by updating the state.
 
 <<< ./snippets/chat.dart.snippet:4[dart]
 
 ### Call previous written methods
 
-Then we are going to call all of hose methods in the `initState` method of the State of our `StatefulWidget`:
+Then we are going to call all of those methods in the `initState` method of the State of our `StatefulWidget`:
 
 <<< ./snippets/chat.dart.snippet:5[dart]
 
