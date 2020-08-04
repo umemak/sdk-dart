@@ -65,7 +65,7 @@ class _ChatPage extends State<ChatPage> {
     });
     super.initState();
   }
-/*snippet:end*/
+/* snippet:end */
 
 /* snippet:start:2 */
   void _initData() async {
