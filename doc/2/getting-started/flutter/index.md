@@ -115,7 +115,7 @@ _chat.dart:_
 
 And _chat_view.dart:_
 
-<<< ./snippets/chat.dart.snippet:8[dart]
+<<< ./snippets/chat_view.dart.snippet[dart]
 
 ### Sending messages
 
