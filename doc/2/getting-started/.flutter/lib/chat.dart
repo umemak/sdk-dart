@@ -114,7 +114,9 @@ class _ChatPage extends State<ChatPage> {
       if (notification.action != 'create') return;
       if (notification.controller != 'document') return;
       setState(() {
+        /* snippet:start:7 */
         _messages.add(Message.fromJson(notification.result));
+        /* snippet:end:7 */
       });
     }, subscribeToSelf: true);
   }
@@ -157,7 +159,7 @@ class _ChatPage extends State<ChatPage> {
                             'username': widget.username,
                             'value': _chatController.text
                           });
-                          /* snippet:end */
+                          /* snippet:end:9 */
                           _chatController.clear();
                         },
                         child: Icon(Icons.send),
