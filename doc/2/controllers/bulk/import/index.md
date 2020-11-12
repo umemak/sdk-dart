@@ -5,7 +5,7 @@ title: import
 description: Creates, updates or deletes large amounts of documents as fast as possible.
 ---
 
-# Impport
+# Import
 
 Creates, updates or deletes large amounts of documents as fast as possible.
 
