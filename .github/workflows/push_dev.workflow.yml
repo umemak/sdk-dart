@@ -77,7 +77,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12"
-      - uses: ./.github/actions/doc-deploy
+      - uses: ./.github/actions/deploy-doc
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
         with:
