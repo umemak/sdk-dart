@@ -206,7 +206,6 @@ class KuzzleRequest {
     if (source != null) {
       map['source'] = source;
     }
-
     if (includeKuzzleMeta != null) {
       map['includeKuzzleMeta'] = includeKuzzleMeta;
     }
