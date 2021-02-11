@@ -99,9 +99,10 @@ jobs:
     needs: [tests]
     steps:
       - uses: actions/checkout@v2
-      - uses: cedx/setup-dart@v2
+      - name: '>> Dart package <<'
+        uses: k-paxian/dart-package-publisher@master
         with:
-            accessToken: ${{ secrets.PUB_ACCESS_TOKEN }}
-            refreshToken: ${{ secrets.PUB_REFRESH_TOKEN }}
-      - run: pub publish --force
-      
+          accessToken: ${{ secrets.PUB_ACCESS_TOKEN }}
+          refreshToken: ${{ secrets.PUB_REFRESH_TOKEN }}
+          skipTests: true
+          suppressBuildRunner: true
