@@ -1,3 +1,11 @@
+## [2.2.0]
+
+- Add HTTP Protocol
+- Add [auth|security] checkRights
+- Add document:upsert
+- Support lang parameter for Koncorde filters
+- Add timeout to jobs
+
 ## [2.1.0]
 
 - Fix KuzzleError instanciation (Yoann-Abbes)
