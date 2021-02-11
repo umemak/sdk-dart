@@ -100,4 +100,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: cedx/setup-dart@v2
-      - run: pub publish
+      - run: pub publish --force
