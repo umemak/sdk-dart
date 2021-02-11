@@ -8,7 +8,7 @@ description: Checks if the provided API request can be executed by this client, 
 # checkRights
 
 <SinceBadge version="Kuzzle 2.8.0"/>
-<SinceBadge version="auto-version"/>
+<SinceBadge version="2.2.0"/>
 
 Checks if the provided API request can be executed by this client, using the current authentication information.
 
