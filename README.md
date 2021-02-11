@@ -6,7 +6,7 @@
 [![Pub](https://img.shields.io/pub/v/kuzzle.svg?style=flat-square)](https://pub.dartlang.org/packages/kuzzle)
 [![codecov](https://img.shields.io/codecov/c/github/prijindal/kuzzle_dart/master.svg?style=flat-square)](https://codecov.io/gh/kuzzleio/sdk-dart)
 
-<img alt="GitHub branch checks state" src="https://img.shields.io/github/checks-status/kuzzleio/kuzzle/master">
+<img alt="GitHub branch checks state" src="https://img.shields.io/github/checks-status/kuzzleio/sdk-dart/master">
 
 # Kuzzle Dart SDK
 
