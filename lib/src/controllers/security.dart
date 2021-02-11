@@ -15,6 +15,21 @@ import 'abstract.dart';
 class SecurityController extends KuzzleController {
   SecurityController(Kuzzle kuzzle) : super(kuzzle, name: 'security');
 
+  /// Checks if an API action can be executed by the current user.
+  Future<bool> checkRights(
+    String kuid, Map<String, dynamic> requestPayload) async {
+    final response = await kuzzle.query(
+        KuzzleRequest(
+            controller: name,
+            action: 'checkRights',
+            userId: kuid,
+            body: requestPayload,
+          )
+        );
+
+    return response.result['allowed'] as bool;
+  }
+
   /// Creates a new API key for a user.
   Future<Map<String, dynamic>> createApiKey(
       String userId, String description,
@@ -537,7 +552,7 @@ class SecurityController extends KuzzleController {
 
   /// Searches for a user API keys.
   Future<SearchResult> searchApiKeys(String userId, Map<String, dynamic> query,
-      {int from, int size}) async {
+      {int from, int size, String lang}) async {
     final request = KuzzleRequest(
       controller: name,
       action: 'searchApiKeys',
@@ -545,6 +560,7 @@ class SecurityController extends KuzzleController {
       body: query,
       from: from,
       size: size,
+      lang: lang,
     );
 
     final response = await kuzzle.query(request);
@@ -587,7 +603,13 @@ class SecurityController extends KuzzleController {
   /// Searches security profiles, optionally returning
   /// only those linked to the provided list of security roles.
   Future<UserSearchResult> searchUsers(
-      {Map<String, dynamic> query, int from, int size, String scroll}) async {
+      {
+        Map<String, dynamic> query,
+        int from,
+        int size,
+        String scroll,
+        String lang
+      }) async {
     final request = KuzzleRequest(
       controller: name,
       action: 'searchUsers',
@@ -595,6 +617,7 @@ class SecurityController extends KuzzleController {
       from: from,
       size: size,
       scroll: scroll,
+      lang: lang,
     );
     final response = await kuzzle.query(request);
 
