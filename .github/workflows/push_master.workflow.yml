@@ -99,5 +99,8 @@ jobs:
     needs: [tests]
     steps:
       - uses: actions/checkout@v2
-      - uses: cedx/setup-dart@v2
-      - run: pub publish --force
+      - name: Run a one-line script
+        uses: k-paxian/dart-package-publisher@v1.2
+        with:
+          accessToken: ${{ secrets.PUB_ACCESS_TOKEN }}
+          refreshToken: ${{ secrets.PUB_REFRESH_TOKEN}}

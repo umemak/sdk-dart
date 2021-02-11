@@ -5,7 +5,9 @@
 [![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)](https://stackoverflow.com/questions/tagged/flutter?sort=votes)
 [![Pub](https://img.shields.io/pub/v/kuzzle.svg?style=flat-square)](https://pub.dartlang.org/packages/kuzzle)
 [![codecov](https://img.shields.io/codecov/c/github/prijindal/kuzzle_dart/master.svg?style=flat-square)](https://codecov.io/gh/kuzzleio/sdk-dart)
-[![Build Status](https://img.shields.io/travis/prijindal/kuzzle_dart/master.svg?style=flat-square)](https://travis-ci.com/kuzzleio/sdk-dart)
+com/kuzzleio/sdk-dart)
+
+<img alt="GitHub branch checks state" src="https://img.shields.io/github/checks-status/kuzzleio/kuzzle/master">
 
 # Kuzzle Dart SDK
 
@@ -26,7 +28,7 @@ Include this in your pubspec.yaml
 
 ```yaml
 dependencies:
-  kuzzle: ^2.0.0
+  kuzzle: ^2.2.0
 
 ```
 
