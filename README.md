@@ -31,8 +31,6 @@ dependencies:
 
 ```
 
-> only `WebSocketProtocol` protocol is available for now, feel free to suggest a PR for other protocols submissions
-
 ## Documentation and Samples
 
 * [https://docs.kuzzle.io/sdk/dart/2/](https://docs.kuzzle.io/sdk/dart/2/) - 
