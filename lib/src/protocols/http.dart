@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kuzzle/src/kuzzle/errors.dart';
 import 'package:kuzzle/src/kuzzle/request.dart';
 import 'package:kuzzle/src/kuzzle/response.dart';
 import 'package:kuzzle/src/protocols/abstract.dart';
@@ -37,6 +38,9 @@ class HttpProtocol extends KuzzleProtocol {
       headers: headers,
       body: jsonEncode(request),
     );
+    if (res.statusCode != 200) {
+      return Future.error(res.reasonPhrase);
+    }
     return Future.value(
       KuzzleResponse.fromJson(jsonDecode(res.body) as Map<String, dynamic>),
     );
