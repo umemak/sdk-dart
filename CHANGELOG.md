@@ -1,3 +1,7 @@
+## [2.2.1]
+
+- Bugfix: Export HttpProtocol class
+
 ## [2.2.0]
 
 - Add HTTP Protocol
