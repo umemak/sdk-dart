@@ -37,6 +37,9 @@ class HttpProtocol extends KuzzleProtocol {
       headers: headers,
       body: jsonEncode(request),
     );
+    if (res.statusCode != 200) {
+      return Future.error(res);
+    }
     return Future.value(
       KuzzleResponse.fromJson(jsonDecode(res.body) as Map<String, dynamic>),
     );
