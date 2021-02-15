@@ -17,6 +17,7 @@ export 'src/kuzzle/response.dart';
 export 'src/kuzzle/role.dart';
 export 'src/kuzzle/user.dart';
 export 'src/protocols/abstract.dart';
+export 'src/protocols/http.dart';
 export 'src/protocols/websocket.dart';
 export 'src/search_result/documents.dart';
 export 'src/search_result/profiles.dart';
