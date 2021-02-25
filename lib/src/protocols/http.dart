@@ -7,10 +7,10 @@ import 'package:kuzzle/src/kuzzle/response.dart';
 import 'package:kuzzle/src/protocols/abstract.dart';
 
 class HttpProtocol extends KuzzleProtocol {
-  HttpProtocol(Uri uri, {bool acceptUnsignedCertificate = false}) : super(uri) {
+  HttpProtocol(Uri uri, {bool acceptBadCertificate = false}) : super(uri) {
     _client = HttpClient()
       ..badCertificateCallback =
-          ((cert, host, port) => acceptUnsignedCertificate);
+          ((cert, host, port) => acceptBadCertificate);
     _ioClient = IOClient(_client);
   }
 

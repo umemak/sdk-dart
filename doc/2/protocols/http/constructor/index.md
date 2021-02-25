@@ -21,7 +21,7 @@ HttpProtocol(Uri, {bool acceptUnsignedCertificate = false});
 | Argument  | Type              | Description                  |
 | --------- | ----------------- | ---------------------------- |
 | `uri`    | <pre>Uri</pre> | URI pointing to a Kuzzle server. See more: [https://api.dart.dev/stable/2.10.5/dart-core/Uri-class.html](https://api.dart.dev/stable/2.10.5/dart-core/Uri-class.html) |
-| `acceptUnsignedCertificate` | <pre>bool(false)</pre> | Accept or not bad certificate when using https
+| `acceptBadCertificate` | <pre>bool(false)</pre> | Accept or not bad certificate when using https
 
 
 ## Return
