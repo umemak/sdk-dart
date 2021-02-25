@@ -1,3 +1,7 @@
+## [2.3.0]
+
+- Add an option to accept bad SSL certificate
+
 ## [2.2.2]
 
 - Bugfix: Handle HTTP Errors
