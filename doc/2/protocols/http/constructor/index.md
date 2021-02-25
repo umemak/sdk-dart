@@ -13,7 +13,7 @@ Use this constructor to create a new instance of the `Http` protocol with specif
 ## Arguments
 
 ```dart
-HttpProtocol(Uri);
+HttpProtocol(Uri, {bool acceptUnsignedCertificate = false});
 ```
 
 <br/>
@@ -21,6 +21,7 @@ HttpProtocol(Uri);
 | Argument  | Type              | Description                  |
 | --------- | ----------------- | ---------------------------- |
 | `uri`    | <pre>Uri</pre> | URI pointing to a Kuzzle server. See more: [https://api.dart.dev/stable/2.10.5/dart-core/Uri-class.html](https://api.dart.dev/stable/2.10.5/dart-core/Uri-class.html) |
+| `acceptUnsignedCertificate` | <pre>bool(false)</pre> | Accept or not bad certificate when using https
 
 
 ## Return
