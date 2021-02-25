@@ -1,18 +1,27 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:http/io_client.dart';
 import 'package:kuzzle/src/kuzzle/request.dart';
 import 'package:kuzzle/src/kuzzle/response.dart';
 import 'package:kuzzle/src/protocols/abstract.dart';
-import 'package:http/http.dart' as http;
 
 class HttpProtocol extends KuzzleProtocol {
-  HttpProtocol(Uri uri) : super(uri);
+  HttpProtocol(Uri uri, {bool acceptBadCertificate = false}) : super(uri) {
+    _client = HttpClient()
+      ..badCertificateCallback =
+          ((cert, host, port) => acceptBadCertificate);
+    _ioClient = IOClient(_client);
+  }
+
+  HttpClient _client;
+  IOClient _ioClient;
 
   @override
   Future<void> connect() async {
     await super.connect();
 
-    final res = await http.get('${uri.toString()}/_query');
+    final res = await _ioClient.get('${uri.toString()}/_query');
     if (res.statusCode == 401 || res.statusCode == 403) {
       return Future.error('You must have permission on the _query route.');
     }
@@ -32,7 +41,7 @@ class HttpProtocol extends KuzzleProtocol {
       headers['x-kuzzle-volatile'] = jsonEncode(request.volatile);
     }
 
-    final res = await http.post(
+    final res = await _ioClient.post(
       '${uri.toString()}/_query',
       headers: headers,
       body: jsonEncode(request),
