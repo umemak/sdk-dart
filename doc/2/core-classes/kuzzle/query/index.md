@@ -24,7 +24,7 @@ This is a low-level method, exposed to allow advanced SDK users to bypass high-l
 
 | Argument  | Type              | Description            |
 | --------- | ----------------- | ---------------------- |
-| `request` | <pre>KuzzleRequest</pre> | API request    |
+| `request` | <pre>[KuzzleRequest](/sdk/dart/2/core-classes/request)</pre> | API request    |
 | `volatile`   | <pre>Map<String, dynamic></pre> | Additional information to send to Kuzzle |
 | `queueable`   | <pre>bool</pre> | If true, queues the request during downtime, until connected to Kuzzle again |
 
