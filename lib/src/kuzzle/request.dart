@@ -111,8 +111,13 @@ class KuzzleRequest {
     includeKuzzleMeta = data['includeKuzzleMeta'] as bool;
   }
 
+  final Map<String, dynamic> _args = {};
+
+  dynamic operator [](String key) => _args[key];
+  void operator []=(String key, dynamic value) => _args[key] = value;
+
   Map toJson() {
-    final map = <String, dynamic>{};
+    final map = _args;
 
     if (action != null) {
       map['action'] = action;
