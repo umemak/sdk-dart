@@ -1,3 +1,7 @@
+## [2.4.0]
+
+- Add custom properties to a KuzzleRequest
+
 ## [2.3.0]
 
 - Add an option to accept bad SSL certificate
