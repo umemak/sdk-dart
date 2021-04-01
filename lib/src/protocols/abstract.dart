@@ -123,6 +123,15 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
       final syncRes = send(request);
       // If we use a synchronous protocol the result is returned directly
       if (syncRes != null) {
+        syncRes.then((response) {
+          if (response.error != null) {
+            emit(ProtocolEvents.QUERY_ERROR, [response, request]);
+          }
+        }).catchError((err) {
+          emit(ProtocolEvents.QUERY_ERROR, [{
+            'error': err,
+          }, request]);
+        });
         return syncRes;
       }
     } on Exception catch (error) {
