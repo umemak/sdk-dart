@@ -81,6 +81,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12"
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
       - uses: ./.github/actions/deploy-doc
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
