@@ -29,6 +29,7 @@ runs:
     - name: Install AWS CLI
       run: |
         sudo apt-get update
+        sudo add-apt-repository universe
         sudo apt-get install python python-pip
         pip install awscli --upgrade --user
       shell: bash
