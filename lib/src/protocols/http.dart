@@ -47,7 +47,7 @@ class HttpProtocol extends KuzzleProtocol {
       return Future.error(res);
     }
     return Future.value(
-      KuzzleResponse.fromJson(jsonDecode(res.body) as Map<String, dynamic>),
+      KuzzleResponse.fromJson(jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>),
     );
   }
 }
