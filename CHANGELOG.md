@@ -1,3 +1,9 @@
+## [2.4.1]
+
+- Decode http response with utf8
+- WebSocket browser support
+- Add HTTP Browser support
+
 ## [2.4.0]
 
 - Add custom properties to a KuzzleRequest
