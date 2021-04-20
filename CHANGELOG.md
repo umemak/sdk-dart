@@ -1,3 +1,7 @@
+## [2.4.2]
+
+- Fix auto-reconnect
+
 ## [2.4.1]
 
 - Decode http response with utf8
