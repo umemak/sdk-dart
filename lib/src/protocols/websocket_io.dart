@@ -13,20 +13,32 @@ import 'events.dart';
 class KuzzleWebSocket extends KuzzleProtocol {
   KuzzleWebSocket(
     Uri uri, {
-    bool autoReconnect = true,
+    this.autoReconnect = true,
     Duration reconnectionDelay,
     this.pingInterval,
-  })  : 
-        super(uri,
-            autoReconnect: autoReconnect, reconnectionDelay: reconnectionDelay);
+  }) : super(uri) {
+    _reconnectionDelay = reconnectionDelay ?? Duration(seconds: 1);
+  }
 
   String _lastUrl;
   WebSocket _webSocket;
   StreamSubscription _subscription;
   Duration pingInterval;
+  Duration _reconnectionDelay;
+  bool autoReconnect;
+  bool _stopRetryingToConnect = false;
+  bool _hasBeenClosed = false;
 
   @override
   Future<void> connect() async {
+    // If a reconnection is going on 
+    // and the enduser called disconnect in between
+    // then don't try to connect
+    if (_hasBeenClosed && retrying) {
+      return;
+    }
+    _hasBeenClosed = false;
+
     final url = '${uri.scheme}://${uri.host}:${uri.port}';
 
     await super.connect();
@@ -42,12 +54,15 @@ class KuzzleWebSocket extends KuzzleProtocol {
     await _webSocket?.close();
     _webSocket = null;
 
+    _stopRetryingToConnect = false;
+
     try {
       _webSocket = await WebSocket.connect(url);
     } on IOException {
-      if (wasConnected) {
+      if (wasConnected || autoReconnect) {
         clientNetworkError(
             KuzzleError('WebSocketProtocol: Unable to connect to $url'));
+        _handleAutoReconnect();
 
         return;
       }
@@ -80,8 +95,10 @@ class KuzzleWebSocket extends KuzzleProtocol {
   void close() {
     super.close();
 
+    _hasBeenClosed = true;
+
     removeAllListeners();
-    stopRetryingToConnect = true;
+    _stopRetryingToConnect = true;
     wasConnected = false;
 
     _subscription?.cancel();
@@ -103,12 +120,27 @@ class KuzzleWebSocket extends KuzzleProtocol {
     }
   }
 
+  void _handleAutoReconnect() {
+    if (autoReconnect && !retrying && !_stopRetryingToConnect) {
+      retrying = true;
+
+      Timer(_reconnectionDelay, () async {
+        await connect().catchError(clientNetworkError);
+        retrying = false;
+      });
+    } else {
+      emit(ProtocolEvents.DISCONNECT);
+    }
+  }
+
   void _handleDone() {
     if (_webSocket.closeCode == 1000) {
       clientDisconnected();
-    } else if (wasConnected) {
+    } else if (wasConnected || autoReconnect) {
+      clientDisconnected();
       clientNetworkError(KuzzleError(
           'clientNetworkError', _webSocket.closeReason, _webSocket.closeCode));
+      _handleAutoReconnect();
     }
   }
 }
