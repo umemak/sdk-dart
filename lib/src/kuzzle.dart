@@ -16,6 +16,7 @@ import 'kuzzle/request.dart';
 import 'kuzzle/response.dart';
 import 'protocols/abstract.dart';
 import 'protocols/events.dart';
+import 'utils/deprecation.dart';
 
 enum OfflineMode { manual, auto }
 
@@ -31,11 +32,13 @@ class _KuzzleQueuedRequest {
 }
 
 class Kuzzle extends KuzzleEventEmitter {
+
   Kuzzle(
     this.protocol, {
     this.autoQueue = false,
     this.autoReplay = false,
     this.autoResubscribe = true,
+    bool deprecationWarnings = true,
     this.eventTimeout = 200,
     this.offlineMode = OfflineMode.manual,
     this.offlineQueueLoader,
@@ -44,7 +47,10 @@ class Kuzzle extends KuzzleEventEmitter {
     this.queueMaxSize = 500,
     this.replayInterval,
     this.globalVolatile,
-  }) {
+  }) :
+    deprecationHandler = 
+      DeprecationHandler(deprecationWarning: deprecationWarnings)
+    {
     if (offlineMode == OfflineMode.auto) {
       autoQueue = true;
       autoReplay = true;
@@ -128,6 +134,7 @@ class Kuzzle extends KuzzleEventEmitter {
   final OfflineMode offlineMode;
   final Function offlineQueueLoader;
   final Function queueFilter;
+  final DeprecationHandler deprecationHandler;
 
   /// Automatically queue all requests during offline mode
   bool autoQueue;
@@ -395,7 +402,7 @@ class Kuzzle extends KuzzleEventEmitter {
 
     _requests.add(request.requestId);
     // todo: implement query options
-    return protocol.query(request);
+    return protocol.query(request).then(deprecationHandler.logDeprecation);
   }
 
   KuzzleController operator [](String accessor) => _controllers[accessor];

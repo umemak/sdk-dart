@@ -26,6 +26,7 @@ Kuzzle(
     queueTTL,
     queueMaxSize = 500,
     replayInterval,
+    deprecationWarnings = true,
     globalVolatile,
   })
 ```

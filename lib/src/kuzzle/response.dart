@@ -1,3 +1,5 @@
+import 'package:kuzzle/src/utils/deprecation.dart';
+
 import 'errors.dart';
 
 class KuzzleResponse {
@@ -5,6 +7,7 @@ class KuzzleResponse {
     this.action,
     this.collection,
     this.controller,
+    this.deprecations,
     this.error,
     this.index,
     this.room,
@@ -17,6 +20,7 @@ class KuzzleResponse {
     action = json['action'] as String;
     collection = json['collection'] as String;
     controller = json['controller'] as String;
+    deprecations = Deprecation.fromJsonList(json);
     error = json['error'] == null ? null : KuzzleError.fromJson(json);
     index = json['index'] as String;
     protocol = json['protocol'] as String;
@@ -43,10 +47,12 @@ class KuzzleResponse {
     if (controller != null) {
       map['controller'] = controller;
     }
+    if (deprecations != null) {
+      map['deprecations'] = Deprecation.toJsonList(deprecations);
+    }
     if (error != null) {
       map['error'] = error.toJson();
     }
-  String users;
     if (index != null) {
       map['index'] = index;
     }
@@ -90,6 +96,7 @@ class KuzzleResponse {
   String action;
   String collection;
   String controller;
+  List<Deprecation> deprecations;
   KuzzleError error;
   String index;
   String protocol;
