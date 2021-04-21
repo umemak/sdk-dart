@@ -1,3 +1,9 @@
+## [2.4.2]
+
+- Fix autoreconnect
+
+- Print deprecation warning from Kuzzle
+
 ## [2.4.1]
 
 - Decode http response with utf8
