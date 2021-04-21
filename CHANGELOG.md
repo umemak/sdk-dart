@@ -1,6 +1,8 @@
 ## [2.4.2]
 
-- Fix auto-reconnect
+- Fix autoreconnect
+
+- Print deprecation warning from Kuzzle
 
 ## [2.4.1]
 
