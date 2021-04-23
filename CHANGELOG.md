@@ -1,3 +1,7 @@
+## [2.4.3]
+
+- fix autoreconnect (2) by using different flag internally to know if we should reconnect
+
 ## [2.4.2]
 
 - Fix autoreconnect
