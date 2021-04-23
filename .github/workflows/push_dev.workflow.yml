@@ -28,6 +28,8 @@ jobs:
         with:
           node-version: "12"
       - uses: ./.github/actions/dead-links
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
 
   doc-snippets:
     name: Doc Snippets
