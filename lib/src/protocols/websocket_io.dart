@@ -28,13 +28,14 @@ class KuzzleWebSocket extends KuzzleProtocol {
   bool autoReconnect;
   bool _stopRetryingToConnect = false;
   bool _hasBeenClosed = false;
+  bool _retryingFromTimer = false;
 
   @override
   Future<void> connect() async {
     // If a reconnection is going on 
     // and the enduser called disconnect in between
     // then don't try to connect
-    if (_hasBeenClosed && retrying) {
+    if (_hasBeenClosed && _retryingFromTimer) {
       return;
     }
     _hasBeenClosed = false;
@@ -123,10 +124,12 @@ class KuzzleWebSocket extends KuzzleProtocol {
   void _handleAutoReconnect() {
     if (autoReconnect && !retrying && !_stopRetryingToConnect) {
       retrying = true;
+      _retryingFromTimer = true;
 
       Timer(_reconnectionDelay, () async {
-        await connect().catchError(clientNetworkError);
         retrying = false;
+        await connect().catchError(clientNetworkError);
+        _retryingFromTimer = false;
       });
     } else {
       emit(ProtocolEvents.DISCONNECT);

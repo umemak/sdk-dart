@@ -7,27 +7,27 @@ on:
       - 1-stable
 
 jobs:
-  dead-links:
-    name: Dead links
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1.4.4
-        with:
-          node-version: "12"
-      - uses: ./.github/actions/dead-links
+  # dead-links:
+  #   name: Dead links
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Cache node modules
+  #       uses: actions/cache@v2
+  #       env:
+  #         cache-name: cache-node-modules
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-
+  #           ${{ runner.os }}-build-
+  #           ${{ runner.os }}-
+  #     - uses: actions/setup-node@v1.4.4
+  #       with:
+  #         node-version: "12"
+  #     - uses: ./.github/actions/dead-links
 
   doc-snippets:
     name: Doc Snippets
@@ -64,7 +64,8 @@ jobs:
     name: Deployment Doc Prod
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: [dead-links, doc-snippets]
+    # needs: [dead-links, doc-snippets]
+    needs: [doc-snippets]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules
