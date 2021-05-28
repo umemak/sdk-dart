@@ -13,42 +13,53 @@ class KuzzleWebSocket extends KuzzleProtocol {
   KuzzleWebSocket(
     Uri uri, {
     bool autoReconnect = true,
-    Duration reconnectionDelay,
+    Duration reconnectionDelay = const Duration(seconds: 1),
+    int reconnectionAttempts = 10,
     this.pingInterval,
-  }) : super(
-          uri,
-        );
+  }) : super(uri,
+            autoReconnect: autoReconnect,
+            reconnectionDelay: reconnectionDelay,
+            reconnectionAttempts: reconnectionAttempts);
 
-  String _lastUrl;
   WebSocket _webSocket;
   StreamSubscription _subscription;
   Duration pingInterval;
   Completer<void> _connected = Completer();
 
   @override
-  Future<void> connect() async {
+  Future<void> protocolConnect() async {
+    if (state == KuzzleProtocolState.reconnecting) {
+      return;
+    }
+
     final url = '${uri.scheme}://${uri.host}:${uri.port}';
 
     _webSocket ??= WebSocket(url);
-
-    await super.connect();
-
-    if (url != _lastUrl) {
-      wasConnected = false;
-      _lastUrl = url;
-    }
 
     await _subscription?.cancel();
     _subscription = null;
 
     _subscription = _webSocket.onMessage.listen(_handlePayload);
-    _webSocket.onError.listen(_handleError);
-    _webSocket.onClose.listen(_handleDone);
+
+    var onErrorSubscription = _webSocket.onError.listen((Event event) {
+      _connected.completeError(event);
+    });
+
+    var onCloseSubscription = _webSocket.onClose.listen((Event event) {
+      _connected
+          .completeError(KuzzleError('Unable to connect to ${uri.toString()}'));
+    });
 
     _webSocket.onOpen.listen((_) {
-      clientConnected();
+      onErrorSubscription.cancel();
+      onCloseSubscription.cancel();
+
+      _webSocket.onError.listen(_handleError);
+      _webSocket.onClose.listen(_handleDone);
+
       _connected.complete();
     });
+
     return _connected.future;
   }
 
@@ -65,7 +76,6 @@ class KuzzleWebSocket extends KuzzleProtocol {
     super.close();
 
     removeAllListeners();
-    wasConnected = false;
 
     _subscription?.cancel();
     _subscription = null;
