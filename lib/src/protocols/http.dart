@@ -15,14 +15,12 @@ class HttpProtocol extends KuzzleProtocol {
   BaseClient _ioClient;
 
   @override
-  Future<void> connect() async {
-    await super.connect();
-
+  Future<void> protocolConnect() async {
     final res = await _ioClient.get('${uri.toString()}/_query');
     if (res.statusCode == 401 || res.statusCode == 403) {
       return Future.error('You must have permission on the _query route.');
     }
-    clientConnected();
+
     return Future.value();
   }
 
@@ -47,7 +45,8 @@ class HttpProtocol extends KuzzleProtocol {
       return Future.error(res);
     }
     return Future.value(
-      KuzzleResponse.fromJson(jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>),
+      KuzzleResponse.fromJson(
+          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>),
     );
   }
 }
