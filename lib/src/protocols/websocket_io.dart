@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:kuzzle/src/kuzzle/response.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../kuzzle/errors.dart';
 import '../kuzzle/request.dart';
