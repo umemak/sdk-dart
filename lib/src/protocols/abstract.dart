@@ -55,11 +55,13 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
         throw KuzzleError(
             'Unable to connect to kuzzle server at ${uri.toString()}: Connection aborted.');
       }
+
       try {
         await protocolConnect();
         _clientConnected();
         return;
-      } on Exception {
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
         attempt += reconnectionAttempts > -1 ? 1 : 0;
         print('Reconnection attempt: $attempt');
 
