@@ -37,6 +37,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   KuzzleProtocolState _state;
   KuzzleProtocolState get state => _state;
   bool _abortConnection = false;
+  bool get connectionAborted => _abortConnection;
 
   bool isReady() => _state == KuzzleProtocolState.connected;
 
@@ -44,13 +45,12 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   Future<void> connect() async {
     if (_state == KuzzleProtocolState.offline) {
       _abortConnection = false;
+      _state = KuzzleProtocolState.connecting;
     }
 
-    _state = KuzzleProtocolState.connecting;
     var attempt = 0;
     do {
       if (_abortConnection) {
-        _abortConnection = false;
         _state = KuzzleProtocolState.offline;
         throw KuzzleError(
             'Unable to connect to kuzzle server at ${uri.toString()}: Connection aborted.');
@@ -63,10 +63,11 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         attempt += reconnectionAttempts > -1 ? 1 : 0;
-        print('Reconnection attempt: $attempt');
+        // print('Reconnection attempt: $attempt');
 
         if (!autoReconnect ||
             reconnectionAttempts > -1 && attempt >= reconnectionAttempts) {
+          _state = KuzzleProtocolState.offline;
           rethrow;
         }
 
@@ -84,6 +85,12 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
   /// Called when the client's connection is established
   void _clientConnected() {
+    if (_abortConnection) {
+      _state = KuzzleProtocolState.connected;
+      close();
+      return;
+    }
+
     emit(_state == KuzzleProtocolState.reconnecting
         ? ProtocolEvents.RECONNECT
         : ProtocolEvents.CONNECT);
@@ -92,12 +99,20 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
   /// Called when the client's connection is closed
   void clientDisconnected() {
+    if (_state == KuzzleProtocolState.offline) {
+      return;
+    }
+
     _state = KuzzleProtocolState.offline;
     emit(ProtocolEvents.DISCONNECT);
   }
 
   /// Called when the client's connection is closed with an error state
   void clientNetworkError([dynamic error]) {
+    if (_state == KuzzleProtocolState.offline) {
+      return;
+    }
+
     _state = KuzzleProtocolState.offline;
 
     emit(ProtocolEvents.NETWORK_ERROR, [error]);
@@ -107,7 +122,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
   Future<void> _handleAutoReconnect() async {
     if (!autoReconnect) {
-      clientDisconnected();
+      emit(ProtocolEvents.DISCONNECT);
       return;
     }
 
@@ -115,14 +130,19 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
     try {
       await connect();
-    } on Exception {
-      clientDisconnected();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      emit(ProtocolEvents.DISCONNECT);
     }
   }
 
   /// Called when the client's connection is closed
   @mustCallSuper
   void close() {
+    if (_state == KuzzleProtocolState.offline) {
+      return;
+    }
+
     if (_state == KuzzleProtocolState.connected) {
       clientDisconnected();
       return;
