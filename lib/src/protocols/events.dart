@@ -1,11 +1,8 @@
 class ProtocolEvents {
   static const String DISCARDED = 'discarded';
   static const String DISCONNECT = 'disconnect';
-  static const String DISCONNECTED = 'disconnected';
   static const String RECONNECT = 'reconnect';
-  static const String RECONNECTED = 'reconnected';
   static const String CONNECT = 'connect';
-
   static const String QUERY_ERROR = 'queryError';
 
   static const String NETWORK_ERROR = 'networkError';
