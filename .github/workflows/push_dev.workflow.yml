@@ -60,21 +60,21 @@ jobs:
       - uses: cedx/setup-dart@v2
       - uses: ./.github/actions/unit-tests
 
-  func-tests:
-    name: Functionnal Tests
+  dart-doc:
+    name: Generate DartDoc
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: cedx/setup-dart@v2
-      - uses: ./.github/actions/func-tests
+      - uses: ./.github/actions/dart-doc
 
   doc-dev:
     name: Deployment Doc Dev
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # needs: [dead-links, doc-snippets, tests]
-    needs: [doc-snippets, unit-tests, func-tests]
+    needs: [doc-snippets, unit-tests, dart-doc]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules

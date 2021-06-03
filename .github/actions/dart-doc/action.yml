@@ -1,5 +1,5 @@
-name: Functionnal tests Dart SDK
-description: Functionnal tests Dart SDK
+name: Generate DartDoc
+description: Dart Documentation Generation
 runs:
   using: "composite"
   steps: 
