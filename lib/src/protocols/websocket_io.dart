@@ -30,7 +30,7 @@ class KuzzleWebSocket extends KuzzleProtocol {
     // If a reconnection is going on
     // and the enduser called disconnect in between
     // then don't try to connect
-    if (state == KuzzleProtocolState.reconnecting) {
+    if (connectionAborted) {
       return;
     }
 

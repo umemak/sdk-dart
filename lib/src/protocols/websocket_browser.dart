@@ -24,11 +24,11 @@ class KuzzleWebSocket extends KuzzleProtocol {
   WebSocket _webSocket;
   StreamSubscription _subscription;
   Duration pingInterval;
-  Completer<void> _connected = Completer();
+  final Completer<void> _connected = Completer();
 
   @override
   Future<void> protocolConnect() async {
-    if (state == KuzzleProtocolState.reconnecting) {
+    if (connectionAborted) {
       return;
     }
 
@@ -41,9 +41,8 @@ class KuzzleWebSocket extends KuzzleProtocol {
 
     _subscription = _webSocket.onMessage.listen(_handlePayload);
 
-    var onErrorSubscription = _webSocket.onError.listen((Event event) {
-      _connected.completeError(event);
-    });
+    final onErrorSubscription =
+        _webSocket.onError.listen(_connected.completeError);
 
     var onCloseSubscription = _webSocket.onClose.listen((Event event) {
       _connected
