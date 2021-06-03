@@ -23,6 +23,9 @@ class FakeProtocol extends KuzzleProtocol {
 
   @override
   Future<void> protocolConnect() async {
+    if (connectionAborted) {
+      return;
+    }
     connectionRetries += 1;
     if (shouldConnectFail) {
       throw KuzzleError('connection.error', 'Connection failed');
