@@ -77,10 +77,11 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
         (reconnectionAttempts == -1 || attempt < reconnectionAttempts));
   }
 
-  @protected
+  @internal
   Future<void> protocolConnect();
 
   /// Sends a payload to the connected server
+  @internal
   Future<KuzzleResponse> send(KuzzleRequest request);
 
   /// Called when the client's connection is established
@@ -98,6 +99,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   }
 
   /// Called when the client's connection is closed
+  @internal
   void clientDisconnected() {
     if (_state == KuzzleProtocolState.offline) {
       return;
@@ -108,6 +110,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   }
 
   /// Called when the client's connection is closed with an error state
+  @internal
   void clientNetworkError([dynamic error]) {
     if (_state == KuzzleProtocolState.offline) {
       return;
@@ -157,8 +160,8 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
     if (!isReady()) {
       emit(ProtocolEvents.DISCARDED, [request]);
 
-      return Future.error(KuzzleError(
-          'Unable to execute request: not connected to a Kuzzle server.'));
+      throw KuzzleError(
+          'Unable to execute request: not connected to a Kuzzle server.');
     }
 
     final completer = Completer<KuzzleResponse>();
@@ -190,7 +193,8 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
         });
         return syncRes;
       }
-    } on Exception catch (error) {
+      // ignore: avoid_catches_without_on_clauses
+    } catch (error) {
       completer.completeError(error);
     }
 
