@@ -1,5 +1,5 @@
-name: Unit tests Dart SDK
-description: Unit tests Dart SDK Tests
+name: Functionnal tests Dart SDK
+description: Functionnal tests Dart SDK
 runs:
   using: "composite"
   steps: 
