@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:kuzzle/src/kuzzle/errors.dart';
-import 'package:kuzzle/src/kuzzle/events.dart';
 import 'package:kuzzle/src/protocols/events.dart';
 import 'package:test/test.dart';
 
@@ -61,7 +59,8 @@ void main() {
 
       try {
         await protocol.connect();
-      } on KuzzleError catch (e) {
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
         expect(Future.error(e), throwsA(const TypeMatcher<KuzzleError>()));
       }
 
@@ -83,12 +82,11 @@ void main() {
 
       try {
         await protocol.connect();
-      } on KuzzleError catch (e) {
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
         expect(Future.error(e), throwsA(const TypeMatcher<KuzzleError>()));
         expect(protocol.connectionRetries, equals(5));
         // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        rethrow;
       }
     });
 
