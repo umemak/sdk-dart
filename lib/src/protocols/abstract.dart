@@ -63,7 +63,6 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         attempt += reconnectionAttempts > -1 ? 1 : 0;
-        // print('Reconnection attempt: $attempt');
 
         if (!autoReconnect ||
             reconnectionAttempts > -1 && attempt >= reconnectionAttempts) {

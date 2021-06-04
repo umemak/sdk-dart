@@ -171,7 +171,8 @@ class Kuzzle extends KuzzleEventEmitter {
       return Future.value();
     }
 
-    if (protocol.state == KuzzleProtocolState.connecting) {
+    if (protocol.state == KuzzleProtocolState.connecting ||
+        protocol.state == KuzzleProtocolState.reconnecting) {
       final completer = Completer<void>();
 
       protocol.once(ProtocolEvents.RECONNECT, completer.complete);
