@@ -11,7 +11,7 @@ void main() async {
   )),
     offlineMode: OfflineMode.auto,
   );
-  kuzzle.connect();
+  await kuzzle.connect();
   [snippet-code]
   print(result['collections'].length);
   kuzzle.disconnect();

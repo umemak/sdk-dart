@@ -12,7 +12,7 @@ void main() async {
     offlineMode: OfflineMode.auto,
   );
   try {
-    kuzzle.connect();
+    await kuzzle.connect();
     [snippet-code]
   } catch(e, s) {
     print(e.message);
