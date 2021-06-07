@@ -5,7 +5,7 @@ runs:
   steps:
     - name: Prepare Kuzzle Stack
       run: |
-        npm ci
+        npm ci --production=false
         npm run doc-prepare
         npx kuzdoc iterate-repos:install --repos_path doc/framework/.repos/
         npx kuzdoc framework:link -d /sdk/dart/2/ -v 2
