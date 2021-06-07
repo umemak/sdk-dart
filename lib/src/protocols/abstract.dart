@@ -25,7 +25,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
     this.autoReconnect = false,
     this.reconnectionDelay = const Duration(seconds: 1),
     this.reconnectionAttempts = 10,
-  })  : _state = KuzzleProtocolState.offline,
+  })  : protocolState = KuzzleProtocolState.offline,
         id = _uuid.v4();
 
   final Uri uri;
@@ -34,24 +34,28 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   Duration reconnectionDelay;
   int reconnectionAttempts;
 
-  KuzzleProtocolState _state;
-  KuzzleProtocolState get state => _state;
-  bool _abortConnection = false;
-  bool get connectionAborted => _abortConnection;
+  @protected
+  KuzzleProtocolState protocolState;
 
-  bool isReady() => _state == KuzzleProtocolState.connected;
+  @protected
+  bool abortConnection = false;
+
+  KuzzleProtocolState get state => protocolState;
+  bool get connectionAborted => abortConnection;
+
+  bool isReady() => protocolState == KuzzleProtocolState.connected;
 
   @nonVirtual
   Future<void> connect() async {
-    if (_state == KuzzleProtocolState.offline) {
-      _abortConnection = false;
-      _state = KuzzleProtocolState.connecting;
+    if (protocolState == KuzzleProtocolState.offline) {
+      abortConnection = false;
+      protocolState = KuzzleProtocolState.connecting;
     }
 
     var attempt = 0;
     do {
-      if (_abortConnection) {
-        _state = KuzzleProtocolState.offline;
+      if (abortConnection) {
+        protocolState = KuzzleProtocolState.offline;
         throw KuzzleError(
             'Unable to connect to kuzzle server at ${uri.toString()}: Connection aborted.');
       }
@@ -66,7 +70,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
         if (!autoReconnect ||
             reconnectionAttempts > -1 && attempt >= reconnectionAttempts) {
-          _state = KuzzleProtocolState.offline;
+          protocolState = KuzzleProtocolState.offline;
           rethrow;
         }
 
@@ -85,37 +89,37 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
   /// Called when the client's connection is established
   void _clientConnected() {
-    if (_abortConnection) {
-      _state = KuzzleProtocolState.connected;
+    if (abortConnection) {
+      protocolState = KuzzleProtocolState.connected;
       close();
       return;
     }
 
-    emit(_state == KuzzleProtocolState.reconnecting
+    emit(protocolState == KuzzleProtocolState.reconnecting
         ? ProtocolEvents.RECONNECT
         : ProtocolEvents.CONNECT);
-    _state = KuzzleProtocolState.connected;
+    protocolState = KuzzleProtocolState.connected;
   }
 
   /// Called when the client's connection is closed
   @internal
   void clientDisconnected() {
-    if (_state == KuzzleProtocolState.offline) {
+    if (protocolState == KuzzleProtocolState.offline) {
       return;
     }
 
-    _state = KuzzleProtocolState.offline;
+    protocolState = KuzzleProtocolState.offline;
     emit(ProtocolEvents.DISCONNECT);
   }
 
   /// Called when the client's connection is closed with an error state
   @internal
   void clientNetworkError([dynamic error]) {
-    if (_state == KuzzleProtocolState.offline) {
+    if (protocolState == KuzzleProtocolState.offline) {
       return;
     }
 
-    _state = KuzzleProtocolState.offline;
+    protocolState = KuzzleProtocolState.offline;
 
     emit(ProtocolEvents.NETWORK_ERROR, [error]);
 
@@ -128,7 +132,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
       return;
     }
 
-    _state = KuzzleProtocolState.reconnecting;
+    protocolState = KuzzleProtocolState.reconnecting;
 
     try {
       await connect();
@@ -141,15 +145,15 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   /// Called when the client's connection is closed
   @mustCallSuper
   void close() {
-    if (_state == KuzzleProtocolState.offline) {
+    if (protocolState == KuzzleProtocolState.offline) {
       return;
     }
 
-    if (_state == KuzzleProtocolState.connected) {
+    if (protocolState == KuzzleProtocolState.connected) {
       clientDisconnected();
       return;
     }
-    _abortConnection = true;
+    abortConnection = true;
   }
 
   // todo: implement query options

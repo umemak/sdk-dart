@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:kuzzle/src/kuzzle/errors.dart';
 import 'package:kuzzle/src/protocols/events.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:test/test.dart';
 
 import 'package:kuzzle/src/kuzzle/request.dart';
@@ -20,6 +22,14 @@ class FakeProtocol extends KuzzleProtocol {
 
   int connectionRetries = 0;
   bool shouldConnectFail = false;
+
+  void setAborted(bool state) {
+    abortConnection = state;
+  }
+
+  void setState(KuzzleProtocolState state) {
+    protocolState = state;
+  }
 
   @override
   Future<void> protocolConnect() async {
@@ -70,6 +80,17 @@ void main() {
       expect(protocol.connectionRetries, equals(1));
       expect(protocol.state, equals(KuzzleProtocolState.offline));
     });
+
+    test('calling connect when offline should set abortConnection to false',
+        () async {
+      final protocol = FakeProtocol(Uri(host: 'uri'));
+      protocol.setAborted(true);
+      expect(protocol.state, equals(KuzzleProtocolState.offline));
+      expect(protocol.connectionAborted, equals(true));
+      await protocol.connect();
+      expect(protocol.connectionAborted, equals(false));
+      expect(protocol.state, equals(KuzzleProtocolState.connected));
+    });
   });
 
   group('reconnect', () {
@@ -96,7 +117,7 @@ void main() {
     test('should reconnect on network error', () async {
       final protocol = FakeProtocol(Uri(host: 'uri'),
           autoReconnect: true,
-          reconnectionAttempts: 5,
+          reconnectionAttempts: 50,
           reconnectionDelay: const Duration(milliseconds: 100));
 
       final completer = Completer<void>();
@@ -110,7 +131,7 @@ void main() {
       expect(protocol.state, equals(KuzzleProtocolState.reconnecting));
       protocol.shouldConnectFail = false;
       await completer.future;
-      expect(protocol.connectionRetries, equals(2));
+      expect(protocol.connectionRetries, greaterThan(1));
       expect(protocol.state, equals(KuzzleProtocolState.connected));
     });
 
@@ -131,27 +152,6 @@ void main() {
       expect(protocol.state, equals(KuzzleProtocolState.reconnecting));
       await completer.future;
       expect(protocol.connectionRetries, equals(5));
-      expect(protocol.state, equals(KuzzleProtocolState.offline));
-    });
-
-    test('calling close should abort the reconnection', () async {
-      final protocol = FakeProtocol(Uri(host: 'uri'),
-          autoReconnect: true,
-          reconnectionAttempts: -1,
-          reconnectionDelay: const Duration(milliseconds: 100));
-
-      final completer = Completer<void>();
-      await protocol.connect();
-      protocol.shouldConnectFail = true;
-      protocol.connectionRetries = 0;
-      protocol.on(ProtocolEvents.DISCONNECT, completer.complete);
-      expect(protocol.state, equals(KuzzleProtocolState.connected));
-      protocol
-          .clientNetworkError(KuzzleError('network.error', 'Network Error'));
-      expect(protocol.state, equals(KuzzleProtocolState.reconnecting));
-      protocol.close();
-      expect(protocol.connectionAborted, equals(true));
-      await completer.future;
       expect(protocol.state, equals(KuzzleProtocolState.offline));
     });
   });
@@ -202,6 +202,7 @@ void main() {
       protocol.on(ProtocolEvents.DISCONNECT, completerDisconnect.complete);
       protocol.clientDisconnected();
       await completerDisconnect.future;
+      expect(protocol.state, KuzzleProtocolState.offline);
     });
   });
 
@@ -217,6 +218,42 @@ void main() {
       protocol.close();
       await completerDisconnect.future;
       expect(protocol.state, equals(KuzzleProtocolState.offline));
+    });
+
+    test(
+        'should abort the connection while connecting or reconnecting and set the state to offline',
+        () async {
+      final protocol = FakeProtocol(Uri(host: 'uri'));
+      protocol.setState(KuzzleProtocolState.connecting);
+      expect(protocol.state, equals(KuzzleProtocolState.connecting));
+      expect(protocol.connectionAborted, equals(false));
+
+      protocol.close();
+      expect(protocol.connectionAborted, equals(true));
+
+      protocol.setAborted(false);
+      protocol.setState(KuzzleProtocolState.reconnecting);
+
+      expect(protocol.state, equals(KuzzleProtocolState.reconnecting));
+      expect(protocol.connectionAborted, equals(false));
+
+      protocol.close();
+      expect(protocol.connectionAborted, equals(true));
+    });
+  });
+
+  group('#query', () {
+    test('should discard requests when not connected', () async {
+      final protocol = FakeProtocol(Uri(host: 'uri'));
+      final completerDiscarded = Completer<void>();
+      protocol.on(ProtocolEvents.DISCARDED, completerDiscarded.complete);
+      expect(protocol.state, equals(KuzzleProtocolState.offline));
+      try {
+        protocol.query(null);
+      } catch (e) {
+        expect(Future.error(e), throwsA(const TypeMatcher<KuzzleError>()));
+      }
+      await completerDiscarded.future;
     });
   });
 }
