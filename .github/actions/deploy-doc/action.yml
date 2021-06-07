@@ -17,12 +17,12 @@ inputs:
   REGION:
     description: AWS default region
     required: true
-    default: 'us-west-2'
+    default: "us-west-2"
   FRAMEWORK_BRANCH:
     description: Documentation framework branch to use
     required: true
-    default: 'master'
-  
+    default: "master"
+
 runs:
   using: "composite"
   steps:
@@ -33,7 +33,7 @@ runs:
     - name: Build documentation
       run: |
         rm -fr doc/framework
-        npm ci
+        npm ci --production=false
         npm install --save-dev kuzdoc
         npm run doc-prepare
         npm run doc-build
