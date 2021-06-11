@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 
 import 'controllers/abstract.dart';
@@ -68,12 +69,7 @@ class Kuzzle extends KuzzleEventEmitter {
     realtime = RealTimeController(this);
 
     protocol.on(ProtocolEvents.QUERY_ERROR, (error, request) {
-      emit(ProtocolEvents.QUERY_ERROR, [error, request]);
-    });
-
-    protocol.on(KuzzleEvents.TOKEN_EXPIRED, () {
-      jwt = null;
-      emit(KuzzleEvents.TOKEN_EXPIRED);
+      emit(KuzzleEvents.QUERY_ERROR, [error, request]);
     });
 
     protocol.on(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, (payload) {
@@ -83,15 +79,16 @@ class Kuzzle extends KuzzleEventEmitter {
 
         if (response.room.isNotEmpty) {
           if (!_requests.contains(response.room)) {
-            protocol.emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
+            emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
           }
           if (response.error != null &&
               response.error.id == 'security.token.expired') {
+            jwt = null;
             emit(KuzzleEvents.TOKEN_EXPIRED);
           }
           protocol.emit(response.room, [response]);
         } else {
-          protocol.emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
+          emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
         }
       } catch (e) {
         protocol.emit(ProtocolEvents.DISCARDED, [payload]);
@@ -158,7 +155,7 @@ class Kuzzle extends KuzzleEventEmitter {
   /// Common volatile data, will be sent to all future requests
   Map<String, dynamic> globalVolatile;
 
-  final List<String> _requests = [];
+  final HashSet<String> _requests = HashSet();
 
   final Map<String, KuzzleController> _controllers =
       <String, KuzzleController>{};
