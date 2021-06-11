@@ -67,8 +67,7 @@ class Subscription {
 
 class RealTimeController extends KuzzleController {
   RealTimeController(Kuzzle kuzzle) : super(kuzzle, name: 'realtime') {
-    kuzzle.protocol.on(KuzzleEvents.UNHANDLED_RESPONSE,
-        (KuzzleResponse message) {
+    kuzzle.on(KuzzleEvents.UNHANDLED_RESPONSE, (KuzzleResponse message) {
       var fromSelf = false;
       if (message.volatile != null && message.volatile.isNotEmpty) {
         if (message.volatile.containsKey('sdkInstanceId') &&
