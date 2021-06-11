@@ -7,6 +7,8 @@ import 'package:kuzzle/src/protocols/abstract.dart';
 import 'package:kuzzle/src/protocols/http_client_io.dart'
     if (dart.library.html) 'package:kuzzle/src/protocols/http_client_browser.dart';
 
+import 'events.dart';
+
 class HttpProtocol extends KuzzleProtocol {
   HttpProtocol(Uri uri, {bool acceptBadCertificate = false}) : super(uri) {
     _ioClient = createHttpClient(acceptBadCertificate: acceptBadCertificate);
@@ -27,7 +29,7 @@ class HttpProtocol extends KuzzleProtocol {
   }
 
   @override
-  Future<KuzzleResponse> send(KuzzleRequest request) async {
+  Future<void> send(KuzzleRequest request) async {
     final headers = {'Content-Type': 'application/json'};
 
     if (request.jwt != null) {
@@ -46,7 +48,9 @@ class HttpProtocol extends KuzzleProtocol {
     if (res.statusCode != 200) {
       return Future.error(res);
     }
-    return KuzzleResponse.fromJson(
-        jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
+    emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [
+      KuzzleResponse.fromJson(
+          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>)
+    ]);
   }
 }
