@@ -7,4 +7,5 @@ class KuzzleEvents {
   static const String CONNECTED = 'connected';
   static const String RECONNECTED = 'reconnected';
   static const String DISCONNECTED = 'disconnected';
+  static const String QUERY_ERROR = 'queryError';
 }
