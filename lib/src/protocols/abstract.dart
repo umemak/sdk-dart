@@ -85,7 +85,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
   /// Sends a payload to the connected server
   @internal
-  Future<KuzzleResponse> send(KuzzleRequest request);
+  Future<void> send(KuzzleRequest request);
 
   /// Called when the client's connection is established
   void _clientConnected() {
@@ -159,7 +159,7 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   // todo: implement query options
   /// Register a response event handler for [request]
   @mustCallSuper
-  Future<KuzzleResponse> query(KuzzleRequest request) {
+  Future<KuzzleResponse> query(KuzzleRequest request) async {
     if (!isReady()) {
       emit(ProtocolEvents.DISCARDED, [request]);
 
@@ -174,30 +174,14 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
         emit(ProtocolEvents.QUERY_ERROR, [response.error, request]);
         return completer.completeError(response.error);
       }
-
       return completer.complete(response as KuzzleResponse);
     });
 
     try {
-      final syncRes = send(request);
-      // If we use a synchronous protocol the result is returned directly
-      if (syncRes != null) {
-        syncRes.then((response) {
-          if (response.error != null) {
-            emit(ProtocolEvents.QUERY_ERROR, [response, request]);
-          }
-        }).catchError((err) {
-          emit(ProtocolEvents.QUERY_ERROR, [
-            {
-              'error': err,
-            },
-            request
-          ]);
-        });
-        return syncRes;
-      }
+      await send(request);
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
+      emit(ProtocolEvents.QUERY_ERROR, [error, request]);
       completer.completeError(error);
     }
 
