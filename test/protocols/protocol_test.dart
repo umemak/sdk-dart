@@ -22,7 +22,7 @@ class FakeProtocol extends KuzzleProtocol {
 
   int connectionRetries = 0;
   bool shouldConnectFail = false;
-  dynamic sendFunc;
+  bool shouldSendFail = false;
 
   void setAborted(bool state) {
     abortConnection = state;
@@ -44,14 +44,10 @@ class FakeProtocol extends KuzzleProtocol {
   }
 
   @override
-  Future<KuzzleResponse> send(KuzzleRequest request) {
-    if (sendFunc != null) {
-      final result = sendFunc(request);
-      if (result != null) {
-        return result as Future<KuzzleResponse>;
-      }
+  Future<void> send(KuzzleRequest request) async {
+    if (shouldSendFail) {
+      throw Exception('Failed to send');
     }
-    return null;
   }
 }
 
@@ -265,17 +261,14 @@ void main() {
 
     test('complete with an error when send has throw', () async {
       final protocol = FakeProtocol(Uri(host: 'uri'));
-      final request = KuzzleRequest(action: 'foo');
       final completerQueryError = Completer<void>();
       protocol.setState(KuzzleProtocolState.connected);
-      protocol.sendFunc = (_) {
-        throw Exception('send fail');
-      };
       protocol.on(ProtocolEvents.QUERY_ERROR, (error, request) {
         completerQueryError.complete();
       });
+      protocol.shouldSendFail = true;
       try {
-        await protocol.query(request);
+        await protocol.query(KuzzleRequest(action: 'foo'));
         throw KuzzleError('should have failed');
       } catch (e) {
         expect(Future.error(e), throwsA(const TypeMatcher<Exception>()));
@@ -283,49 +276,49 @@ void main() {
       return completerQueryError.future;
     });
 
-    test('complete with an error when the KuzzleResponse is errored', () async {
-      final protocol = FakeProtocol(Uri(host: 'uri'));
-      final request = KuzzleRequest(action: 'foo');
-      final completerQueryError = Completer<void>();
-      protocol.setState(KuzzleProtocolState.connected);
-      protocol.sendFunc = (request) =>
-          Future.value(KuzzleResponse(error: KuzzleError('foobar')));
-
-      protocol.on(ProtocolEvents.QUERY_ERROR, (error, request) {
-        expect((error as KuzzleError).id, equals('foobar'));
-        completerQueryError.complete();
-      });
-      try {
-        await protocol.query(request);
-        throw KuzzleError('should have failed');
-      } catch (e) {
-        expect(Future.error(e), throwsA(const TypeMatcher<KuzzleError>()));
-        expect((e as KuzzleError).id, equals('foobar'));
-      }
-      return completerQueryError.future;
-    });
-
     test(
-        'on requestId event complete with an error when KuzzleResponse is errored',
+        'sending an event with a requestId should complete the previously generated future',
         () async {
       final protocol = FakeProtocol(Uri(host: 'uri'));
       final request = KuzzleRequest(action: 'foo');
       final completerQueryError = Completer<void>();
       protocol.setState(KuzzleProtocolState.connected);
-      protocol.sendFunc = (KuzzleRequest request) => () {
-            protocol.emit(request.requestId,
-                [KuzzleResponse(error: KuzzleError('foobar'))]);
-            return null;
-          };
-
       protocol.on(ProtocolEvents.QUERY_ERROR, (error, request) {
         completerQueryError.complete();
       });
+
+      final responseFuture = protocol.query(request);
+
+      protocol.emit(request.requestId, [KuzzleResponse(action: 'foo')]);
+
+      final response = await responseFuture;
+
+      expect(response.action, equals('foo'));
+
+      return responseFuture;
+    });
+
+    test('complete with an error when the KuzzleResponse is errored', () async {
+      final protocol = FakeProtocol(Uri(host: 'uri'));
+      final request = KuzzleRequest(action: 'foo');
+      final completerQueryError = Completer<void>();
+      protocol.setState(KuzzleProtocolState.connected);
+
+      protocol.on(ProtocolEvents.QUERY_ERROR, (error, request) {
+        expect((error as KuzzleError).id, equals('foobar'));
+        completerQueryError.complete();
+      });
+
+      final responseFuture = protocol.query(request);
+
+      protocol.emit(request.requestId,
+          [KuzzleResponse(action: 'foo', error: KuzzleError('foobar'))]);
+
+      KuzzleResponse response;
       try {
-        await protocol.query(request);
+        await responseFuture;
         throw KuzzleError('should have failed');
       } catch (e) {
-        print(e);
         expect(Future.error(e), throwsA(const TypeMatcher<KuzzleError>()));
         expect((e as KuzzleError).id, equals('foobar'));
       }
