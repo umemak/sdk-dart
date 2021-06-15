@@ -161,20 +161,18 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
   @mustCallSuper
   Future<KuzzleResponse> query(KuzzleRequest request) async {
     if (!isReady()) {
-      emit(ProtocolEvents.DISCARDED, [request]);
-
       throw KuzzleError(
           'Unable to execute request: not connected to a Kuzzle server.');
     }
 
     final completer = Completer<KuzzleResponse>();
 
-    once(request.requestId, (response) {
+    once(request.requestId, (KuzzleResponse response) {
       if (response.error != null) {
         emit(ProtocolEvents.QUERY_ERROR, [response.error, request]);
         return completer.completeError(response.error);
       }
-      return completer.complete(response as KuzzleResponse);
+      return completer.complete(response);
     });
 
     try {
