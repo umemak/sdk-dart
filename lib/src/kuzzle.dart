@@ -72,27 +72,17 @@ class Kuzzle extends KuzzleEventEmitter {
       emit(KuzzleEvents.QUERY_ERROR, [error, request]);
     });
 
-    protocol.on(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, (payload) {
-      try {
-        final _json = json.decode(payload as String) as Map<String, dynamic>;
-        final response = KuzzleResponse.fromJson(_json);
-
-        if (response.room.isNotEmpty) {
-          if (!_requests.contains(response.room)) {
-            emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
-          }
-          if (response.error != null &&
-              response.error.id == 'security.token.expired') {
-            jwt = null;
-            emit(KuzzleEvents.TOKEN_EXPIRED);
-          }
-          protocol.emit(response.room, [response]);
-        } else {
-          emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
-        }
-      } catch (e) {
-        protocol.emit(ProtocolEvents.DISCARDED, [payload]);
+    protocol.on(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED,
+        (KuzzleResponse response) {
+      if (!_requests.contains(response.room)) {
+        emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
       }
+      if (response.error != null &&
+          response.error.id == 'security.token.expired') {
+        jwt = null;
+        emit(KuzzleEvents.TOKEN_EXPIRED);
+      }
+      protocol.emit(response.room, [response]);
     });
   }
 
@@ -232,10 +222,6 @@ class Kuzzle extends KuzzleEventEmitter {
         jwt = null;
         emit(KuzzleEvents.RECONNECTED);
       });
-    });
-
-    protocol.on(ProtocolEvents.DISCARDED, (request) {
-      emit(ProtocolEvents.DISCARDED, [request]);
     });
 
     return protocol.connect();
@@ -391,9 +377,10 @@ class Kuzzle extends KuzzleEventEmitter {
         return completer.future;
       }
 
-      emit(ProtocolEvents.DISCARDED, [request]);
-      return Future.error(KuzzleError('not_connected',
-          'Unable to execute request: not connected to a Kuzzle server.', 503));
+      final error = KuzzleError('not_connected',
+          'Unable to execute request: not connected to a Kuzzle server.', 503);
+      emit(ProtocolEvents.QUERY_ERROR, [error, request]);
+      return Future.error(error);
     }
 
     _requests.add(request.requestId);
