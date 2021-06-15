@@ -1,5 +1,5 @@
 class KuzzleEvents {
-  static const UNHANDLED_RESPONSE = 'unhandledResponse';
+  static const String UNHANDLED_RESPONSE = 'unhandledResponse';
   static const String LOGIN_ATTEMPT = 'loginAttempt';
   static const String OFFLINE_QUEUE_PUSH = 'offlineQueuePush';
   static const String OFFLINE_QUEUE_POP = 'offlineQueuePop';
