@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:kuzzle/src/kuzzle/response.dart';
 
 import '../kuzzle/errors.dart';
 import '../kuzzle/request.dart';
@@ -70,7 +71,22 @@ class KuzzleWebSocket extends KuzzleProtocol {
   }
 
   void _handlePayload(dynamic payload) {
-    emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [payload]);
+    try {
+      final _json = json.decode(payload as String) as Map<String, dynamic>;
+      final response = KuzzleResponse.fromJson(_json);
+
+      if (response.room != null && response.room.isNotEmpty) {
+        emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
+      } else {
+        emit(ProtocolEvents.QUERY_ERROR, [
+          KuzzleError.fromJson(response.error as Map<String, dynamic>),
+          payload
+        ]);
+      }
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      emit(ProtocolEvents.QUERY_ERROR, [e, payload]);
+    }
   }
 
   void _handleError(dynamic error, StackTrace stackTrace) {
