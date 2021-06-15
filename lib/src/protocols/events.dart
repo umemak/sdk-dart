@@ -1,5 +1,4 @@
 class ProtocolEvents {
-  static const String DISCARDED = 'discarded';
   static const String DISCONNECT = 'disconnect';
   static const String RECONNECT = 'reconnect';
   static const String CONNECT = 'connect';
