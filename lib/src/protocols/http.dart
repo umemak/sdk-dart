@@ -24,7 +24,7 @@ class HttpProtocol extends KuzzleProtocol {
 
     final res = await _ioClient.get('${uri.toString()}/_query');
     if (res.statusCode == 401 || res.statusCode == 403) {
-      return Future.error('You must have permission on the _query route.');
+      throw Exception('You must have permission on the _query route.');
     }
   }
 
@@ -45,10 +45,8 @@ class HttpProtocol extends KuzzleProtocol {
       headers: headers,
       body: jsonEncode(request),
     );
-    if (res.statusCode != 200) {
-      return Future.error(res);
-    }
-    emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [
+
+    emit(request.requestId, [
       KuzzleResponse.fromJson(
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>)
     ]);
