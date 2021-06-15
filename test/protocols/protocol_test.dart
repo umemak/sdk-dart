@@ -251,12 +251,14 @@ void main() {
     test('should discard requests when not connected', () async {
       final protocol = FakeProtocol(Uri(host: 'uri'));
       final completerDiscarded = Completer<void>();
-      protocol.on(ProtocolEvents.DISCARDED, completerDiscarded.complete);
       expect(protocol.state, equals(KuzzleProtocolState.offline));
 
-      expect(protocol.query(null), throwsA(const TypeMatcher<KuzzleError>()));
-
-      await completerDiscarded.future;
+      try {
+        await protocol.query(KuzzleRequest(action: 'foo'));
+        throw Exception('should have failed');
+      } catch (e) {
+        expect(Future.error(e), throwsA(const TypeMatcher<KuzzleError>()));
+      }
     });
 
     test('complete with an error when send has throw', () async {
