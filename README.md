@@ -35,10 +35,10 @@ dependencies:
 
 * [https://docs.kuzzle.io/sdk/dart/2/](https://docs.kuzzle.io/sdk/dart/2/) - 
   _Access the auto generated documentation from source code_
-* [https://docs.kuzzle.io/core/1/api](https://docs.kuzzle.io/core/1/api) - 
-  _Official Kuzzle API documentation_
-* [example/ folder](./example/) - 
-  _Various samples about using this library_
+* [https://docs.kuzzle.io/core/2/guides](https://docs.kuzzle.io/core/2/guides) - 
+  _Official Kuzzle Guides
+* [https://docs.kuzzle.io/core/2/api](https://docs.kuzzle.io/core/2/api) - 
+  _Official Kuzzle API Documentation_
   
 ## Contributions
 
