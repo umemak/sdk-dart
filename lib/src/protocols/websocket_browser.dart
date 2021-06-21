@@ -91,10 +91,7 @@ class KuzzleWebSocket extends KuzzleProtocol {
       if (response.room != null && response.room.isNotEmpty) {
         emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
       } else {
-        emit(ProtocolEvents.QUERY_ERROR, [
-          KuzzleError.fromJson(response.error as Map<String, dynamic>),
-          payload
-        ]);
+        emit(ProtocolEvents.QUERY_ERROR, [response.error, payload]);
       }
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
