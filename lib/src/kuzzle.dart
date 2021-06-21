@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 
 import 'controllers/abstract.dart';
@@ -14,8 +15,9 @@ import 'kuzzle/errors.dart';
 import 'kuzzle/event_emitter.dart';
 import 'kuzzle/request.dart';
 import 'kuzzle/response.dart';
-import 'protocols/abstract.dart';
+import 'kuzzle/events.dart';
 import 'protocols/events.dart';
+import 'protocols/abstract.dart';
 import 'utils/deprecation.dart';
 
 enum OfflineMode { manual, auto }
@@ -32,7 +34,6 @@ class _KuzzleQueuedRequest {
 }
 
 class Kuzzle extends KuzzleEventEmitter {
-
   Kuzzle(
     this.protocol, {
     this.autoQueue = false,
@@ -47,10 +48,8 @@ class Kuzzle extends KuzzleEventEmitter {
     this.queueMaxSize = 500,
     this.replayInterval,
     this.globalVolatile,
-  }) :
-    deprecationHandler = 
-      DeprecationHandler(deprecationWarning: deprecationWarnings)
-    {
+  }) : deprecationHandler =
+            DeprecationHandler(deprecationWarning: deprecationWarnings) {
     if (offlineMode == OfflineMode.auto) {
       autoQueue = true;
       autoReplay = true;
@@ -70,34 +69,20 @@ class Kuzzle extends KuzzleEventEmitter {
     realtime = RealTimeController(this);
 
     protocol.on(ProtocolEvents.QUERY_ERROR, (error, request) {
-      emit(ProtocolEvents.QUERY_ERROR, [error, request]);
+      emit(KuzzleEvents.QUERY_ERROR, [error, request]);
     });
 
-    protocol.on(ProtocolEvents.TOKEN_EXPIRED, () {
-      jwt = null;
-      emit(ProtocolEvents.TOKEN_EXPIRED);
-    });
-
-    protocol.on(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, (payload) {
-      try {
-        final _json = json.decode(payload as String) as Map<String, dynamic>;
-        final response = KuzzleResponse.fromJson(_json);
-
-        if (response.room.isNotEmpty) {
-          if (!_requests.contains(response.room)) {
-            protocol.emit(ProtocolEvents.UNHANDLED_RESPONSE, [response]);
-          }
-          if (response.error != null &&
-              response.error.id == 'security.token.expired') {
-            emit(ProtocolEvents.TOKEN_EXPIRED);
-          }
-          protocol.emit(response.room, [response]);
-        } else {
-          protocol.emit(ProtocolEvents.UNHANDLED_RESPONSE, [response]);
-        }
-      } catch (e) {
-        protocol.emit(ProtocolEvents.DISCARDED, [payload]);
+    protocol.on(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED,
+        (KuzzleResponse response) {
+      if (!_requests.contains(response.room)) {
+        emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
       }
+      if (response.error != null &&
+          response.error.id == 'security.token.expired') {
+        jwt = null;
+        emit(KuzzleEvents.TOKEN_EXPIRED);
+      }
+      protocol.emit(response.room, [response]);
     });
   }
 
@@ -160,7 +145,7 @@ class Kuzzle extends KuzzleEventEmitter {
   /// Common volatile data, will be sent to all future requests
   Map<String, dynamic> globalVolatile;
 
-  final List<String> _requests = [];
+  final HashSet<String> _requests = HashSet();
 
   final Map<String, KuzzleController> _controllers =
       <String, KuzzleController>{};
@@ -173,7 +158,8 @@ class Kuzzle extends KuzzleEventEmitter {
       return Future.value();
     }
 
-    if (protocol.state == KuzzleProtocolState.connecting) {
+    if (protocol.state == KuzzleProtocolState.connecting ||
+        protocol.state == KuzzleProtocolState.reconnecting) {
       final completer = Completer<void>();
 
       protocol.once(ProtocolEvents.RECONNECT, completer.complete);
@@ -195,7 +181,7 @@ class Kuzzle extends KuzzleEventEmitter {
         playQueue();
       }
 
-      emit(ProtocolEvents.CONNECTED);
+      emit(KuzzleEvents.CONNECTED);
     });
 
     protocol.on(ProtocolEvents.NETWORK_ERROR, (error) {
@@ -208,7 +194,7 @@ class Kuzzle extends KuzzleEventEmitter {
 
     protocol.on(ProtocolEvents.DISCONNECT, () {
       _requests.clear();
-      emit(ProtocolEvents.DISCONNECTED);
+      emit(KuzzleEvents.DISCONNECTED);
     });
 
     protocol.on(ProtocolEvents.RECONNECT, () {
@@ -221,7 +207,7 @@ class Kuzzle extends KuzzleEventEmitter {
       }
 
       if (jwt == null) {
-        emit(ProtocolEvents.RECONNECTED);
+        emit(KuzzleEvents.RECONNECTED);
         return;
       }
 
@@ -231,15 +217,11 @@ class Kuzzle extends KuzzleEventEmitter {
           jwt = null;
         }
 
-        emit(ProtocolEvents.RECONNECTED);
+        emit(KuzzleEvents.RECONNECTED);
       }).catchError((_) {
         jwt = null;
-        emit(ProtocolEvents.RECONNECTED);
+        emit(KuzzleEvents.RECONNECTED);
       });
-    });
-
-    protocol.on(ProtocolEvents.DISCARDED, (request) {
-      emit(ProtocolEvents.DISCARDED, [request]);
     });
 
     return protocol.connect();
@@ -288,7 +270,7 @@ class Kuzzle extends KuzzleEventEmitter {
         for (final queuedRequest
             in _offlineQueue.getRange(0, lastDocumentIndex + 1)) {
           _requests.remove(queuedRequest.request.requestId);
-          emit(ProtocolEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
+          emit(KuzzleEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
         }
 
         _offlineQueue.removeRange(0, lastDocumentIndex + 1);
@@ -298,7 +280,7 @@ class Kuzzle extends KuzzleEventEmitter {
     if (queueMaxSize > 0 && _offlineQueue.length > queueMaxSize) {
       for (final queuedRequest in _offlineQueue.getRange(
           0, _offlineQueue.length + 1 - queueMaxSize)) {
-        emit(ProtocolEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
+        emit(KuzzleEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
       }
 
       _offlineQueue.removeRange(0, _offlineQueue.length + 1 - queueMaxSize);
@@ -319,7 +301,7 @@ class Kuzzle extends KuzzleEventEmitter {
           queuedRequest.completer.completeError(error);
         });
 
-        emit(ProtocolEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
+        emit(KuzzleEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
         _offlineQueue.removeAt(0);
 
         Timer(replayInterval, _dequeuingProcess);
@@ -390,14 +372,15 @@ class Kuzzle extends KuzzleEventEmitter {
         _cleanQueue();
 
         _offlineQueue.add(queuedRequest);
-        emit(ProtocolEvents.OFFLINE_QUEUE_PUSH, [queuedRequest.request]);
+        emit(KuzzleEvents.OFFLINE_QUEUE_PUSH, [queuedRequest.request]);
 
         return completer.future;
       }
 
-      emit(ProtocolEvents.DISCARDED, [request]);
-      return Future.error(KuzzleError('not_connected',
-          'Unable to execute request: not connected to a Kuzzle server.', 503));
+      final error = KuzzleError('not_connected',
+          'Unable to execute request: not connected to a Kuzzle server.', 503);
+      emit(ProtocolEvents.QUERY_ERROR, [error, request]);
+      return Future.error(error);
     }
 
     _requests.add(request.requestId);

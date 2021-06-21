@@ -3,8 +3,6 @@ description: Unit tests Dart SDK Tests
 runs:
   using: "composite"
   steps: 
-    - name: Run DartDoc
-      run: |
-        ./docker_launch.sh
-        dartdoc
+    - name: Run Unit Tests
+      run: dart run test
       shell: bash

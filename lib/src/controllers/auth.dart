@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:kuzzle/src/protocols/events.dart';
+import 'package:kuzzle/src/kuzzle/events.dart';
 
 import '../kuzzle.dart';
 import '../kuzzle/request.dart';
@@ -12,15 +12,12 @@ class AuthController extends KuzzleController {
   AuthController(Kuzzle kuzzle) : super(kuzzle, name: 'auth');
 
   /// Checks if an API action can be executed by the current user.
-  Future<bool> checkRights(
-    Map<String, dynamic> requestPayload) async {
-    final response = await kuzzle.query(
-        KuzzleRequest(
-            controller: name,
-            action: 'checkRights',
-            body: requestPayload,
-          )
-        );
+  Future<bool> checkRights(Map<String, dynamic> requestPayload) async {
+    final response = await kuzzle.query(KuzzleRequest(
+      controller: name,
+      action: 'checkRights',
+      body: requestPayload,
+    ));
 
     return response.result['allowed'] as bool;
   }
@@ -136,7 +133,7 @@ class AuthController extends KuzzleController {
           .then((response) {
         try {
           kuzzle.jwt = response.result['jwt'] as String;
-          kuzzle.emit(ProtocolEvents.LOGIN_ATTEMPT, [], {
+          kuzzle.emit(KuzzleEvents.LOGIN_ATTEMPT, [], {
             const Symbol('success'): true,
           });
 
@@ -145,7 +142,7 @@ class AuthController extends KuzzleController {
           rethrow;
         }
       }).catchError((error) {
-        kuzzle.emit(ProtocolEvents.LOGIN_ATTEMPT, [], {
+        kuzzle.emit(KuzzleEvents.LOGIN_ATTEMPT, [], {
           const Symbol('success'): false,
           const Symbol('error'): error,
         });

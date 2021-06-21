@@ -33,9 +33,9 @@ Kuzzle(
 
 <br/>
 
-| Argument   | Type                | Description                       |
-| ---------- | ------------------- | --------------------------------- |
-| `protocol` | <pre>AbstractProtocol</pre> | Protocol used by the SDK instance |
+| Argument   | Type                      | Description                       |
+| ---------- | ------------------------- | --------------------------------- |
+| `protocol` | <pre>KuzzleProtocol</pre> | Protocol used by the SDK instance |
 
 ## protocol
 

@@ -7,7 +7,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:kuzzle/src/kuzzle/response.dart';
-import 'package:kuzzle/src/protocols/events.dart';
+import 'package:kuzzle/src/kuzzle/events.dart';
 
 import '../kuzzle.dart';
 import '../kuzzle/errors.dart';
@@ -67,8 +67,7 @@ class Subscription {
 
 class RealTimeController extends KuzzleController {
   RealTimeController(Kuzzle kuzzle) : super(kuzzle, name: 'realtime') {
-    kuzzle.protocol.on(ProtocolEvents.UNHANDLED_RESPONSE,
-        (KuzzleResponse message) {
+    kuzzle.on(KuzzleEvents.UNHANDLED_RESPONSE, (KuzzleResponse message) {
       var fromSelf = false;
       if (message.volatile != null && message.volatile.isNotEmpty) {
         if (message.volatile.containsKey('sdkInstanceId') &&
@@ -185,7 +184,7 @@ class RealTimeController extends KuzzleController {
         }
         _rooms[roomId] = channel;
 
-        kuzzle.on(ProtocolEvents.RECONNECTED, _renewSubscribe);
+        kuzzle.on(KuzzleEvents.RECONNECTED, _renewSubscribe);
 
         return roomId;
       });

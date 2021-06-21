@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:pedantic/pedantic.dart';
 import 'package:uuid/uuid.dart';
 import 'package:meta/meta.dart';
 
@@ -12,109 +13,173 @@ import 'events.dart';
 final _uuid = Uuid();
 
 enum KuzzleProtocolState {
-  ready,
   connected,
   connecting,
+  reconnecting,
   offline,
 }
 
 abstract class KuzzleProtocol extends KuzzleEventEmitter {
   KuzzleProtocol(
-    this.uri,
-  )   : _state = KuzzleProtocolState.offline,
+    this.uri, {
+    this.autoReconnect = false,
+    this.reconnectionDelay = const Duration(seconds: 1),
+    this.reconnectionAttempts = 10,
+  })  : protocolState = KuzzleProtocolState.offline,
         id = _uuid.v4();
 
   final Uri uri;
   final String id;
+  bool autoReconnect;
+  Duration reconnectionDelay;
+  int reconnectionAttempts;
 
   @protected
-  bool wasConnected = false;
+  KuzzleProtocolState protocolState;
 
   @protected
-  bool retrying = false;
+  bool abortConnection = false;
 
-  KuzzleProtocolState _state;
-  KuzzleProtocolState get state => _state;
+  KuzzleProtocolState get state => protocolState;
+  bool get connectionAborted => abortConnection;
 
-  bool isReady() => _state == KuzzleProtocolState.connected;
+  bool isReady() => protocolState == KuzzleProtocolState.connected;
 
-  @mustCallSuper
+  @nonVirtual
   Future<void> connect() async {
-    _state = KuzzleProtocolState.connecting;
+    if (protocolState == KuzzleProtocolState.offline) {
+      abortConnection = false;
+      protocolState = KuzzleProtocolState.connecting;
+    }
+
+    var attempt = 0;
+    do {
+      if (abortConnection) {
+        protocolState = KuzzleProtocolState.offline;
+        throw KuzzleError(
+            'Unable to connect to kuzzle server at ${uri.toString()}: Connection aborted.');
+      }
+
+      try {
+        await protocolConnect();
+        _clientConnected();
+        return;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        attempt += reconnectionAttempts > -1 ? 1 : 0;
+
+        if (!autoReconnect ||
+            reconnectionAttempts > -1 && attempt >= reconnectionAttempts) {
+          protocolState = KuzzleProtocolState.offline;
+          rethrow;
+        }
+
+        await Future.delayed(reconnectionDelay);
+      }
+    } while (autoReconnect &&
+        (reconnectionAttempts == -1 || attempt < reconnectionAttempts));
   }
 
+  @internal
+  Future<void> protocolConnect();
+
   /// Sends a payload to the connected server
-  Future<KuzzleResponse> send(KuzzleRequest request);
+  @internal
+  Future<void> send(KuzzleRequest request);
 
   /// Called when the client's connection is established
-  void clientConnected({
-    KuzzleProtocolState state = KuzzleProtocolState.connected,
-  }) {
-    _state = state;
-    emit(wasConnected ? ProtocolEvents.RECONNECT : ProtocolEvents.CONNECT);
+  void _clientConnected() {
+    if (abortConnection) {
+      protocolState = KuzzleProtocolState.connected;
+      close();
+      return;
+    }
 
-    wasConnected = true;
+    emit(protocolState == KuzzleProtocolState.reconnecting
+        ? ProtocolEvents.RECONNECT
+        : ProtocolEvents.CONNECT);
+    protocolState = KuzzleProtocolState.connected;
   }
 
   /// Called when the client's connection is closed
+  @internal
   void clientDisconnected() {
+    if (protocolState == KuzzleProtocolState.offline) {
+      return;
+    }
+
+    protocolState = KuzzleProtocolState.offline;
     emit(ProtocolEvents.DISCONNECT);
   }
 
   /// Called when the client's connection is closed with an error state
+  @internal
   void clientNetworkError([dynamic error]) {
-    _state = KuzzleProtocolState.offline;
+    if (protocolState == KuzzleProtocolState.offline) {
+      return;
+    }
 
-    emit(ProtocolEvents.NETWORK_ERROR, [
-      KuzzleError('Unable to connect to kuzzle server at ${uri.toString()}')
-    ]);
+    protocolState = KuzzleProtocolState.offline;
+
+    emit(ProtocolEvents.NETWORK_ERROR, [error]);
+
+    unawaited(_handleAutoReconnect());
+  }
+
+  Future<void> _handleAutoReconnect() async {
+    if (!autoReconnect) {
+      emit(ProtocolEvents.DISCONNECT);
+      return;
+    }
+
+    protocolState = KuzzleProtocolState.reconnecting;
+
+    try {
+      await connect();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      emit(ProtocolEvents.DISCONNECT);
+    }
   }
 
   /// Called when the client's connection is closed
   @mustCallSuper
   void close() {
-    _state = KuzzleProtocolState.offline;
-    clientDisconnected();
+    if (protocolState == KuzzleProtocolState.offline) {
+      return;
+    }
+
+    if (protocolState == KuzzleProtocolState.connected) {
+      clientDisconnected();
+      return;
+    }
+    abortConnection = true;
   }
 
   // todo: implement query options
   /// Register a response event handler for [request]
   @mustCallSuper
-  Future<KuzzleResponse> query(KuzzleRequest request) {
+  Future<KuzzleResponse> query(KuzzleRequest request) async {
     if (!isReady()) {
-      emit(ProtocolEvents.DISCARDED, [request]);
-
-      return Future.error(KuzzleError(
-          'Unable to execute request: not connected to a Kuzzle server.'));
+      throw KuzzleError(
+          'Unable to execute request: not connected to a Kuzzle server.');
     }
 
     final completer = Completer<KuzzleResponse>();
 
-    once(request.requestId, (response) {
+    once(request.requestId, (KuzzleResponse response) {
       if (response.error != null) {
         emit(ProtocolEvents.QUERY_ERROR, [response.error, request]);
         return completer.completeError(response.error);
       }
-
-      return completer.complete(response as KuzzleResponse);
+      return completer.complete(response);
     });
 
     try {
-      final syncRes = send(request);
-      // If we use a synchronous protocol the result is returned directly
-      if (syncRes != null) {
-        syncRes.then((response) {
-          if (response.error != null) {
-            emit(ProtocolEvents.QUERY_ERROR, [response, request]);
-          }
-        }).catchError((err) {
-          emit(ProtocolEvents.QUERY_ERROR, [{
-            'error': err,
-          }, request]);
-        });
-        return syncRes;
-      }
-    } on Exception catch (error) {
+      await send(request);
+      // ignore: avoid_catches_without_on_clauses
+    } catch (error) {
+      emit(ProtocolEvents.QUERY_ERROR, [error, request]);
       completer.completeError(error);
     }
 

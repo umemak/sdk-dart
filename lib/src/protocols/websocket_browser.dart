@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
+
 import 'package:kuzzle/src/kuzzle/response.dart';
 
 import '../kuzzle/errors.dart';
@@ -13,51 +14,60 @@ class KuzzleWebSocket extends KuzzleProtocol {
   KuzzleWebSocket(
     Uri uri, {
     bool autoReconnect = true,
-    Duration reconnectionDelay,
+    Duration reconnectionDelay = const Duration(seconds: 1),
+    int reconnectionAttempts = 10,
     this.pingInterval,
-  }) : super(
-          uri,
-        );
+  }) : super(uri,
+            autoReconnect: autoReconnect,
+            reconnectionDelay: reconnectionDelay,
+            reconnectionAttempts: reconnectionAttempts);
 
-  String _lastUrl;
   WebSocket _webSocket;
   StreamSubscription _subscription;
   Duration pingInterval;
-  Completer<void> _connected = Completer();
+  final Completer<void> _connected = Completer();
 
   @override
-  Future<void> connect() async {
+  Future<void> protocolConnect() async {
+    if (connectionAborted) {
+      return;
+    }
+
     final url = '${uri.scheme}://${uri.host}:${uri.port}';
 
     _webSocket ??= WebSocket(url);
-
-    await super.connect();
-
-    if (url != _lastUrl) {
-      wasConnected = false;
-      _lastUrl = url;
-    }
 
     await _subscription?.cancel();
     _subscription = null;
 
     _subscription = _webSocket.onMessage.listen(_handlePayload);
-    _webSocket.onError.listen(_handleError);
-    _webSocket.onClose.listen(_handleDone);
+
+    final onErrorSubscription =
+        _webSocket.onError.listen(_connected.completeError);
+
+    var onCloseSubscription = _webSocket.onClose.listen((Event event) {
+      _connected
+          .completeError(KuzzleError('Unable to connect to ${uri.toString()}'));
+    });
 
     _webSocket.onOpen.listen((_) {
-      clientConnected();
+      onErrorSubscription.cancel();
+      onCloseSubscription.cancel();
+
+      _webSocket.onError.listen(_handleError);
+      _webSocket.onClose.listen(_handleDone);
+
       _connected.complete();
     });
+
     return _connected.future;
   }
 
   @override
-  Future<KuzzleResponse> send(KuzzleRequest request) {
+  Future<void> send(KuzzleRequest request) async {
     if (_webSocket != null && _webSocket.readyState == WebSocket.OPEN) {
       _webSocket.sendString(json.encode(request));
     }
-    return null;
   }
 
   @override
@@ -65,7 +75,6 @@ class KuzzleWebSocket extends KuzzleProtocol {
     super.close();
 
     removeAllListeners();
-    wasConnected = false;
 
     _subscription?.cancel();
     _subscription = null;
@@ -75,7 +84,19 @@ class KuzzleWebSocket extends KuzzleProtocol {
   }
 
   void _handlePayload(MessageEvent payload) {
-    emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [payload.data]);
+    try {
+      final _json = json.decode(payload.data as String) as Map<String, dynamic>;
+      final response = KuzzleResponse.fromJson(_json);
+
+      if (response.room != null && response.room.isNotEmpty) {
+        emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
+      } else {
+        emit(ProtocolEvents.QUERY_ERROR, [response.error, payload]);
+      }
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      emit(ProtocolEvents.QUERY_ERROR, [e, payload]);
+    }
   }
 
   void _handleError(Event event) {
