@@ -25,7 +25,6 @@ class KuzzleWebSocket extends KuzzleProtocol {
   WebSocket? _webSocket;
   StreamSubscription? _subscription;
   Duration? pingInterval;
-  final Completer<void> _connected = Completer();
 
   @override
   Future<void> protocolConnect() async {
@@ -33,6 +32,7 @@ class KuzzleWebSocket extends KuzzleProtocol {
       return;
     }
 
+    final _connected = Completer();
     final url = '${uri.scheme}://${uri.host}:${uri.port}';
 
     _webSocket ??= WebSocket(url);
@@ -45,7 +45,7 @@ class KuzzleWebSocket extends KuzzleProtocol {
     final onErrorSubscription =
         _webSocket!.onError.listen(_connected.completeError);
 
-    var onCloseSubscription = _webSocket!.onClose.listen((Event event) {
+    final onCloseSubscription = _webSocket!.onClose.listen((Event event) {
       _connected
           .completeError(KuzzleError('Unable to connect to ${uri.toString()}'));
     });
