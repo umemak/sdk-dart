@@ -181,7 +181,7 @@ class SecurityController extends KuzzleController {
   }
 
   /// Deletes user API key.
-  Future<Null> deleteApiKey(String userId, String id,
+  Future<void> deleteApiKey(String userId, String id,
       {bool? waitForRefresh}) async {
     await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -190,12 +190,10 @@ class SecurityController extends KuzzleController {
       uid: id,
       waitForRefresh: waitForRefresh,
     ));
-
-    return null;
   }
 
   /// Deletes user credentials for the specified authentication strategy.
-  Future<Map<String, dynamic>?> deleteCredentials(String strategy, String id,
+  Future<Map<String, dynamic>> deleteCredentials(String strategy, String id,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -205,12 +203,12 @@ class SecurityController extends KuzzleController {
       waitForRefresh: waitForRefresh,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Deletes a security profile.
   /// An error is returned if the profile is still in use.
-  Future<Map<String, dynamic>?> deleteProfile(String id,
+  Future<Map<String, dynamic>> deleteProfile(String id,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -219,12 +217,12 @@ class SecurityController extends KuzzleController {
       waitForRefresh: waitForRefresh,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Deletes a security role.
   /// An error is returned if the role is still in use.
-  Future<Map<String, dynamic>?> deleteRole(String id,
+  Future<Map<String, dynamic>> deleteRole(String id,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -233,11 +231,11 @@ class SecurityController extends KuzzleController {
       waitForRefresh: waitForRefresh,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Deletes a user and all their associate credentials.
-  Future<Map<String, dynamic>?> deleteUser(String id,
+  Future<Map<String, dynamic>> deleteUser(String id,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -246,29 +244,29 @@ class SecurityController extends KuzzleController {
       waitForRefresh: waitForRefresh,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Retrieves the list of fields accepted by authentication strategies.
-  Future<Map<String, dynamic>?> getAllCredentialFields() async {
+  Future<Map<String, dynamic>> getAllCredentialFields() async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getAllCredentialFields',
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Retrieves the list of accepted field names by
   /// the specified authentication strategy.
-  Future<List<dynamic>?> getCredentialFields(String strategy) async {
+  Future<List<dynamic>> getCredentialFields(String strategy) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getCredentialFields',
       strategy: strategy,
     ));
 
-    return response.result as List<dynamic>?;
+    return response.result as List<dynamic>;
   }
 
   /// Gets a user's credential information for
@@ -276,7 +274,7 @@ class SecurityController extends KuzzleController {
   ///
   /// The returned content depends on the authentication strategy,
   /// but it should never include sensitive information.
-  Future<Map<String, dynamic>?> getCredentials(
+  Future<Map<String, dynamic>> getCredentials(
       String strategy, String id) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -285,7 +283,7 @@ class SecurityController extends KuzzleController {
       uid: id,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Gets credential information for the user identified by
@@ -297,7 +295,7 @@ class SecurityController extends KuzzleController {
   /// Note: the user identifier to use depends on the specified strategy.
   /// If you wish to get credential information using a kuid identifier,
   /// use the getCredentials API route instead.
-  Future<Map<String, dynamic>?> getCredentialsById(
+  Future<Map<String, dynamic>> getCredentialsById(
       String strategy, String id) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -306,7 +304,7 @@ class SecurityController extends KuzzleController {
       uid: id,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Gets a security profile.
@@ -321,24 +319,24 @@ class SecurityController extends KuzzleController {
   }
 
   /// Gets the mapping of the internal security profiles collection.
-  Future<Map<String, dynamic>?> getProfileMapping() async {
+  Future<Map<String, dynamic>> getProfileMapping() async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getProfileMapping',
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Gets the detailed rights configured by a security profile.
-  Future<List<dynamic>?> getProfileRights(String id) async {
+  Future<List<dynamic>> getProfileRights(String id) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getProfileRights',
       uid: id,
     ));
 
-    return response.result['hits'] as List<dynamic>?;
+    return response.result['hits'] as List<dynamic>;
   }
 
   /// Gets a security role.
@@ -353,13 +351,13 @@ class SecurityController extends KuzzleController {
   }
 
   /// Gets the mapping of the internal security role collection.
-  Future<Map<String, dynamic>?> getRoleMapping() async {
+  Future<Map<String, dynamic>> getRoleMapping() async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getRoleMapping',
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Gets a security role.
@@ -374,29 +372,29 @@ class SecurityController extends KuzzleController {
   }
 
   /// Gets the mapping of the internal security user collection.
-  Future<Map<String, dynamic>?> getUserMapping() async {
+  Future<Map<String, dynamic>> getUserMapping() async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getUserMapping',
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Gets the detailed rights granted to a user.
-  Future<List<dynamic>?> getUserRights(String id) async {
+  Future<List<dynamic>> getUserRights(String id) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'getUserRights',
       uid: id,
     ));
 
-    return response.result['hits'] as List<dynamic>?;
+    return response.result['hits'] as List<dynamic>;
   }
 
   /// Checks if a user has credentials registered
   /// for the specified authentication strategy.
-  Future<bool?> hasCredentials(String strategy, String id) async {
+  Future<bool> hasCredentials(String strategy, String id) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'hasCredentials',
@@ -405,7 +403,7 @@ class SecurityController extends KuzzleController {
     ));
 
     if (response.result is bool) {
-      return response.result as bool?;
+      return response.result as bool;
     }
 
     throw BadResponseFormatError(response.error?.id,
@@ -413,7 +411,7 @@ class SecurityController extends KuzzleController {
   }
 
   /// Deletes multiple security profiles.
-  Future<List<dynamic>?> mDeleteProfiles(List<String> ids,
+  Future<List<dynamic>> mDeleteProfiles(List<String> ids,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
         controller: name,
@@ -422,11 +420,11 @@ class SecurityController extends KuzzleController {
           'ids': ids,
         }));
 
-    return response.result as List<dynamic>?;
+    return response.result as List<dynamic>;
   }
 
   /// Deletes multiple security roles.
-  Future<List<dynamic>?> mDeleteRoles(List<String> ids,
+  Future<List<dynamic>> mDeleteRoles(List<String> ids,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
         controller: name,
@@ -435,11 +433,11 @@ class SecurityController extends KuzzleController {
           'ids': ids,
         }));
 
-    return response.result as List<dynamic>?;
+    return response.result as List<dynamic>;
   }
 
   /// Deletes multiple security users.
-  Future<List<dynamic>?> mDeleteUsers(List<String> ids,
+  Future<List<dynamic>> mDeleteUsers(List<String> ids,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
         controller: name,
@@ -448,7 +446,7 @@ class SecurityController extends KuzzleController {
           'ids': ids,
         }));
 
-    return response.result as List<dynamic>?;
+    return response.result as List<dynamic>;
   }
 
   /// Gets multiple security profiles.
@@ -554,7 +552,7 @@ class SecurityController extends KuzzleController {
   /// Searches security profiles, optionally returning
   /// only those linked to the provided list of security roles.
   Future<ProfileSearchResult> searchProfiles(
-      {Map<String, dynamic>? query,
+      {Map<String, dynamic> query = const {},
       int? from,
       int? size,
       String? scroll}) async {
@@ -574,7 +572,7 @@ class SecurityController extends KuzzleController {
   /// Searches security roles, optionally returning only
   /// those allowing access to the provided controllers.
   Future<RoleSearchResult> searchRoles(
-      {Map<String, dynamic>? query, int? from, int? size}) async {
+      {Map<String, dynamic> query = const {}, int? from, int? size}) async {
     final request = KuzzleRequest(
       controller: name,
       action: 'searchRoles',
@@ -590,7 +588,7 @@ class SecurityController extends KuzzleController {
   /// Searches security profiles, optionally returning
   /// only those linked to the provided list of security roles.
   Future<UserSearchResult> searchUsers(
-      {Map<String, dynamic>? query,
+      {Map<String, dynamic> query = const {},
       int? from,
       int? size,
       String? scroll,
@@ -610,7 +608,7 @@ class SecurityController extends KuzzleController {
   }
 
   /// Updates a user credentials for the specified authentication strategy.
-  Future<Map<String, dynamic>?> updateCredentials(
+  Future<Map<String, dynamic>> updateCredentials(
       String strategy, String id, Map<String, dynamic> credentials,
       {bool? waitForRefresh}) async {
     final response = await kuzzle.query(KuzzleRequest(
@@ -622,7 +620,7 @@ class SecurityController extends KuzzleController {
       waitForRefresh: waitForRefresh,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Updates a security profile definition.
@@ -642,12 +640,12 @@ class SecurityController extends KuzzleController {
   }
 
   /// Updates the internal profile storage mapping.
-  Future<Map<String, dynamic>?> updateProfileMapping(
+  Future<Map<String, dynamic>> updateProfileMapping(
       Map<String, dynamic> mapping) async {
     final response = await kuzzle.query(KuzzleRequest(
         controller: name, action: 'updateProfileMapping', body: mapping));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Updates a security role definition
@@ -669,7 +667,7 @@ class SecurityController extends KuzzleController {
   }
 
   /// Updates the internal role storage mapping.
-  Future<Map<String, dynamic>?> updateRoleMapping(
+  Future<Map<String, dynamic>> updateRoleMapping(
       Map<String, dynamic> mapping) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -677,7 +675,7 @@ class SecurityController extends KuzzleController {
       body: mapping,
     ));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Updates a user definition.
@@ -695,17 +693,17 @@ class SecurityController extends KuzzleController {
   }
 
   /// Updates the internal user storage mapping.
-  Future<Map<String, dynamic>?> updateUserMapping(
+  Future<Map<String, dynamic>> updateUserMapping(
       Map<String, dynamic> mapping) async {
     final response = await kuzzle.query(KuzzleRequest(
         controller: name, action: 'updateUserMapping', body: mapping));
 
-    return response.result as Map<String, dynamic>?;
+    return response.result as Map<String, dynamic>;
   }
 
   /// Checks if the provided credentials are well-formed.
   /// Does not actually save credentials.
-  Future<bool?> validateCredentials(
+  Future<bool> validateCredentials(
       String strategy, String id, Map<String, dynamic> credentials) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -716,7 +714,7 @@ class SecurityController extends KuzzleController {
     ));
 
     if (response.result is bool) {
-      return response.result as bool?;
+      return response.result as bool;
     }
 
     throw BadResponseFormatError(response.error?.id,

@@ -213,7 +213,7 @@ class Kuzzle extends KuzzleEventEmitter {
 
       auth.checkToken(jwt).then((result) {
         // shouldn't obtain an error but let's invalidate the token anyway
-        if (result!['valid'] is! bool && result['valid'] == false) {
+        if (result['valid'] is! bool && result['valid'] == false) {
           jwt = null;
         }
 

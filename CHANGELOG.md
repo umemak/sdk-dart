@@ -1,4 +1,4 @@
-## [3.4.4]
+## [3.0.0]
 
 - Sound null safety compat
 
