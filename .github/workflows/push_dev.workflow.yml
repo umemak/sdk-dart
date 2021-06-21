@@ -54,30 +54,21 @@ jobs:
           node-version: "12"
       - uses: ./.github/actions/doc-snippets
 
-  unit-tests:
-    name: Unit Tests
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: cedx/setup-dart@v2
-      - uses: ./.github/actions/unit-tests
-
-  dart-doc:
-    name: Generate DartDoc
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v2
-      - uses: cedx/setup-dart@v2
-      - uses: ./.github/actions/dart-doc
+      - uses: ./.github/actions/tests
 
   doc-dev:
     name: Deployment Doc Dev
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # needs: [dead-links, doc-snippets, tests]
-    needs: [doc-snippets, unit-tests, dart-doc]
+    needs: [doc-snippets, tests]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules

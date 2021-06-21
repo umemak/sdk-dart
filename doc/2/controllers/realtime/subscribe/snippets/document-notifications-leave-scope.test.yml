@@ -8,5 +8,3 @@ hooks:
   after:
 template: default
 expected: Document left the scope
-protocols:
-  - websocket

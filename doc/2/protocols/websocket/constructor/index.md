@@ -16,23 +16,21 @@ Initializes a new instance of the WebSocket class pointing to the Kuzzle server 
 WebSocketProtocol(
     Uri uri, {
     bool autoReconnect = true,
-    Duration reconnectionDelay = const Duration(seconds: 1),
-    int reconnectionAttempts = 10,
+    Duration reconnectionDelay,
     Duration pingInterval,
   })
 ```
 
 <br/>
 
-| Argument               | Type                         | Description                                                           |
-| ---------------------- | ---------------------------- | --------------------------------------------------------------------- |
-| `uri`                  | <pre>Uri</pre>               | URI pointing to a Kuzzle server                                       |
-| `autoReconnect`        | <pre>bool</pre>              | If `true` will automatically reconnect after a conneciton loss        |
-| `port`                 | <pre>int</pre>               | Kuzzle port                                                           |
-| `reconnectionDelay`    | <pre>Duration</pre>          | Time to wait before trying to reconnect                               |
-| `reconnectionAttempts` | <pre>int</pre>               | Maximum number of reconnection attempts, set to -1 for infinite retry |
-| `ssl`                  | <pre>bool</pre><br>(`false`) | If `true` will use SSL                                                |
-| `pingInterval`         | <pre>Duration</pre>          | Time to wait between each ping                                        |
+| Argument  | Type              | Description                  |
+| --------- | ----------------- | ---------------------------- |
+| `uri`    | <pre>Uri</pre> | URI pointing to a Kuzzle server |
+| `autoReconnect` | <pre>bool</pre> | If `true` will automatically reconnect after a conneciton loss |
+| `port` | <pre>int</pre> | Kuzzle port |
+| `reconnectionDelay` | <pre>Duration</pre> | Time to wait before trying to reconnect |
+| `ssl` | <pre>bool</pre><br>(`false`) | If `true` will use SSL |
+| `pingInterval` | <pre>Duration</pre> | Time to wait between each ping |
 
 ## Return
 

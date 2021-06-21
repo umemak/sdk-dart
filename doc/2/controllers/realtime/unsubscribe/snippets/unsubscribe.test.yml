@@ -5,5 +5,3 @@ hooks:
   after:
 template: default
 expected: Success
-protocols:
-  - websocket
