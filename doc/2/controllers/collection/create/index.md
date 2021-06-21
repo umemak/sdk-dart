@@ -24,7 +24,7 @@ This method will only update the mapping if the collection already exists.
 Future<Map<String, dynamic>> create(
     String index,
     String collection, {
-    Map<String, dynamic> mapping,
+    Map<String, dynamic> mapping = const {},
   })
 ```
 
@@ -32,7 +32,7 @@ Future<Map<String, dynamic>> create(
 | ------------------ | -------------------------------------------- | --------------------------------- |
 | `index`            | <pre>String</pre>                            | Index                             |
 | `collection`       | <pre>String</pre>                            | Collection                        |
-| `mapping`          | <pre>Map<String, dynamic><String, Object></pre><br>(`{}`) | Describes the data mapping to associate to the new collection, using Elasticsearch [mapping format](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/mapping.html) |
+| `mapping`          | <pre>Map<String, dynamic></pre><br>(`{}`) | Describes the data mapping to associate to the new collection, using Elasticsearch [mapping format](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/mapping.html) |
 
 ---
 

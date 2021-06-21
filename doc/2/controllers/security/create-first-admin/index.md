@@ -14,7 +14,7 @@ Creates a Kuzzle administrator account, only if none exist.
 ```dart
 Future<KuzzleUser> createFirstAdmin(
     String uid, Map<String, dynamic> body,
-    {bool reset})
+    {bool? reset})
 ```
 
 <br />
@@ -23,7 +23,7 @@ Future<KuzzleUser> createFirstAdmin(
 | --- | --- | --- |
 | `kuid` | <pre>String</pre> | Administrator [kuid](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
 | `body` | <pre>Map<String, dynamic></pre> | Administrator content &amp; credentials |
-| `reset` | <pre>bool</pre><br />(`null`) | If true, restricted permissions are applied to `anonymous` and `default` roles |
+| `reset` | <pre>bool?</pre><br />(`null`) | If true, restricted permissions are applied to `anonymous` and `default` roles |
 
 ### body
 

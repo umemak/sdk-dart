@@ -17,7 +17,7 @@ class CollectionController extends KuzzleController {
   Future<Map<String, dynamic>> create(
     String index,
     String collection, {
-    Map<String, dynamic> mapping,
+    Map<String, dynamic> mapping = const {},
   }) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
@@ -38,7 +38,7 @@ class CollectionController extends KuzzleController {
   /// Note: an empty specification is implicitly applied to all collections.
   /// In a way, "no specification set" means "all documents are valid".
   Future<Map<String, dynamic>> deleteSpecifications(
-    String index, String collection) async {
+      String index, String collection) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'deleteSpecifications',
@@ -62,10 +62,8 @@ class CollectionController extends KuzzleController {
       return response.result as bool;
     }
 
-    throw BadResponseFormatError(response.error?.id, 
-      '$name.exists: bad response format', 
-      response
-    );
+    throw BadResponseFormatError(
+        response.error?.id, '$name.exists: bad response format', response);
   }
 
   /// Returns a data [collection] mapping.
@@ -84,7 +82,7 @@ class CollectionController extends KuzzleController {
 
   /// Returns the validation specifications associated to the [collection].
   Future<Map<String, dynamic>> getSpecifications(
-    String index, String collection) async {
+      String index, String collection) async {
     final request = KuzzleRequest(
       controller: name,
       action: 'getSpecifications',
@@ -100,8 +98,8 @@ class CollectionController extends KuzzleController {
   /// Returns the list of data collections associated to a provided data index.
   ///
   /// The returned list is sorted in alphanumerical order.
-  Future<Map<String, dynamic>> list(
-    String index, {int from, int size, String type}) async {
+  Future<Map<String, dynamic>> list(String index,
+      {int? from, int? size, String? type}) async {
     final response = await kuzzle.query(KuzzleRequest(
       controller: name,
       action: 'list',
@@ -167,10 +165,10 @@ class CollectionController extends KuzzleController {
   /// Searches collection specifications.
   Future<SpecificationSearchResult> searchSpecifications(
     String index, {
-    Map<String, dynamic> query,
-    int from,
-    int size,
-    String scroll,
+    Map<String, dynamic> query = const {},
+    int? from,
+    int? size,
+    String? scroll,
   }) async {
     final request = KuzzleRequest(
       controller: name,
@@ -182,10 +180,8 @@ class CollectionController extends KuzzleController {
     );
     final response = await kuzzle.query(request);
 
-    return SpecificationSearchResult(
-      kuzzle, 
-      request: request, 
-      response: response);
+    return SpecificationSearchResult(kuzzle,
+        request: request, response: response);
   }
 
   /// Empties a [collection] by removing all its documents,
@@ -234,7 +230,8 @@ class CollectionController extends KuzzleController {
   }
 
   /// Updates a data [collection] data [mapping].
-  @Deprecated('Deprecated since 2.1.0 and will be removed. Please use Update instead')
+  @Deprecated('''
+Deprecated since 2.1.0 and will be removed. Please use Update instead''')
   Future<Map<String, dynamic>> updateMapping(
     String index,
     String collection,

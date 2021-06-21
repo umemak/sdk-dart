@@ -14,7 +14,7 @@ Creates a new profile.
 ```dart
 Future<KuzzleProfile> createProfile(
     String uid, List<Map<String, dynamic>> policies,
-    {bool waitForRefresh})
+    {bool? waitForRefresh})
 ```
 
 <br />
@@ -23,7 +23,7 @@ Future<KuzzleProfile> createProfile(
 |--- |--- |--- |
 | `id` | <pre>String</pre> | Profile identifier |
 | `policies` | <pre>List<Map<String, dynamic>></pre> | [Profile content](/core/2/guides/main-concepts/permissions#profiles) |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the created profile is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the created profile is indexed |
 
 ## Return
 

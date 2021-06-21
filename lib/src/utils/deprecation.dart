@@ -9,8 +9,8 @@ class DeprecationHandler {
   final bool deprecationWarning;
 
   KuzzleResponse logDeprecation(KuzzleResponse response) {
-    if (deprecationWarning && response.deprecations.isNotEmpty) {
-      for (final deprecation in response.deprecations) {
+    if (deprecationWarning && response.deprecations!.isNotEmpty) {
+      for (final deprecation in response.deprecations!) {
         log(
           '${response.action}: ${deprecation.message}',
           name: 'Deprecation Warning',
@@ -26,7 +26,7 @@ class Deprecation {
   Deprecation(this.message, this.version);
 
   factory Deprecation.fromJson(Map<String, dynamic> json) => 
-    Deprecation(json['message'] as String, json['version'] as String);
+    Deprecation(json['message'] as String?, json['version'] as String?);
 
   static List<Deprecation> fromJsonList(Map<String, dynamic> json) {
     if (json['deprecations'] == null || json['deprecations'] is! List<Object>) {
@@ -43,8 +43,8 @@ class Deprecation {
     return list;
   }
 
-  final String message;
-  final String version;
+  final String? message;
+  final String? version;
 
   Map<String, dynamic> toJson() => {
     'message': message,

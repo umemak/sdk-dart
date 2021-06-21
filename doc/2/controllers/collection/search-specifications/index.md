@@ -22,10 +22,10 @@ When processing a large number of items (i.e. more than 1000), it is advised to 
 ```dart
 Future<SearchResult> searchSpecifications(
     String index, {
-    Map<String, dynamic> query,
-    int from,
-    int size,
-    String scroll,
+    Map<String, dynamic> query = Map(),
+    int? from,
+    int? size,
+    String? scroll,
   })
 ```
 

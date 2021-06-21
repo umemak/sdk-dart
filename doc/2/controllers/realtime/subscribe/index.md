@@ -13,13 +13,13 @@ Subscribes by providing a set of filters: messages, document changes and, option
 
 ```dart
 Future<String> subscribe(String index, String collection,
-      Map<String, dynamic> filters, SubscribeListener callback,
-      {String scope,
-      String state,
-      String users,
-      Map<String, dynamic> volatile,
-      bool subscribeToSelf,
-      bool autoResubscribe})
+        Map<String, dynamic> filters, SubscribeListener callback,
+        {String? scope,
+        String? state,
+        String? users,
+        Map<String, dynamic>? volatile,
+        bool? subscribeToSelf = true,
+        bool? autoResubscribe})
 ```
 
 | Argument     | Type                                    | Description                                         |

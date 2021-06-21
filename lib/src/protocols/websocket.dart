@@ -7,7 +7,7 @@ class WebSocketProtocol extends KuzzleWebSocket {
     bool autoReconnect = true,
     Duration reconnectionDelay = const Duration(seconds: 1),
     int reconnectionAttempts = 10,
-    Duration pingInterval,
+    Duration? pingInterval,
   }) : super(
           uri,
           autoReconnect: autoReconnect,

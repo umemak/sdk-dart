@@ -19,9 +19,10 @@ Applies partial changes to a document. If the document doesn't already exist, a 
     String collection,
     String id,
     Map<String, dynamic> changes, {
-    bool waitForRefresh = false,
-    int retryOnConflict,
-    bool source,
+      Map<String, dynamic> defaults = const {},
+      bool waitForRefresh = false,
+      int? retryOnConflict,
+      bool? source,
   })
 ```
 
@@ -40,8 +41,8 @@ Additional query options
 | ----------------- | ------------------------------- | ---------------------------------------------------------------------------------- |
 | `defaults` | <pre>Map<String, dynamic></pre><br/>(`{}`)  | (optional) fields to add to the document if it gets created  |
 | `waitForRefresh`         | <pre>bool</pre><br/>(`""`)    | If set to `true`, waits for the change to be reflected for `search` (up to 1s) |
-| `retryOnConflict` | <pre>int</pre><br/>(`10`)        | The number of times the database layer should retry in case of version conflict    |
-| `source`          | <pre>bool</pre><br/>(`false`)| If true, returns the updated document inside the response
+| `retryOnConflict` | <pre>int?</pre><br/>(`10`)        | The number of times the database layer should retry in case of version conflict    |
+| `source`          | <pre>bool?</pre><br/>(`false`)| If true, returns the updated document inside the response
 
 
 ## Returns

@@ -22,9 +22,9 @@ class KuzzleWebSocket extends KuzzleProtocol {
             reconnectionDelay: reconnectionDelay,
             reconnectionAttempts: reconnectionAttempts);
 
-  WebSocket _webSocket;
-  StreamSubscription _subscription;
-  Duration pingInterval;
+  WebSocket? _webSocket;
+  StreamSubscription? _subscription;
+  Duration? pingInterval;
   final Completer<void> _connected = Completer();
 
   @override
@@ -40,22 +40,22 @@ class KuzzleWebSocket extends KuzzleProtocol {
     await _subscription?.cancel();
     _subscription = null;
 
-    _subscription = _webSocket.onMessage.listen(_handlePayload);
+    _subscription = _webSocket!.onMessage.listen(_handlePayload);
 
     final onErrorSubscription =
-        _webSocket.onError.listen(_connected.completeError);
+        _webSocket!.onError.listen(_connected.completeError);
 
-    var onCloseSubscription = _webSocket.onClose.listen((Event event) {
+    var onCloseSubscription = _webSocket!.onClose.listen((Event event) {
       _connected
           .completeError(KuzzleError('Unable to connect to ${uri.toString()}'));
     });
 
-    _webSocket.onOpen.listen((_) {
+    _webSocket!.onOpen.listen((_) {
       onErrorSubscription.cancel();
       onCloseSubscription.cancel();
 
-      _webSocket.onError.listen(_handleError);
-      _webSocket.onClose.listen(_handleDone);
+      _webSocket!.onError.listen(_handleError);
+      _webSocket!.onClose.listen(_handleDone);
 
       _connected.complete();
     });
@@ -65,8 +65,8 @@ class KuzzleWebSocket extends KuzzleProtocol {
 
   @override
   Future<void> send(KuzzleRequest request) async {
-    if (_webSocket != null && _webSocket.readyState == WebSocket.OPEN) {
-      _webSocket.sendString(json.encode(request));
+    if (_webSocket != null && _webSocket!.readyState == WebSocket.OPEN) {
+      _webSocket!.sendString(json.encode(request));
     }
   }
 
@@ -88,7 +88,7 @@ class KuzzleWebSocket extends KuzzleProtocol {
       final _json = json.decode(payload.data as String) as Map<String, dynamic>;
       final response = KuzzleResponse.fromJson(_json);
 
-      if (response.room != null && response.room.isNotEmpty) {
+      if (response.room != null && response.room!.isNotEmpty) {
         emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
       } else {
         emit(ProtocolEvents.QUERY_ERROR, [response.error, payload]);

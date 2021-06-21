@@ -21,9 +21,9 @@ class KuzzleWebSocket extends KuzzleProtocol {
             reconnectionDelay: reconnectionDelay,
             reconnectionAttempts: reconnectionAttempts);
 
-  WebSocket _webSocket;
-  StreamSubscription _subscription;
-  Duration pingInterval;
+  WebSocket? _webSocket;
+  StreamSubscription? _subscription;
+  Duration? pingInterval;
 
   @override
   Future<void> protocolConnect() async {
@@ -44,16 +44,16 @@ class KuzzleWebSocket extends KuzzleProtocol {
 
     _webSocket = await WebSocket.connect(url);
 
-    _webSocket.pingInterval = pingInterval;
+    _webSocket!.pingInterval = pingInterval;
 
-    _subscription = _webSocket.listen(_handlePayload,
+    _subscription = _webSocket!.listen(_handlePayload,
         onError: _handleError, onDone: _handleDone);
   }
 
   @override
   Future<void> send(KuzzleRequest request) async {
-    if (_webSocket != null && _webSocket.readyState == WebSocket.open) {
-      _webSocket.add(json.encode(request));
+    if (_webSocket != null && _webSocket!.readyState == WebSocket.open) {
+      _webSocket!.add(json.encode(request));
     }
   }
 
@@ -75,7 +75,7 @@ class KuzzleWebSocket extends KuzzleProtocol {
       final _json = json.decode(payload as String) as Map<String, dynamic>;
       final response = KuzzleResponse.fromJson(_json);
 
-      if (response.room != null && response.room.isNotEmpty) {
+      if (response.room != null && response.room!.isNotEmpty) {
         emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
       } else {
         emit(ProtocolEvents.QUERY_ERROR, [response.error, payload]);
@@ -95,11 +95,11 @@ class KuzzleWebSocket extends KuzzleProtocol {
   }
 
   void _handleDone() {
-    if (_webSocket.closeCode == 1000) {
+    if (_webSocket!.closeCode == 1000) {
       clientDisconnected();
     } else if (state == KuzzleProtocolState.connected) {
       clientNetworkError(KuzzleError(
-          'clientNetworkError', _webSocket.closeReason, _webSocket.closeCode));
+          'clientNetworkError', _webSocket!.closeReason, _webSocket!.closeCode));
     }
   }
 }

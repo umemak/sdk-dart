@@ -24,7 +24,7 @@ class AuthController extends KuzzleController {
 
   /// Checks whether a given jwt [token] still
   /// represents a valid session in Kuzzle.
-  Future<Map<String, dynamic>> checkToken(String token) async {
+  Future<Map<String, dynamic>> checkToken(String? token) async {
     final response = await kuzzle.query(
         KuzzleRequest(
             controller: name,
@@ -120,8 +120,8 @@ class AuthController extends KuzzleController {
   /// Send login request to kuzzle with credentials
   ///
   /// If login success, store the jwt into kuzzle object
-  Future<String> login(String strategy, Map<String, dynamic> credentials,
-          {String expiresIn}) async =>
+  Future<String?> login(String strategy, Map<String, dynamic> credentials,
+          {String? expiresIn}) async =>
       kuzzle
           .query(KuzzleRequest(
         controller: name,
@@ -132,7 +132,7 @@ class AuthController extends KuzzleController {
       ))
           .then((response) {
         try {
-          kuzzle.jwt = response.result['jwt'] as String;
+          kuzzle.jwt = response.result['jwt'] as String?;
           kuzzle.emit(KuzzleEvents.LOGIN_ATTEMPT, [], {
             const Symbol('success'): true,
           });
@@ -147,7 +147,7 @@ class AuthController extends KuzzleController {
           const Symbol('error'): error,
         });
 
-        throw error;
+        throw error as Error;
       });
 
   /// Send logout request to kuzzle with jwt.

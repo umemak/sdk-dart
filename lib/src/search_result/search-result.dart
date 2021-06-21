@@ -11,22 +11,22 @@ class SearchResult {
     this.request,
     this.response,
   }) {
-    lang = request.lang;
-    controller = request.controller;
+    lang = request!.lang;
+    controller = request!.controller;
     searchAction = 'search';
     scrollAction = 'scroll';
 
-    final result = response.result as Map<String, dynamic>;
+    final result = response!.result as Map<String, dynamic>;
 
     if (result.containsKey('aggregations')) {
-      aggregations = result['aggregations'] as Map<String, dynamic>;
+      aggregations = result['aggregations'] as Map<String, dynamic>?;
     }
     if (result.containsKey('hits')) {
-      hits = result['hits'] as List<dynamic>;
-      fetched = hits.length;
+      hits = result['hits'] as List<dynamic>?;
+      fetched = hits!.length;
     }
     if (result.containsKey('total')) {
-      total = result['total'] as int;
+      total = result['total'] as int?;
     }
   }
 
@@ -37,38 +37,38 @@ class SearchResult {
   Kuzzle kuzzle;
 
   @protected
-  KuzzleRequest request;
+  KuzzleRequest? request;
 
   @protected
-  KuzzleResponse response;
+  KuzzleResponse? response;
 
   @protected
-  String controller;
+  String? controller;
 
   @protected
-  String lang;
+  String? lang;
 
   @protected
-  String searchAction;
+  String? searchAction;
 
   @protected
-  String scrollAction;
+  String? scrollAction;
 
-  Map<String, dynamic> aggregations = <String, dynamic>{};
-  List<dynamic> hits = <dynamic>[];
+  Map<String, dynamic>? aggregations = <String, dynamic>{};
+  List<dynamic>? hits = <dynamic>[];
   int fetched = 0;
-  int total = 0;
+  int? total = 0;
 
   @override
-  Future<SearchResult> next() async {
-    if (fetched >= total) {
+  Future<SearchResult?> next() async {
+    if (fetched >= total!) {
       return null;
     }
 
-    if (request.scroll != null && request.scroll.isNotEmpty) {
+    if (request!.scroll != null && request!.scroll!.isNotEmpty) {
       final query = KuzzleRequest(
         controller: controller,
-        scrollId: response.result['scrollId'] as String,
+        scrollId: response!.result['scrollId'] as String?,
       );
       query.action = scrollAction;
       query.lang = lang;
@@ -77,73 +77,73 @@ class SearchResult {
           .then((_response) {
         response = _response;
 
-        final result = response.result as Map<String, dynamic>;
+        final result = response!.result as Map<String, dynamic>;
 
         if (result.containsKey('aggregations')) {
-          aggregations = result['aggregations'] as Map<String, dynamic>;
+          aggregations = result['aggregations'] as Map<String, dynamic>?;
         }
         if (result.containsKey('hits')) {
-          hits = result['hits'] as List<dynamic>;
+          hits = result['hits'] as List<dynamic>?;
           fetched = fetched;
         }
 
         return buildNextSearchResult(response);
       });
-    } else if (request.size != null && request.sort != null) {
-      final _request = KuzzleRequest.clone(request)
+    } else if (request!.size != null && request!.sort != null) {
+      final _request = KuzzleRequest.clone(request!)
         ..action = searchAction
         ..lang = lang;
 
       _request.body ??= <String, dynamic>{};
-      _request.body['search_after'] ??= <dynamic>[];
+      _request.body!['search_after'] ??= <dynamic>[];
 
-      final hit = hits.last;
+      final hit = hits!.last;
 
-      for (var sort in request.sort) {
+      for (var sort in request!.sort!) {
         final key =
             (sort is String) ? sort : (sort as Map<String, dynamic>).keys.first;
         final value = (key == '_uid')
-            ? '${request.collection}#${hit['_id']}'
-            : _get(hit['_source'] as Map<String, dynamic>, key.split('.'));
+            ? '${request!.collection}#${hit['_id']}'
+            : _get(hit['_source'] as Map<String, dynamic>?, key.split('.'));
 
-        _request.body['search_after'].add(value);
+        _request.body!['search_after'].add(value);
       }
 
       return await kuzzle.query(_request).then((_response) {
         response = _response;
 
-        final result = response.result as Map<String, dynamic>;
+        final result = response!.result as Map<String, dynamic>;
 
         if (result.containsKey('aggregations')) {
-          aggregations = result['aggregations'] as Map<String, dynamic>;
+          aggregations = result['aggregations'] as Map<String, dynamic>?;
         }
         if (result.containsKey('hits')) {
-          hits = result['hits'] as List<dynamic>;
-          fetched = hits.length;
+          hits = result['hits'] as List<dynamic>?;
+          fetched = hits!.length;
         }
 
         return buildNextSearchResult(response);
       });
-    } else if (request.size != null) {
+    } else if (request!.size != null) {
 
-      if (request.from >= total) {
+      if (request!.from! >= total!) {
         return null;
       }
 
       return await kuzzle
-          .query(KuzzleRequest.clone(request)
+          .query(KuzzleRequest.clone(request!)
             ..action = searchAction
             ..from = fetched)
           .then((_response) {
         response = _response;
 
-        final result = response.result as Map<String, dynamic>;
+        final result = response!.result as Map<String, dynamic>;
 
         if (result.containsKey('aggregations')) {
-          aggregations = result['aggregations'] as Map<String, dynamic>;
+          aggregations = result['aggregations'] as Map<String, dynamic>?;
         }
         if (result.containsKey('hits')) {
-          hits = result['hits'] as List<dynamic>;
+          hits = result['hits'] as List<dynamic>?;
           fetched = fetched;
         }
 
@@ -155,7 +155,7 @@ class SearchResult {
         'missing scrollId, from/sort, or from/size params');
   }
 
-  dynamic _get(Map<String, dynamic> object, List<String> path) {
+  dynamic _get(Map<String, dynamic>? object, List<String> path) {
     if (object == null) {
       return <String>[];
     }
@@ -167,11 +167,11 @@ class SearchResult {
     final key = path.first;
     path.removeAt(0);
 
-    return _get(object[key] as Map<String, dynamic>, path);
+    return _get(object[key] as Map<String, dynamic>?, path);
   }
 
   @protected
-  SearchResult buildNextSearchResult(KuzzleResponse response){
+  SearchResult buildNextSearchResult(KuzzleResponse? response){
     final nextSearchResult = SearchResult(
       kuzzle, 
       request: request, 

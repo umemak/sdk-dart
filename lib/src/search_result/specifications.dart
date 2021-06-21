@@ -7,8 +7,8 @@ import 'search-result.dart';
 class SpecificationSearchResult extends SearchResult {
   SpecificationSearchResult(
     Kuzzle kuzzle, {
-    KuzzleRequest request,
-    KuzzleResponse response,
+    KuzzleRequest? request,
+    KuzzleResponse? response,
   }) : super(kuzzle, request: request, response: response) {
     controller = 'collection';
     searchAction = 'searchSpecifications';

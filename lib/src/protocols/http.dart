@@ -14,7 +14,7 @@ class HttpProtocol extends KuzzleProtocol {
     _ioClient = createHttpClient(acceptBadCertificate: acceptBadCertificate);
   }
 
-  BaseClient _ioClient;
+  late BaseClient _ioClient;
 
   @override
   Future<void> protocolConnect() async {
@@ -22,7 +22,7 @@ class HttpProtocol extends KuzzleProtocol {
       return;
     }
 
-    final res = await _ioClient.get('${uri.toString()}/_query');
+    final res = await _ioClient.get(Uri.parse('${uri.toString()}/_query'));
     if (res.statusCode == 401 || res.statusCode == 403) {
       throw Exception('You must have permission on the _query route.');
     }
@@ -41,12 +41,12 @@ class HttpProtocol extends KuzzleProtocol {
     }
 
     final res = await _ioClient.post(
-      '${uri.toString()}/_query',
+      Uri.parse('${uri.toString()}/_query'),
       headers: headers,
       body: jsonEncode(request),
     );
 
-    emit(request.requestId, [
+    emit(request.requestId!, [
       KuzzleResponse.fromJson(
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>)
     ]);

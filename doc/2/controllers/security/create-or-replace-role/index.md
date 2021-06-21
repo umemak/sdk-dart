@@ -14,7 +14,7 @@ Creates a new role or, if the provided role identifier already exists, replaces 
 ```dart
 Future<KuzzleRole> createOrReplaceRole(
       String uid, Map<String, dynamic> controllers,
-      {bool waitForRefresh, bool force})
+      {bool? waitForRefresh, bool? force})
 ```
 
 <br />
@@ -23,8 +23,8 @@ Future<KuzzleRole> createOrReplaceRole(
 | --- | --- | --- |
 | `id` | <pre>String</pre> | Role identifier |
 | `controllers` | <pre>Map<String, dynamic></pre> | [Role definition](/core/2/guides/main-concepts/permissions#roles) |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the created/replaced role is indexed |
-| `force`   | <pre>bool</pre><br />(`null`) | If set to `true`, creates or replaces the role even if it gives access to non-existent plugins API routes. |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the created/replaced role is indexed |
+| `force`   | <pre>bool?</pre><br />(`null`) | If set to `true`, creates or replaces the role even if it gives access to non-existent plugins API routes. |
 
 ## Return
 
