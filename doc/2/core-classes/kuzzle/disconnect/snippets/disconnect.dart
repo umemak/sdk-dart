@@ -1,1 +1,1 @@
-await kuzzle.disconnect();
+kuzzle.disconnect();
