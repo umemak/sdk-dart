@@ -37,7 +37,7 @@ Future<String> subscribe(String index, String collection,
 ### handler
 
 Handler function that will be called each time a new notification is received.
-The hanlder will receive a [KuzzleResponse](/sdk/dart/2/essentials/realtime-notifications) as its only argument.
+The hanlder will receive a [KuzzleResponse](/sdk/dart/3/essentials/realtime-notifications) as its only argument.
 
 ## Return
 

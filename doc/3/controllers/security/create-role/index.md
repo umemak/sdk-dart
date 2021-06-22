@@ -27,7 +27,7 @@ Future<KuzzleRole> createRole(String id, Map<String, dynamic> controllers,
 
 ## Return
 
-A [`Role`](/sdk/dart/2/core-classes/role) object representing the created/replaced role.
+A [`Role`](/sdk/dart/3/core-classes/role) object representing the created/replaced role.
 
 ## Usage
 

@@ -37,7 +37,7 @@ Future<ProfileSearchResult> searchProfiles(
 
 ## Return
 
-A [`ProfileSearchResult`](sdk/dart/2/core-classes/search-result) object containing the retrieved [`Profile`](/sdk/dart/2/core-classes/profile) objects.
+A [`ProfileSearchResult`](sdk/dart/2/core-classes/search-result) object containing the retrieved [`Profile`](/sdk/dart/3/core-classes/profile) objects.
 
 ## Usage
 

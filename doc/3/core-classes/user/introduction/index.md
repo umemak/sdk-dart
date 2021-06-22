@@ -14,5 +14,5 @@ Refer to the [Security guide](/core/2/guides/main-concepts/permissions) for more
 
 The following methods return a `User` object:
 
-- [auth:getCurrentUser](/sdk/dart/2/controllers/auth/get-current-user)
-- [auth:updateSelf](/sdk/dart/2/controllers/auth/update-self)
+- [auth:getCurrentUser](/sdk/dart/3/controllers/auth/get-current-user)
+- [auth:updateSelf](/sdk/dart/3/controllers/auth/update-self)

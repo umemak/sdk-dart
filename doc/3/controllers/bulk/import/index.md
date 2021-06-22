@@ -9,7 +9,7 @@ description: Creates, updates or deletes large amounts of documents as fast as p
 
 Creates, updates or deletes large amounts of documents as fast as possible.
 
-This route is faster than the `document:m*` routes family (e.g. [document:mCreate](/sdk/dart/2/controllers/document/m-create)), but no real-time notifications will be generated, even if some of the documents in the import match subscription filters.
+This route is faster than the `document:m*` routes family (e.g. [document:mCreate](/sdk/dart/3/controllers/document/m-create)), but no real-time notifications will be generated, even if some of the documents in the import match subscription filters.
 
 ## Arguments
 

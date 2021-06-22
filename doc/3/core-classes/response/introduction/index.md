@@ -18,7 +18,7 @@ order: 0
 | `action` | <pre>String</pre> | Executed Kuzzle API controller's action |
 | `collection` | <pre>String</pre> | Impacted collection |
 | `controller` | <pre>String</pre> | Executed Kuzzle API controller |
-| `error` | <pre>[KuzzleError](/sdk/dart/2/core-classes/kuzzle-error)</pre> | Error object (null if the request finished successfully) |
+| `error` | <pre>[KuzzleError](/sdk/dart/3/core-classes/kuzzle-error)</pre> | Error object (null if the request finished successfully) |
 | `index` | <pre>String</pre> | Impacted index |
 | `protocol` | <pre>String</pre> | Network protocol at the origin of the real-time notification |
 | `requestId` | <pre>String</pre> | Request unique identifier |

@@ -35,7 +35,7 @@ Future<KuzzleUser> replaceUser(String id,
 **other properties**
 
 The body can be extended with any custom information. 
-Make sure to [update the user mapping](/sdk/dart/2/controllers/security/update-user-mapping) collection to match your custom attributes.
+Make sure to [update the user mapping](/sdk/dart/3/controllers/security/update-user-mapping) collection to match your custom attributes.
 
 example:
 

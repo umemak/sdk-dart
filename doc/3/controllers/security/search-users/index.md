@@ -47,7 +47,7 @@ If left empty, the result will return all available users.
 
 ## Return
 
-A [`UserSearchResult`](sdk/dart/2/core-classes/search-result) object containing the retrieved [`User`](/sdk/dart/2/core-classes/user) objects.
+A [`UserSearchResult`](sdk/dart/2/core-classes/search-result) object containing the retrieved [`User`](/sdk/dart/3/core-classes/user) objects.
 
 ## Usage
 

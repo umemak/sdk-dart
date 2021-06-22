@@ -42,7 +42,7 @@ Kuzzle(
 The protocol used to connect to the Kuzzle instance.
 It can be one of the following available protocols:
 
-- [WebSocket](/sdk/dart/2/protocols/websocket)
+- [WebSocket](/sdk/dart/3/protocols/websocket)
 
 ## Return
 

@@ -17,7 +17,7 @@ getRoles();
 
 ## Resolve
 
-Resolves to an array of [Role](/sdk/dart/2/core-classes/role).
+Resolves to an array of [Role](/sdk/dart/3/core-classes/role).
 
 ## Usage
 

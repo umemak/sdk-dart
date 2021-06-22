@@ -23,7 +23,7 @@ Future<List<KuzzleProfile>> mGetProfiles(List<String> ids)
 
 ## Return
 
-An List of retrieved [`Profile`](/sdk/dart/2/core-classes/profile/introduction) objects.
+An List of retrieved [`Profile`](/sdk/dart/3/core-classes/profile/introduction) objects.
 
 ## Usage
 

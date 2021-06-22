@@ -24,7 +24,7 @@ This is a low-level method, exposed to allow advanced SDK users to bypass high-l
 
 | Argument  | Type              | Description            |
 | --------- | ----------------- | ---------------------- |
-| `request` | <pre>[KuzzleRequest](/sdk/dart/2/core-classes/request)</pre> | API request    |
+| `request` | <pre>[KuzzleRequest](/sdk/dart/3/core-classes/request)</pre> | API request    |
 | `volatile`   | <pre>Map<String, dynamic></pre> | Additional information to send to Kuzzle |
 | `queueable`   | <pre>bool</pre> | If true, queues the request during downtime, until connected to Kuzzle again |
 
@@ -45,7 +45,7 @@ The following properties are the most common.
 
 ## Returns
 
-Returns a [KuzzleResponse](/sdk/dart/2/core-classes/response) object which represents a raw Kuzzle API response. See the [API Documentation](/core/2/api).
+Returns a [KuzzleResponse](/sdk/dart/3/core-classes/response) object which represents a raw Kuzzle API response. See the [API Documentation](/core/2/api).
 
 ## Usage
 

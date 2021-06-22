@@ -17,7 +17,7 @@ getProfiles();
 
 ## Resolve
 
-Resolves to a List of [Profile](/sdk/dart/2/core-classes/profile).
+Resolves to a List of [Profile](/sdk/dart/3/core-classes/profile).
 
 ## Usage
 

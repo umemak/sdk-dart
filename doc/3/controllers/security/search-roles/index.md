@@ -32,7 +32,7 @@ Future<RoleSearchResult> searchRoles(
 
 ## Return
 
-A [`RoleSearchResult`](sdk/dart/2/core-classes/search-result) object containing the retrieved [`Role`](/sdk/dart/2/core-classes/role) objects.
+A [`RoleSearchResult`](sdk/dart/2/core-classes/search-result) object containing the retrieved [`Role`](/sdk/dart/3/core-classes/role) objects.
 
 ## Usage
 

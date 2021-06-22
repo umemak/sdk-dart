@@ -24,7 +24,7 @@ Future<List<KuzzleRole>> mGetRoles(
 
 ## Resolves
 
-A List of retrieved [`Role`](/sdk/dart/2/core-classes/role/introduction) objects.
+A List of retrieved [`Role`](/sdk/dart/3/core-classes/role/introduction) objects.
 
 ## Usage
 

@@ -44,7 +44,7 @@ If left empty, the result will return all available API keys for the user.
 
 ## Returns
 
-Returns a [SearchResult](/sdk/dart/2/core-classes/search-result) object.
+Returns a [SearchResult](/sdk/dart/3/core-classes/search-result) object.
 
 ## Usage
 

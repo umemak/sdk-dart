@@ -8,7 +8,7 @@ order: 300
 
 # Notifications
 
-The [RealtimeController.subscribe](/sdk/dart/2/controllers/realtime/subscribe) method takes a handler argument, called with a [KuzzleResponse](/sdk/dart/2/core-classes/response) object, whose content of the `Result` property depends on the type of notification received.
+The [RealtimeController.subscribe](/sdk/dart/3/controllers/realtime/subscribe) method takes a handler argument, called with a [KuzzleResponse](/sdk/dart/3/core-classes/response) object, whose content of the `Result` property depends on the type of notification received.
 
 ## Document & messages
 

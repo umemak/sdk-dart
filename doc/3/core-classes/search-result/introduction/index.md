@@ -11,8 +11,8 @@ order: 1
 This class represents a paginated search result.  
 
 It can be returned by the following methods:
- - [document:search](/sdk/dart/2/controllers/document/search)
- - [collection:searchSpecifications](/sdk/dart/2/controllers/collection/search-specifications)
+ - [document:search](/sdk/dart/3/controllers/document/search)
+ - [collection:searchSpecifications](/sdk/dart/3/controllers/collection/search-specifications)
 
 ## Properties
 

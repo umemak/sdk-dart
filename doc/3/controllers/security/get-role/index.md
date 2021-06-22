@@ -23,7 +23,7 @@ Future<KuzzleRole> getRole(String id)
 
 ## Return
 
-The retrieved [`Role`](/sdk/dart/2/core-classes/role) object.
+The retrieved [`Role`](/sdk/dart/3/core-classes/role) object.
 
 ## Usage
 

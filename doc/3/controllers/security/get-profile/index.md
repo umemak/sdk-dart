@@ -23,7 +23,7 @@ Future<KuzzleProfile> getProfile(String id)
 
 ## Return
 
-The retrieved [`Profile`](/sdk/dart/2/core-classes/profile/introduction) object.
+The retrieved [`Profile`](/sdk/dart/3/core-classes/profile/introduction) object.
 
 ## Usage
 

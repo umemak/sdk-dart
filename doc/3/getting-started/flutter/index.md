@@ -8,7 +8,7 @@ order: 0
 
 # Getting Started with Kuzzle and Flutter
 
-This section deals with **Kuzzle v2**, the **Dart SDK v2** and **Flutter**. We will create **documents** in Kuzzle and subscribe to [document notifications](/sdk/dart/2/essentials/realtime-notifications#document-messages) to develop a realtime chat.
+This section deals with **Kuzzle v2**, the **Dart SDK v2** and **Flutter**. We will create **documents** in Kuzzle and subscribe to [document notifications](/sdk/dart/3/essentials/realtime-notifications#document-messages) to develop a realtime chat.
 
 ## Requirements
 
@@ -60,7 +60,7 @@ In our _chat.dart_ let's import the sdk:
 
 <<< ./snippets/chat.dart.snippet:1[dart]
 
-Then we will [establish the connection](/sdk/dart/2/core-classes/kuzzle/connect) to kuzzle and create, if they don't [exist](/sdk/dart/2/controllers/index/exists/), the [index](/sdk/dart/2/controllers/index/create) and [collection](/sdk/dart/2/controllers/collection/create) of our chat. We will also fetch messages sorted by creation date, and  subscribe to the same collection to receive new messages in realtime.
+Then we will [establish the connection](/sdk/dart/3/core-classes/kuzzle/connect) to kuzzle and create, if they don't [exist](/sdk/dart/3/controllers/index/exists/), the [index](/sdk/dart/3/controllers/index/create) and [collection](/sdk/dart/3/controllers/collection/create) of our chat. We will also fetch messages sorted by creation date, and  subscribe to the same collection to receive new messages in realtime.
 
 ### Create index and collection
 
@@ -71,7 +71,7 @@ So first let's write a method which will create the index/collection if it does 
 
 ### Get existing messages
 
-The method _fetchMessage()_ will [search](/sdk/dart/2/controllers/document/search) for the first hundred newest messages.
+The method _fetchMessage()_ will [search](/sdk/dart/3/controllers/document/search) for the first hundred newest messages.
 It will then update the state of the widget to store those messages in the `messages` variable.
 
 <<< ./snippets/chat.dart.snippet:3[dart]
@@ -125,7 +125,7 @@ _chat.dart:_
 
 <<< ./snippets/chat.dart.snippet:9[dart]
 
-For this we simply [create](/sdk/dart/2/controllers/document/create) a document in our `messages` collection with a `username` and a `value`. Once this document is created it will trigger a notification to all clients who subscribed to this collection and receive the message.
+For this we simply [create](/sdk/dart/3/controllers/document/create) a document in our `messages` collection with a `username` and a `value`. Once this document is created it will trigger a notification to all clients who subscribed to this collection and receive the message.
 
 ## Where do we go from here?
 
@@ -135,4 +135,4 @@ Now that you're more familiar with Kuzzle, dive even deeper to learn how to leve
 - learn more about Kuzzle [realtime engine](/core/2/guides/main-concepts/realtime-engine)
 - follow our guide to learn how to [manage users, and how to set up fine-grained access control](/core/2/guides/main-concepts/permissions)
 - lean how to use Kuzzle [Admin Console](http://next-console.kuzzle.io) to manage your users and data
-- learn how to perform a [basic authentication](/sdk/dart/2/controllers/auth/login)
+- learn how to perform a [basic authentication](/sdk/dart/3/controllers/auth/login)

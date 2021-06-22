@@ -27,7 +27,7 @@ Future<KuzzleProfile> createOrReplaceProfile(
 
 ## Return
 
-A [`Profile`](/sdk/dart/2/core-classes/profile/introduction) object representing the updated/created profile.
+A [`Profile`](/sdk/dart/3/core-classes/profile/introduction) object representing the updated/created profile.
 
 ## Usage
 

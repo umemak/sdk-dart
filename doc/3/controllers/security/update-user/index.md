@@ -28,7 +28,7 @@ Future<KuzzleUser> updateUser(String id, Map<String, dynamic> body,
 
 The `body` contains the list of profile ids to attach the user to and potential additional information.  
 Any other attribute can be added. 
-Make sure to [update the user mapping](/sdk/dart/2/controllers/security/update-user-mapping) collection to match your custom attributes.
+Make sure to [update the user mapping](/sdk/dart/3/controllers/security/update-user-mapping) collection to match your custom attributes.
 
 Example: 
 
