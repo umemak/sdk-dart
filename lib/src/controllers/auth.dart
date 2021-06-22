@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:kuzzle/src/protocols/events.dart';
+import 'package:kuzzle/src/kuzzle/events.dart';
 
 import '../kuzzle.dart';
 import '../kuzzle/request.dart';
@@ -12,22 +12,19 @@ class AuthController extends KuzzleController {
   AuthController(Kuzzle kuzzle) : super(kuzzle, name: 'auth');
 
   /// Checks if an API action can be executed by the current user.
-  Future<bool> checkRights(
-    Map<String, dynamic> requestPayload) async {
-    final response = await kuzzle.query(
-        KuzzleRequest(
-            controller: name,
-            action: 'checkRights',
-            body: requestPayload,
-          )
-        );
+  Future<bool> checkRights(Map<String, dynamic> requestPayload) async {
+    final response = await kuzzle.query(KuzzleRequest(
+      controller: name,
+      action: 'checkRights',
+      body: requestPayload,
+    ));
 
     return response.result['allowed'] as bool;
   }
 
   /// Checks whether a given jwt [token] still
   /// represents a valid session in Kuzzle.
-  Future<Map<String, dynamic>> checkToken(String token) async {
+  Future<Map<String, dynamic>> checkToken(String? token) async {
     final response = await kuzzle.query(
         KuzzleRequest(
             controller: name,
@@ -123,8 +120,8 @@ class AuthController extends KuzzleController {
   /// Send login request to kuzzle with credentials
   ///
   /// If login success, store the jwt into kuzzle object
-  Future<String> login(String strategy, Map<String, dynamic> credentials,
-          {String expiresIn}) async =>
+  Future<String?> login(String strategy, Map<String, dynamic> credentials,
+          {String? expiresIn}) async =>
       kuzzle
           .query(KuzzleRequest(
         controller: name,
@@ -135,8 +132,8 @@ class AuthController extends KuzzleController {
       ))
           .then((response) {
         try {
-          kuzzle.jwt = response.result['jwt'] as String;
-          kuzzle.emit(ProtocolEvents.LOGIN_ATTEMPT, [], {
+          kuzzle.jwt = response.result['jwt'] as String?;
+          kuzzle.emit(KuzzleEvents.LOGIN_ATTEMPT, [], {
             const Symbol('success'): true,
           });
 
@@ -145,12 +142,12 @@ class AuthController extends KuzzleController {
           rethrow;
         }
       }).catchError((error) {
-        kuzzle.emit(ProtocolEvents.LOGIN_ATTEMPT, [], {
+        kuzzle.emit(KuzzleEvents.LOGIN_ATTEMPT, [], {
           const Symbol('success'): false,
           const Symbol('error'): error,
         });
 
-        throw error;
+        throw error as Error;
       });
 
   /// Send logout request to kuzzle with jwt.

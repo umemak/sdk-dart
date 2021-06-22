@@ -1,3 +1,5 @@
+import 'package:kuzzle/src/utils/deprecation.dart';
+
 import 'errors.dart';
 
 class KuzzleResponse {
@@ -5,6 +7,7 @@ class KuzzleResponse {
     this.action,
     this.collection,
     this.controller,
+    this.deprecations,
     this.error,
     this.index,
     this.room,
@@ -14,21 +17,22 @@ class KuzzleResponse {
   });
 
   KuzzleResponse.fromJson(Map<String, dynamic> json) {
-    action = json['action'] as String;
-    collection = json['collection'] as String;
-    controller = json['controller'] as String;
+    action = json['action'] as String?;
+    collection = json['collection'] as String?;
+    controller = json['controller'] as String?;
+    deprecations = Deprecation.fromJsonList(json);
     error = json['error'] == null ? null : KuzzleError.fromJson(json);
-    index = json['index'] as String;
-    protocol = json['protocol'] as String;
-    requestId = json['requestId'] as String;
+    index = json['index'] as String?;
+    protocol = json['protocol'] as String?;
+    requestId = json['requestId'] as String?;
     result = json['result'] as dynamic;
-    room = json['room'] as String;
-    scope = json['scope'] as String;
-    state = json['state'] as String;
-    status = json['status'] as int;
-    timestamp = json['timestamp'] as int;
-    users = json['users'] as String;
-    volatile = json['volatile'] as Map<String, dynamic>;
+    room = json['room'] as String?;
+    scope = json['scope'] as String?;
+    state = json['state'] as String?;
+    status = json['status'] as int?;
+    timestamp = json['timestamp'] as int?;
+    users = json['users'] as String?;
+    volatile = json['volatile'] as Map<String, dynamic>?;
   }
 
   Map toJson() {
@@ -43,10 +47,12 @@ class KuzzleResponse {
     if (controller != null) {
       map['controller'] = controller;
     }
-    if (error != null) {
-      map['error'] = error.toJson();
+    if (deprecations != null) {
+      map['deprecations'] = Deprecation.toJsonList(deprecations!);
     }
-  String users;
+    if (error != null) {
+      map['error'] = error!.toJson();
+    }
     if (index != null) {
       map['index'] = index;
     }
@@ -87,19 +93,20 @@ class KuzzleResponse {
   @override
   String toString() => toJson().toString();
 
-  String action;
-  String collection;
-  String controller;
-  KuzzleError error;
-  String index;
-  String protocol;
-  String requestId;
+  String? action;
+  String? collection;
+  String? controller;
+  List<Deprecation>? deprecations;
+  KuzzleError? error;
+  String? index;
+  String? protocol;
+  String? requestId;
   dynamic result;
-  String room;
-  String scope;
-  String state;
-  int status;
-  int timestamp;
-  String users;
-  Map<String, dynamic> volatile;
+  String? room;
+  String? scope;
+  String? state;
+  int? status;
+  int? timestamp;
+  String? users;
+  Map<String, dynamic>? volatile;
 }

@@ -11,19 +11,19 @@ class KuzzleProfile {
   });
 
   KuzzleProfile.fromKuzzleResponse(this.kuzzle, KuzzleResponse response) {
-    uid = response.result['_id'] as String;
-    policies = response.result['_source']['policies'] as List<dynamic>;
+    uid = response.result['_id'] as String?;
+    policies = response.result['_source']['policies'] as List<dynamic>?;
   }
 
   final Kuzzle kuzzle;
-  String uid;
-  List<dynamic> policies;
+  String? uid;
+  List<dynamic>? policies;
 
-  List<String> get roleIds => policies
-    .map((policy) => policy['roleId'] as String).toList();
+  List<String?> get roleIds => policies!
+    .map((policy) => policy['roleId'] as String?).toList();
   
   Future<List<KuzzleRole>> getRoles() async {
-    if (policies == null || policies.isEmpty) {
+    if (policies == null || policies!.isEmpty) {
       return <KuzzleRole>[];
     }
 

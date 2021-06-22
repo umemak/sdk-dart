@@ -9,12 +9,12 @@ class KuzzleRole {
   });
 
   KuzzleRole.fromKuzzleResponse(this.kuzzle, KuzzleResponse response) {
-    uid = response.result['_id'] as String;
+    uid = response.result['_id'] as String?;
     controllers =
-        response.result['_source']['controllers'] as Map<String, dynamic>;
+        response.result['_source']['controllers'] as Map<String, dynamic>?;
   }
 
   final Kuzzle kuzzle;
-  String uid;
-  Map<String, dynamic> controllers;
+  String? uid;
+  Map<String, dynamic>? controllers;
 }

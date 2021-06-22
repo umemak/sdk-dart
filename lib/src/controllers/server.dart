@@ -12,7 +12,7 @@ class ServerController extends KuzzleController {
     final response = await kuzzle
         .query(KuzzleRequest(controller: name, action: 'adminExists'));
 
-    final result = response.result as Map<String, dynamic>;
+    final result = response.result as Map<String, dynamic>?;
 
     if (result != null && result.containsKey('exists')) {
       if (result['exists'] is bool) {
@@ -77,7 +77,7 @@ class ServerController extends KuzzleController {
     final response =
         await kuzzle.query(KuzzleRequest(controller: name, action: 'now'));
 
-    final result = response.result as Map<String, dynamic>;
+    final result = response.result as Map<String, dynamic>?;
 
     if (result != null && result.containsKey('now')) {
       if (result['now'] is int) {

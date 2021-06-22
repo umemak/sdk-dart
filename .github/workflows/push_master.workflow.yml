@@ -54,21 +54,30 @@ jobs:
           node-version: "12"
       - uses: ./.github/actions/doc-snippets
 
-  tests:
-    name: Tests
+  unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: cedx/setup-dart@v2
-      - uses: ./.github/actions/tests
+      - uses: ./.github/actions/unit-tests
+
+  dart-doc:
+    name: Generate DartDoc
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cedx/setup-dart@v2
+      - uses: ./.github/actions/dart-doc
 
   doc-prod:
     name: Deployment Doc Prod
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # needs: [dead-links, doc-snippets]
-    needs: [doc-snippets]
+    needs: [doc-snippets, unit-tests]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules
@@ -88,7 +97,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - uses: ./.github/actions/deploy-doc
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
@@ -107,7 +116,7 @@ jobs:
     needs: [tests, doc-snippets]
     steps:
       - uses: actions/checkout@v2
-      - name: '>> Dart package <<'
+      - name: ">> Dart package <<"
         uses: k-paxian/dart-package-publisher@master
         with:
           accessToken: ${{ secrets.PUB_ACCESS_TOKEN }}

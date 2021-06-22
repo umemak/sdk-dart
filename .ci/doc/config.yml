@@ -4,6 +4,9 @@
     mount: /mnt
     path: 'doc/**/snippets/*.test.yml'
     templates: /mnt/.ci/doc/templates
+    protocols:
+      - http
+      - websocket
   
   runners:
     default: dart
@@ -15,5 +18,5 @@
         cmd: cd /mnt
       run:
         before: timeout 600 bash -c 'until stat /tmp/runner_is_ready && curl -f -s -o /dev/null http://kuzzle:7512/_now; do sleep 1; done && cp *.dart /mnt/.ci/doc/project/ && cd /mnt/.ci/doc/project/ && pub get'
-        cmd: cd /mnt/.ci/doc/project/ && dart {{ snippet.source }}
+        cmd: cd /mnt/.ci/doc/project/ && SNIPPET_PROTOCOL="{{ snippet.protocol }}" dart {{ snippet.source }}
   
