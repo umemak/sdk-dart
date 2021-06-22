@@ -27,7 +27,7 @@ Include this in your pubspec.yaml
 
 ```yaml
 dependencies:
-  kuzzle: ^2.2.0
+  kuzzle: ^3.0.0
 
 ```
 
