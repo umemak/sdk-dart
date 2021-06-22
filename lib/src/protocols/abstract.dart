@@ -167,10 +167,10 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
 
     final completer = Completer<KuzzleResponse>();
 
-    once(request.requestId, (KuzzleResponse response) {
+    once(request.requestId!, (KuzzleResponse response) {
       if (response.error != null) {
         emit(ProtocolEvents.QUERY_ERROR, [response.error, request]);
-        return completer.completeError(response.error);
+        return completer.completeError(response.error!);
       }
       return completer.complete(response);
     });

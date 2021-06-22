@@ -8,8 +8,8 @@ abstract class KuzzleController {
     this.name,
   });
 
-  final String name;
-  String accessor;
+  final String? name;
+  String? accessor;
 
   @protected
   final Kuzzle kuzzle;

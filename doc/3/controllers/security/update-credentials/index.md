@@ -14,7 +14,7 @@ Updates a user credentials for the specified authentication strategy.
 ```dart
  Future<Map<String, dynamic>> updateCredentials(
       String strategy, String id, Map<String, dynamic> credentials,
-      {bool waitForRefresh})
+      {bool? waitForRefresh})
 ```
 
 <br />
@@ -24,7 +24,7 @@ Updates a user credentials for the specified authentication strategy.
 | `strategy` | <pre>String</pre> | Strategy to use |
 | `id` | <pre>String</pre> | User [id](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
 | `credentials` | <pre>Map<String, dynamic></pre> | New credentials |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the credentials are indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the credentials are indexed |
 
 ### credentials
 

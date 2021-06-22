@@ -73,42 +73,42 @@ class KuzzleRequest {
   }
 
   KuzzleRequest.fromMap(Map data) {
-    action = data['action'] as String;
-    body = data['body'] as Map<String, dynamic>;
-    collection = data['collection'] as String;
-    controller = data['controller'] as String;
-    index = data['index'] as String;
-    jwt = data['jwt'] as String;
-    lang = data['lang'] as String;
-    requestId = data['requestId'] as String;
+    action = data['action'] as String?;
+    body = data['body'] as Map<String, dynamic>?;
+    collection = data['collection'] as String?;
+    controller = data['controller'] as String?;
+    index = data['index'] as String?;
+    jwt = data['jwt'] as String?;
+    lang = data['lang'] as String?;
+    requestId = data['requestId'] as String?;
     requestId ??= _uuid.v4();
-    waitForRefresh = (data['refresh'] as String) == 'wait_for' ? true : false;
-    force = data['force'] as bool;
-    uid = data['_id'] as String;
-    volatile = data['volatile'] as Map<String, dynamic>;
+    waitForRefresh = (data['refresh'] as String?) == 'wait_for' ? true : false;
+    force = data['force'] as bool?;
+    uid = data['_id'] as String?;
+    volatile = data['volatile'] as Map<String, dynamic>?;
     startTime = data['startTime'] == null
         ? null
         : DateTime.parse(data['startTime'] as String);
     stopTime = data['stopTime'] == null
         ? null
         : DateTime.parse(data['stopTime'] as String);
-    strategy = data['strategy'] as String;
-    expiresIn = data['expiresIn'] as String;
-    from = data['from'] as int;
-    size = data['size'] as int;
-    type = data['type'] as String;
-    scroll = data['scroll'] as String;
-    scrollId = data['scrollId'] as String;
-    sort = data['sort'] as List<dynamic>;
-    retryOnConflict = data['retryOnConflict'] as int;
-    reset = data['reset'] as bool;
-    scope = data['scope'] as String;
-    state = data['state'] as String;
-    userId = data['userId'] as String;
-    users = data['users'] as String;
-    verb = data['verb'] as String;
-    source = data['source'] as bool;
-    includeKuzzleMeta = data['includeKuzzleMeta'] as bool;
+    strategy = data['strategy'] as String?;
+    expiresIn = data['expiresIn'] as String?;
+    from = data['from'] as int?;
+    size = data['size'] as int?;
+    type = data['type'] as String?;
+    scroll = data['scroll'] as String?;
+    scrollId = data['scrollId'] as String?;
+    sort = data['sort'] as List<dynamic>?;
+    retryOnConflict = data['retryOnConflict'] as int?;
+    reset = data['reset'] as bool?;
+    scope = data['scope'] as String?;
+    state = data['state'] as String?;
+    userId = data['userId'] as String?;
+    users = data['users'] as String?;
+    verb = data['verb'] as String?;
+    source = data['source'] as bool?;
+    includeKuzzleMeta = data['includeKuzzleMeta'] as bool?;
   }
 
   final Map<String, dynamic> _args = {};
@@ -158,10 +158,10 @@ class KuzzleRequest {
       map['volatile'] = volatile;
     }
     if (startTime != null) {
-      map['startTime'] = startTime.millisecondsSinceEpoch;
+      map['startTime'] = startTime!.millisecondsSinceEpoch;
     }
     if (stopTime != null) {
-      map['stopTime'] = stopTime.millisecondsSinceEpoch;
+      map['stopTime'] = stopTime!.millisecondsSinceEpoch;
     }
     if (strategy != null) {
       map['strategy'] = strategy;
@@ -221,35 +221,35 @@ class KuzzleRequest {
   @override
   String toString() => toJson().toString();
 
-  String action;
-  Map<String, dynamic> body;
-  String collection;
-  String controller;
-  String index;
-  String jwt;
-  String lang;
-  String requestId;
-  bool waitForRefresh;
-  bool force;
-  String uid;
-  Map<String, dynamic> volatile;
-  DateTime startTime;
-  DateTime stopTime;
-  String strategy;
-  String expiresIn;
-  int from;
-  int size;
-  String type;
-  String scroll;
-  String scrollId;
-  List<dynamic> sort;
-  int retryOnConflict;
-  bool reset;
-  bool source;
-  String scope;
-  String state;
-  String userId;
-  String users;
-  String verb;
-  bool includeKuzzleMeta;
+  String? action;
+  Map<String, dynamic>? body;
+  String? collection;
+  String? controller;
+  String? index;
+  String? jwt;
+  String? lang;
+  String? requestId;
+  bool? waitForRefresh;
+  bool? force;
+  String? uid;
+  Map<String, dynamic>? volatile;
+  DateTime? startTime;
+  DateTime? stopTime;
+  String? strategy;
+  String? expiresIn;
+  int? from;
+  int? size;
+  String? type;
+  String? scroll;
+  String? scrollId;
+  List<dynamic>? sort;
+  int? retryOnConflict;
+  bool? reset;
+  bool? source;
+  String? scope;
+  String? state;
+  String? userId;
+  String? users;
+  String? verb;
+  bool? includeKuzzleMeta;
 }

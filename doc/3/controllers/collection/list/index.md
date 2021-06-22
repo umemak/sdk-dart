@@ -14,7 +14,7 @@ The returned list is sorted in alphanumerical order.
 
 ```dart
 Future<Map<String, dynamic>> list(
-    String index, {int from, int size, String type})
+    String index, {int? from, int? size, String? type})
 ```
 
 
@@ -28,9 +28,9 @@ Returns a `ConcurrentHashMap<String, Object>` containing the following propertie
 
 | Property      | Type                | Description                                                        |
 | ------------- | ------------------- | ------------------------------------------------------------------ |
-| `type`        | <pre>String</pre>   | Types of returned collections <br/>(`all`, `realtime` or `stored`) |
-| `from`        | <pre>int</pre>   | Offset of the first result                                         |
-| `size`        | <pre>int</pre>   | Maximum number of returned results                                 |
+| `type`        | <pre>String?</pre>   | Types of returned collections <br/>(`all`, `realtime` or `stored`) |
+| `from`        | <pre>int?</pre>   | Offset of the first result                                         |
+| `size`        | <pre>int?</pre>   | Maximum number of returned results                                 |
 
 Each object in the `collections` array contains the following properties:
 

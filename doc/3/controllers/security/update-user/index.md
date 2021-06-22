@@ -13,7 +13,7 @@ Updates a user definition.
 
 ```dart
 Future<KuzzleUser> updateUser(String id, Map<String, dynamic> body,
-      {bool waitForRefresh})
+      {bool? waitForRefresh})
 ```
 
 <br />
@@ -22,7 +22,7 @@ Future<KuzzleUser> updateUser(String id, Map<String, dynamic> body,
 |--- |--- |--- |
 | `id` | <pre>String</pre> | User [id](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
 | `body` | <pre>Map<String, dynamic></pre> | User content |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the updated user is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the updated user is indexed |
 
 ### body
 

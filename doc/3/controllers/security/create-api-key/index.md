@@ -18,7 +18,7 @@ Creates a new API key for a user.
 ```dart
 Future<Map<String, dynamic>> createApiKey(
       String userId, String description,
-      {String expiresIn, bool refresh})
+      {String? expiresIn, bool? refresh})
 ```
 
 <br />
@@ -27,8 +27,8 @@ Future<Map<String, dynamic>> createApiKey(
 | --- | --- | --- |
 | `userId` | <pre>String</pre> | User [kuid](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
 | `description` | <pre>String</pre> | API key description |
-| `expiresIn` | <pre>String</pre><br />(`-1`) | Expiration duration |
-| `refresh` | <pre>bool</pre><br />(`false`) | If set to `wait_for`, Kuzzle will not respond until the API key is indexed |
+| `expiresIn` | <pre>String?</pre><br />(`-1`) | Expiration duration |
+| `refresh` | <pre>bool?</pre><br />(`false`) | If set to `wait_for`, Kuzzle will not respond until the API key is indexed |
 
 **Notes**:
 - `expiresIn`:

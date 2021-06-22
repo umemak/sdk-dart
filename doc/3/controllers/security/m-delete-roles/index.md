@@ -15,7 +15,7 @@ Throws a partial error (error code 206) if one or more role deletions fail.
 
 ```dart
 Future<List<dynamic>> mDeleteRoles(List<String> ids,
-      {bool waitForRefresh})
+      {bool? waitForRefresh})
 ```
 
 <br />
@@ -23,7 +23,7 @@ Future<List<dynamic>> mDeleteRoles(List<String> ids,
 | Property | Type | Description |
 |--- |--- |--- |
 | `ids` | `List<String>` | Role identifiers |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the roles deletion is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the roles deletion is indexed |
 
 ## Return
 

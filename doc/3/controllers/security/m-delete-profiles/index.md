@@ -14,7 +14,7 @@ Throws a partial error (error code 206) if one or more profile deletions fail.
 <br />
 
 ```dart
-Future<List<dynamic>> mDeleteProfiles(List<String> ids, {bool waitForRefresh})
+Future<List<dynamic>> mDeleteProfiles(List<String> ids, {bool? waitForRefresh})
 ```
 
 <br />
@@ -22,7 +22,7 @@ Future<List<dynamic>> mDeleteProfiles(List<String> ids, {bool waitForRefresh})
 | Property | Type | Description |
 |--- |--- |--- |
 | `ids` | `List<String>` | Profile identifiers |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the profiles deletion is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the profiles deletion is indexed |
 
 ## Return
 

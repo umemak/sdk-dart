@@ -13,7 +13,11 @@ Searches users.
 
 ```dart
 Future<UserSearchResult> searchUsers(
-      {Map<String, dynamic> query, int from, int size, String scroll})
+      {Map<String, dynamic> query = const {},
+      int? from,
+      int? size,
+      String? scroll,
+      String? lang})
 ```
 
 <SinceBadge version="change-me"/>
@@ -30,10 +34,10 @@ Koncorde `bool` operator and `regexp` clause are not supported for search querie
 | Property | Type | Description |
 |--- |--- |--- |
 | `query` | <pre>Map<String, dynamic></pre> | Search query |
-| `from`     | <pre>int</pre><br/>(`0`)     | Offset of the first document to fetch            |
-| `size`     | <pre>int</pre><br/>(`10`)    | Maximum number of documents to retrieve per page |
-| `scroll`   | <pre>String</pre><br/>(`""`)    | When set, gets a forward-only cursor having its ttl set to the given value (ie `30s`; cf [elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/7.3/common-options.html#time-units)) |
-| `lang`     | <pre>String</pre>               | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |
+| `from`     | <pre>int?</pre>     | Offset of the first document to fetch            |
+| `size`     | <pre>int?</pre>    | Maximum number of documents to retrieve per page |
+| `scroll`   | <pre>String?</pre>    | When set, gets a forward-only cursor having its ttl set to the given value (ie `30s`; cf [elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/7.3/common-options.html#time-units)) |
+| `lang`     | <pre>String?</pre>               | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |
 
 ### query
 

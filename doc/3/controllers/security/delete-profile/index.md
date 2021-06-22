@@ -13,7 +13,7 @@ Deletes a security profile.
 
 ```dart
  Future<Map<String, dynamic>> deleteProfile(String id,
-  {bool waitForRefresh})
+  {bool? waitForRefresh})
 ```
 
 <br />
@@ -21,7 +21,7 @@ Deletes a security profile.
 | Property | Type | Description |
 | --- | --- | --- |
 | `id` | <pre>String</pre> | Profile identifier |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the profile deletion is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the profile deletion is indexed |
 
 ## Return
 

@@ -8,28 +8,28 @@ import 'search-result.dart';
 class ProfileSearchResult extends SearchResult {
   ProfileSearchResult(
     Kuzzle kuzzle, {
-    KuzzleRequest request,
-    KuzzleResponse response,
+    KuzzleRequest? request,
+    required KuzzleResponse response,
   }) : super(kuzzle, request: request, response: response) {
     searchAction = 'searchProfiles';
     scrollAction = 'scrollProfiles';
 
     hits = (response.result['hits'] as List)
         .map((hit) => KuzzleProfile(kuzzle,
-            uid: hit['_id'] as String,
-            policies: hit['_source']['policies'] as List))
+            uid: hit['_id'] as String?,
+            policies: hit['_source']['policies'] as List?))
         .toList();
   }
 
   @override
-  ProfileSearchResult buildNextSearchResult (KuzzleResponse response) {
+  ProfileSearchResult buildNextSearchResult (KuzzleResponse? response) {
     final nextSearchResult = ProfileSearchResult(
       kuzzle, 
       request: request, 
-      response: response);
+      response: response!);
     nextSearchResult.fetched += fetched;
     return nextSearchResult;
   }
 
-  List<KuzzleProfile> getRoles() => List<KuzzleProfile>.from(hits);
+  List<KuzzleProfile> getRoles() => List<KuzzleProfile>.from(hits!);
 }

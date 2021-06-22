@@ -18,23 +18,12 @@ import 'abstract.dart';
 typedef SubscribeListener = void Function(KuzzleResponse);
 
 class Subscription {
-  String index;
-  String collection;
-  Map<String, dynamic> filters;
-  SubscribeListener callback;
-  bool autoResubscribe;
-  bool subscribeToSelf;
-  String state;
-  String scope;
-  String users;
-  Map<String, dynamic> volatile;
-
   // Constructor
   Subscription(
-      {this.index,
-      this.collection,
-      this.filters,
-      this.callback,
+      {required this.index,
+      required this.collection,
+      required this.filters,
+      required this.callback,
       this.autoResubscribe,
       this.subscribeToSelf,
       this.state,
@@ -42,13 +31,24 @@ class Subscription {
       this.users,
       this.volatile});
 
-  @override
-  String toString() {
-    return 'Subscription: {index: ${index}, collection: ${collection}, filters: ${filters}, callback: ${callback}, autoResubscribe: ${autoResubscribe}, subscribeToSelf: ${subscribeToSelf}, state: ${state}, scope: ${scope}, users: ${users}, volatile: ${volatile}}';
-  }
+  String index;
+  String collection;
+  Map<String, dynamic> filters;
+  SubscribeListener callback;
+  bool? autoResubscribe;
+  bool? subscribeToSelf;
+  String? state;
+  String? scope;
+  String? users;
+  Map<String, dynamic>? volatile;
 
   @override
-  bool operator ==(other) {
+  String toString() => '''
+Subscription: {index: $index, collection: $collection, filters: $filters, callback: $callback, autoResubscribe: $autoResubscribe, subscribeToSelf: $subscribeToSelf, state: $state, scope: $scope, users: $users, volatile: $volatile}''';
+
+  @override
+  // ignore: prefer_expression_function_bodies
+  bool operator ==(Object other) {
     return (other is Subscription) &&
         other.index == index &&
         other.collection == collection &&
@@ -69,14 +69,14 @@ class RealTimeController extends KuzzleController {
   RealTimeController(Kuzzle kuzzle) : super(kuzzle, name: 'realtime') {
     kuzzle.on(KuzzleEvents.UNHANDLED_RESPONSE, (KuzzleResponse message) {
       var fromSelf = false;
-      if (message.volatile != null && message.volatile.isNotEmpty) {
-        if (message.volatile.containsKey('sdkInstanceId') &&
-            message.volatile['sdkInstanceId'] == kuzzle.protocol.id) {
+      if (message.volatile != null && message.volatile!.isNotEmpty) {
+        if (message.volatile!.containsKey('sdkInstanceId') &&
+            message.volatile!['sdkInstanceId'] == kuzzle.protocol.id) {
           fromSelf = true;
         }
       }
 
-      final subs = _currentSubscriptions[message.room];
+      final subs = _currentSubscriptions[message.room]!;
       for (final sub in subs) {
         if (sub.subscribeToSelf == true || !fromSelf) {
           sub.callback(message);
@@ -85,11 +85,11 @@ class RealTimeController extends KuzzleController {
     });
   }
 
-  final Map<String, List<Subscription>> _currentSubscriptions = {};
-  final Map<String, List<Subscription>> _subscriptionsCache = {};
+  final Map<String?, List<Subscription>> _currentSubscriptions = {};
+  final Map<String?, List<Subscription>> _subscriptionsCache = {};
 
   /// room => channel
-  final Map<String, String> _rooms = {};
+  final Map<String, String?> _rooms = {};
 
   /// Returns the number of other connections sharing the same subscription.
   Future<int> count(String roomId) async {
@@ -132,12 +132,12 @@ class RealTimeController extends KuzzleController {
   /// generate real-time notifications, sent to you in real-time by Kuzzle.
   Future<String> subscribe(String index, String collection,
           Map<String, dynamic> filters, SubscribeListener callback,
-          {String scope = 'all',
-          String state,
-          String users,
-          Map<String, dynamic> volatile,
-          bool subscribeToSelf = true,
-          bool autoResubscribe}) async =>
+          {String? scope,
+          String? state,
+          String? users,
+          Map<String, dynamic>? volatile,
+          bool? subscribeToSelf = true,
+          bool? autoResubscribe}) async =>
       kuzzle
           .query(
               KuzzleRequest(
@@ -165,21 +165,21 @@ class RealTimeController extends KuzzleController {
             subscribeToSelf: subscribeToSelf,
             autoResubscribe: autoResubscribe);
         final roomId = response.result['roomId'] as String;
-        final channel = response.result['channel'] as String;
+        final channel = response.result['channel'] as String?;
 
         if (_currentSubscriptions[channel] == null) {
-          final List<Subscription> item = [];
+          final item = <Subscription>[];
           item.add(subscription);
           _currentSubscriptions[channel] = item;
           _subscriptionsCache[channel] = item;
         } else {
           if (!_checkIsSubscriptionExisting(
-              _currentSubscriptions[channel], subscription)) {
-            _currentSubscriptions[channel].add(subscription);
+              _currentSubscriptions[channel]!, subscription)) {
+            _currentSubscriptions[channel]!.add(subscription);
           }
           if (!_checkIsSubscriptionExisting(
-              _subscriptionsCache[channel], subscription)) {
-            _subscriptionsCache[channel].add(subscription);
+              _subscriptionsCache[channel]!, subscription)) {
+            _subscriptionsCache[channel]!.add(subscription);
           }
         }
         _rooms[roomId] = channel;
@@ -192,7 +192,7 @@ class RealTimeController extends KuzzleController {
   bool _checkIsSubscriptionExisting(
       List<Subscription> currentSubs, Subscription _subscription) {
     for (var i = 0; i < currentSubs.length; i++) {
-      final Subscription sub = currentSubs[i];
+      final sub = currentSubs[i];
       if (sub == _subscription) {
         return true;
       }
@@ -203,7 +203,7 @@ class RealTimeController extends KuzzleController {
 
   void _renewSubscribe() async {
     for (final subs in _subscriptionsCache.values) {
-      final List<Subscription> _localSubs = List<Subscription>.from(subs);
+      final _localSubs = List<Subscription>.from(subs);
       subs.clear();
       for (final sub in _localSubs) {
         await subscribe(
@@ -234,10 +234,12 @@ class RealTimeController extends KuzzleController {
         action: 'unsubscribe',
         body: <String, dynamic>{'roomId': roomId}));
 
-    if (_currentSubscriptions[_rooms[roomId]] != null)
-      _currentSubscriptions[_rooms[roomId]].clear();
-    if (_subscriptionsCache[_rooms[roomId]] != null)
-      _subscriptionsCache[_rooms[roomId]].clear();
+    if (_currentSubscriptions[_rooms[roomId]] != null) {
+      _currentSubscriptions[_rooms[roomId]]!.clear();
+    }
+    if (_subscriptionsCache[_rooms[roomId]] != null) {
+      _subscriptionsCache[_rooms[roomId]]!.clear();
+    }
 
     _rooms.remove(roomId);
   }

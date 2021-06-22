@@ -10,12 +10,11 @@ class BulkController extends KuzzleController {
   /// Creates, updates or deletes
   /// large amounts of [documents] as fast as possible.
   Future<Map<String, dynamic>> import(
-      String index, 
-      String collection, 
-      List<Map<String, dynamic>> documents,
-      {
-        bool waitForRefresh = false,
-      }) async {
+    String index,
+    String collection,
+    List<Map<String, dynamic>> documents, {
+    bool waitForRefresh = false,
+  }) async {
     final response = await kuzzle.query(KuzzleRequest(
       action: 'import',
       collection: collection,
@@ -32,17 +31,13 @@ class BulkController extends KuzzleController {
       return result;
     }
 
-    throw BadResponseFormatError(response.error?.id, 
-      '$name.exists: bad response format', 
-      response
-    );
+    throw BadResponseFormatError(
+        response.error?.id, '$name.exists: bad response format', response);
   }
 
   /// Creates or replaces
   /// large amounts of [documents] as fast as possible.
-  Future<Map<String, dynamic>> mWrite(
-      String index, 
-      String collection, 
+  Future<Map<String, dynamic>> mWrite(String index, String collection,
       List<Map<String, dynamic>> documents) async {
     final response = await kuzzle.query(KuzzleRequest(
       action: 'mWrite',
@@ -59,20 +54,18 @@ class BulkController extends KuzzleController {
       return result;
     }
 
-    throw BadResponseFormatError(response.error?.id, 
-      '$name.exists: bad response format', 
-      response
-    );
+    throw BadResponseFormatError(
+        response.error?.id, '$name.exists: bad response format', response);
   }
 
   /// Creates or replaces a document
   Future<Map<String, dynamic>> write(
-      String index, 
-      String collection, 
-      Map<String, dynamic> document, {
-        String id,
-        bool waitForRefresh = false,
-      }) async {
+    String index,
+    String collection,
+    Map<String, dynamic> document, {
+    String? id,
+    bool waitForRefresh = false,
+  }) async {
     final response = await kuzzle.query(KuzzleRequest(
       action: 'write',
       collection: collection,
@@ -87,9 +80,7 @@ class BulkController extends KuzzleController {
       return response.result as Map<String, dynamic>;
     }
 
-    throw BadResponseFormatError(response.error?.id, 
-      '$name.exists: bad response format', 
-      response
-    );
+    throw BadResponseFormatError(
+        response.error?.id, '$name.exists: bad response format', response);
   }
 }

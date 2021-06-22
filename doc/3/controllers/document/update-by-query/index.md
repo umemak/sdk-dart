@@ -29,11 +29,11 @@ Future<Map<String, dynamic>> updateByQuery(
     String index,
     String collection,
     {
-    @required Map<String, dynamic> searchQuery,
-    @required Map<String, dynamic> changes,
+    required Map<String, dynamic> searchQuery,
+    required Map<String, dynamic> changes,
     bool waitForRefresh = false,
     bool source = false,
-    String lang
+    String lang?
   })
 ```
 
@@ -45,7 +45,7 @@ Future<Map<String, dynamic>> updateByQuery(
 | `changes`          | <pre>Map<String, dynamic></pre> | Partial changes to apply to the documents |
 | `waitForRefresh`   | <pre>bool</pre><br>(`false`)                           | If set to `true`, Kuzzle will wait for the persistence layer to finish indexing|
 | `source`           | <pre>bool</pre><br>(`false`)                           | If true, returns the updated document inside the response |
-| `lang`     | <pre>String</pre>               | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |
+| `lang`     | <pre>String?</pre>               | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |
 
 ---
 

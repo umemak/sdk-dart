@@ -22,7 +22,7 @@ Future<int> count(
     String index,
     String collection,
     {
-    Map<String, dynamic> query
+    Map<String, dynamic> query = const {}
 })
 ```
 

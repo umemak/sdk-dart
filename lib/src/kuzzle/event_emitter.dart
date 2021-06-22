@@ -4,7 +4,7 @@ class _KuzzleListener {
   _KuzzleListener(this.fn, {this.once});
 
   final Function fn;
-  final bool once;
+  final bool? once;
 }
 
 class KuzzleEventEmitter {
@@ -21,7 +21,7 @@ class KuzzleEventEmitter {
       return false;
     }
 
-    return _events[eventName]
+    return _events[eventName]!
         .where((listener) => listener.fn == callback)
         .isNotEmpty;
   }
@@ -32,10 +32,10 @@ class KuzzleEventEmitter {
     assert(eventName != null);
     assert(eventName.isNotEmpty);
 
-    return listeners(eventName).length;
+    return listeners(eventName)!.length;
   }
 
-  List<_KuzzleListener> listeners(String eventName) {
+  List<_KuzzleListener>? listeners(String eventName) {
     assert(eventName != null);
     assert(eventName.isNotEmpty);
 
@@ -57,7 +57,7 @@ class KuzzleEventEmitter {
     }
 
     if (!_exist(eventName, callback)) {
-      _events[eventName].add(_KuzzleListener(callback, once: once));
+      _events[eventName]!.add(_KuzzleListener(callback, once: once));
     }
   }
 
@@ -73,7 +73,7 @@ class KuzzleEventEmitter {
     }
 
     if (!_exist(eventName, callback)) {
-      _events[eventName].insert(0, _KuzzleListener(callback, once: once));
+      _events[eventName]!.insert(0, _KuzzleListener(callback, once: once));
     }
   }
 
@@ -87,17 +87,17 @@ class KuzzleEventEmitter {
       return;
     }
 
-    _events[eventName].removeWhere((listener) => listener.fn == callback);
+    _events[eventName]!.removeWhere((listener) => listener.fn == callback);
 
-    if (_events[eventName].isEmpty) {
+    if (_events[eventName]!.isEmpty) {
       _events.remove(eventName);
     }
   }
 
   @mustCallSuper
-  void removeAllListeners([String eventName]) {
+  void removeAllListeners([String? eventName]) {
     if (eventName != null && eventName.isNotEmpty) {
-      _events[eventName].clear();
+      _events[eventName]!.clear();
     } else {
       _events.clear();
     }
@@ -121,8 +121,8 @@ class KuzzleEventEmitter {
   @mustCallSuper
   bool emit(
     String eventName, [
-    List positionalArguments,
-    Map<Symbol, dynamic> namedArguments,
+    List? positionalArguments,
+    Map<Symbol, dynamic>? namedArguments,
   ]) {
     assert(eventName != null);
     assert(eventName.isNotEmpty);
@@ -131,11 +131,11 @@ class KuzzleEventEmitter {
       return false;
     }
 
-    final _listeners = listeners(eventName);
+    final _listeners = listeners(eventName)!;
     final _onceListeners = <_KuzzleListener>[];
 
     for (final listener in _listeners) {
-      if (listener.once) {
+      if (listener.once!) {
         _onceListeners.add(listener);
       }
 

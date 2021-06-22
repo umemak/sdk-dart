@@ -13,7 +13,7 @@ Creates a new role.
 
 ```dart
 Future<KuzzleRole> createRole(String id, Map<String, dynamic> controllers,
-  {bool waitForRefresh, bool force})
+  {bool? waitForRefresh, bool? force})
 ```
 
 <br />
@@ -22,8 +22,8 @@ Future<KuzzleRole> createRole(String id, Map<String, dynamic> controllers,
 |--- |--- |--- |
 | `id` | <pre>String</pre> | Role identifier |
 | `controllers` | <pre>Map<String, dynamic></pre> | [Role definition](/core/2/guides/main-concepts/permissions#roles) |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `wait_for`, Kuzzle will not respond until the created role is indexed |
-| `force`   | <pre>bool</pre><br />(`null`) | If set to `true`, creates the role even if it gives access to non-existent plugins API routes |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `wait_for`, Kuzzle will not respond until the created role is indexed |
+| `force`   | <pre>bool?</pre><br />(`null`) | If set to `true`, creates the role even if it gives access to non-existent plugins API routes |
 
 ## Return
 

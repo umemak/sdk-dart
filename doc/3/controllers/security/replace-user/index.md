@@ -13,7 +13,7 @@ Replaces a user with new configuration.
 
 ```dart
 Future<KuzzleUser> replaceUser(String id, 
-  Map<String, dynamic> body, {bool waitForRefresh})
+  Map<String, dynamic> body, {bool? waitForRefresh})
 ```
 
 <br />
@@ -22,7 +22,7 @@ Future<KuzzleUser> replaceUser(String id,
 |--- |--- |--- |
 | `id` | <pre>String</pre> | User [id](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
 | `body` | <pre>Map<String, dynamic></pre> | User content |
-| `waitForRefresh` | <pre>boolean</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the created user is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the created user is indexed |
 
 ### body
 

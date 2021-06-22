@@ -13,7 +13,7 @@ Deletes user credentials for the specified authentication strategy.
 
 ```dart
 Future<Map<String, dynamic>> deleteCredentials(
-      String strategy, String id, {bool waitForRefresh})
+      String strategy, String id, {bool? waitForRefresh})
 ```
 
 <br />
@@ -22,7 +22,7 @@ Future<Map<String, dynamic>> deleteCredentials(
 | --- | --- | --- |
 | `strategy` | <pre>String</pre> | Strategy to use |
 | `id` | <pre>String</pre> | User [id](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the credentials deletion is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the credentials deletion is indexed |
 
 ## Returns
 

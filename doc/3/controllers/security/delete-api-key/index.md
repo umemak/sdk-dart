@@ -16,8 +16,8 @@ Deletes a user's API key.
 <br />
 
 ```dart
-Future<Null> deleteApiKey(
-      String userId, String id, {bool waitForRefresh})
+Future<void> deleteApiKey(
+      String userId, String id, {bool? waitForRefresh})
 ```
 
 <br />
@@ -26,7 +26,7 @@ Future<Null> deleteApiKey(
 | --- | --- | --- |
 | `userId` | <pre>String</pre> | User [kuid](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid) |
 | `id` | <pre>String</pre> | API key unique ID |
-| `refresh` | <pre>bool</pre><br />(`false`) | If set to `wait_for`, Kuzzle will not respond until the API key is indexed |
+| `refresh` | <pre>bool?</pre><br />(`false`) | If set to `wait_for`, Kuzzle will not respond until the API key is indexed |
 
 ## Usage
 

@@ -28,8 +28,8 @@ class _KuzzleQueuedRequest {
     this.request,
   }) : queuedAt = DateTime.now();
 
-  Completer<KuzzleResponse> completer;
-  KuzzleRequest request;
+  Completer<KuzzleResponse>? completer;
+  KuzzleRequest? request;
   DateTime queuedAt;
 }
 
@@ -78,11 +78,11 @@ class Kuzzle extends KuzzleEventEmitter {
         emit(KuzzleEvents.UNHANDLED_RESPONSE, [response]);
       }
       if (response.error != null &&
-          response.error.id == 'security.token.expired') {
+          response.error!.id == 'security.token.expired') {
         jwt = null;
         emit(KuzzleEvents.TOKEN_EXPIRED);
       }
-      protocol.emit(response.room, [response]);
+      protocol.emit(response.room!, [response]);
     });
   }
 
@@ -117,8 +117,8 @@ class Kuzzle extends KuzzleEventEmitter {
 
   final int eventTimeout;
   final OfflineMode offlineMode;
-  final Function offlineQueueLoader;
-  final Function queueFilter;
+  final Function? offlineQueueLoader;
+  final Function? queueFilter;
   final DeprecationHandler deprecationHandler;
 
   /// Automatically queue all requests during offline mode
@@ -134,18 +134,18 @@ class Kuzzle extends KuzzleEventEmitter {
   int queueMaxSize;
 
   /// Time a queued request is kept during offline mode, in milliseconds
-  Duration queueTTL;
+  Duration? queueTTL;
 
   /// Delay between each replayed requests
-  Duration replayInterval;
+  Duration? replayInterval;
 
   /// Token used in requests for authentication
-  String jwt;
+  String? jwt;
 
   /// Common volatile data, will be sent to all future requests
-  Map<String, dynamic> globalVolatile;
+  Map<String, dynamic>? globalVolatile;
 
-  final HashSet<String> _requests = HashSet();
+  final HashSet<String?> _requests = HashSet();
 
   final Map<String, KuzzleController> _controllers =
       <String, KuzzleController>{};
@@ -262,14 +262,14 @@ class Kuzzle extends KuzzleEventEmitter {
     final now = DateTime.now();
     var lastDocumentIndex = -1;
 
-    if (!queueTTL.isNegative) {
+    if (!queueTTL!.isNegative) {
       lastDocumentIndex = _offlineQueue.lastIndexWhere((queuedRequest) =>
-          queuedRequest.queuedAt.add(queueTTL).difference(now).isNegative);
+          queuedRequest.queuedAt.add(queueTTL!).difference(now).isNegative);
 
       if (lastDocumentIndex != -1) {
         for (final queuedRequest
             in _offlineQueue.getRange(0, lastDocumentIndex + 1)) {
-          _requests.remove(queuedRequest.request.requestId);
+          _requests.remove(queuedRequest.request!.requestId);
           emit(KuzzleEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
         }
 
@@ -293,18 +293,18 @@ class Kuzzle extends KuzzleEventEmitter {
       if (_offlineQueue.isNotEmpty) {
         final queuedRequest = _offlineQueue.first;
 
-        _requests.add(queuedRequest.request.requestId);
+        _requests.add(queuedRequest.request!.requestId);
 
-        protocol.query(queuedRequest.request).then((response) {
-          queuedRequest.completer.complete(response);
+        protocol.query(queuedRequest.request!).then((response) {
+          queuedRequest.completer!.complete(response);
         }).catchError((error) {
-          queuedRequest.completer.completeError(error);
+          queuedRequest.completer!.completeError(error as Error);
         });
 
         emit(KuzzleEvents.OFFLINE_QUEUE_POP, [queuedRequest.request]);
         _offlineQueue.removeAt(0);
 
-        Timer(replayInterval, _dequeuingProcess);
+        Timer(replayInterval!, _dequeuingProcess);
       }
     }
 
@@ -331,27 +331,27 @@ class Kuzzle extends KuzzleEventEmitter {
   /// ```
   ///
   Future<KuzzleResponse> query(KuzzleRequest request,
-      {Map<String, dynamic> volatile, bool queueable = true}) {
+      {Map<String, dynamic>? volatile, bool queueable = true}) {
     //final _request = KuzzleRequest.fromMap(request);
 
     // bind volatile data
     request.volatile ??= volatile ?? globalVolatile;
 
-    for (final item in globalVolatile.keys) {
-      if (!request.volatile.containsKey(item)) {
-        request.volatile[item] = globalVolatile[item];
+    for (final item in globalVolatile!.keys) {
+      if (!request.volatile!.containsKey(item)) {
+        request.volatile![item] = globalVolatile![item];
       }
     }
 
-    request.volatile['sdkInstanceId'] = protocol.id;
-    request.volatile['sdkName'] = '2.0.0';
+    request.volatile!['sdkInstanceId'] = protocol.id;
+    request.volatile!['sdkName'] = '2.0.0';
 
     /*
      * Do not add the token for the checkToken route,
      * to avoid getting a token error when a developer
      * simply wish to verify his token
      */
-    if ((jwt != null && jwt.isNotEmpty) &&
+    if ((jwt != null && jwt!.isNotEmpty) &&
         !(request.controller == 'auth' && request.action == 'checkToken')) {
       request.jwt = jwt;
     }
@@ -388,7 +388,7 @@ class Kuzzle extends KuzzleEventEmitter {
     return protocol.query(request).then(deprecationHandler.logDeprecation);
   }
 
-  KuzzleController operator [](String accessor) => _controllers[accessor];
+  KuzzleController? operator [](String accessor) => _controllers[accessor];
 
   void operator []=(String accessor, KuzzleController controller) {
     assert(_controllers[accessor] == null);

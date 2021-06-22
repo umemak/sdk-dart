@@ -15,7 +15,7 @@ If this action is successful, all further requests emitted by this SDK instance 
 
 ```dart
 Future<String> login(String strategy, Map<String, dynamic> credentials,
-          {String expiresIn})
+          {String? expiresIn})
 ```
 
 <br/>
@@ -24,7 +24,7 @@ Future<String> login(String strategy, Map<String, dynamic> credentials,
 |---------------|----------------------|--------------------------------------|
 | `strategy`    | <pre>String</pre>    | Strategy to use                      |
 | `credentials` | <pre>Map<String, dynamic></pre>   | Hashmap representing the credentials |
-| `expiresIn`   | <pre>String</pre> | Token duration                       |
+| `expiresIn`   | <pre>String?</pre> | Token duration                       |
 
 #### strategy
 

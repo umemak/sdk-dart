@@ -13,7 +13,7 @@ Searches security roles, optionally returning only those allowing access to the 
 
 ```dart
 Future<RoleSearchResult> searchRoles(
-      {Map<String, dynamic> query, int from, int size})
+      {Map<String, dynamic> query = const {}, int? from, int? size})
 ```
 
 <br />
@@ -21,8 +21,8 @@ Future<RoleSearchResult> searchRoles(
 | Property | Type | Description |
 |--- |--- |--- |
 | `query` | <pre>Map<String, dynamic></pre> | Query including allowed controllers to search for |
-| `from`     | <pre>int</pre><br/>(`0`)     | Offset of the first document to fetch    |
-| `size`     | <pre>int</pre><br/>(`10`)    | Maximum number of documents to retrieve per page |
+| `from`     | <pre>int?</pre>     | Offset of the first document to fetch    |
+| `size`     | <pre>int?</pre>    | Maximum number of documents to retrieve per page |
 
 ### query
 

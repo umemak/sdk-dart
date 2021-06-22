@@ -291,7 +291,7 @@ void main() {
 
       final responseFuture = protocol.query(request);
 
-      protocol.emit(request.requestId, [KuzzleResponse(action: 'foo')]);
+      protocol.emit(request.requestId!, [KuzzleResponse(action: 'foo')]);
 
       final response = await responseFuture;
 
@@ -313,7 +313,7 @@ void main() {
 
       final responseFuture = protocol.query(request);
 
-      protocol.emit(request.requestId,
+      protocol.emit(request.requestId!,
           [KuzzleResponse(action: 'foo', error: KuzzleError('foobar'))]);
 
       KuzzleResponse response;

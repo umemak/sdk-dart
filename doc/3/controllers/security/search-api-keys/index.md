@@ -23,7 +23,7 @@ Koncorde `bool` operator and `regexp` clause are not supported for search querie
 <br />
 
 ```dart
-Future<SearchResult> searchApiKeys(String userId, Map<String, dynamic> query, {int from, int size, String lang})
+Future<SearchResult> searchApiKeys(String userId, Map<String, dynamic> query, {int? from, int? size, String? lang})
 ```
 
 <br />
@@ -32,9 +32,9 @@ Future<SearchResult> searchApiKeys(String userId, Map<String, dynamic> query, {i
 | --- | --- | --- |
 | `userId` | <pre>String</pre> | User kuid |
 | `query` | <pre>Map<String, dynamic></pre> | Search query |
-| `from`     | <pre>int</pre><br/>(`0`)    | Offset of the first document to fetch                  |
-| `size`     | <pre>int</pre><br/>(`10`)   | Maximum number of documents to retrieve per page       |
-| `lang`     | <pre>String</pre>               | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |
+| `from`     | <pre>int?</pre><br/>(`0`)    | Offset of the first document to fetch                  |
+| `size`     | <pre>int?</pre><br/>(`10`)   | Maximum number of documents to retrieve per page       |
+| `lang`     | <pre>String?</pre>               | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |
 
 ### query
 

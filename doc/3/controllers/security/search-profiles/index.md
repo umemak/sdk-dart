@@ -13,7 +13,10 @@ Searches security profiles, optionally returning only those linked to the provid
 
 ```dart
 Future<ProfileSearchResult> searchProfiles(
-      {Map<String, dynamic> query, int from, int size, String scroll})
+      {Map<String, dynamic> query = const {},
+      int? from,
+      int? size,
+      String? scroll})
 ```
 
 <br />
@@ -21,9 +24,9 @@ Future<ProfileSearchResult> searchProfiles(
 | Property | Type | Description |
 |--- |--- |--- |
 | `query` | <pre>Map<String, dynamic></pre> | Query including role identifiers to search for |
-| `from`     | <pre>int</pre><br/>(`0`)     | Offset of the first document to fetch |
-| `size`     | <pre>int</pre><br/>(`10`)    | Maximum number of documents to retrieve per page |
-| `scroll`   | <pre>String</pre><br/>(`""`)    | When set, gets a forward-only cursor having its ttl set to the given value (ie `30s`; cf [elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/7.3/common-options.html#time-units)) |
+| `from`     | <pre>int?</pre><br/>(`0`)     | Offset of the first document to fetch |
+| `size`     | <pre>int?</pre><br/>(`10`)    | Maximum number of documents to retrieve per page |
+| `scroll`   | <pre>String?</pre><br/>(`""`)    | When set, gets a forward-only cursor having its ttl set to the given value (ie `30s`; cf [elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/7.3/common-options.html#time-units)) |
 
 ### query
 

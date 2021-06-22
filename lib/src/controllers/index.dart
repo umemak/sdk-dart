@@ -45,10 +45,7 @@ class IndexController extends KuzzleController {
     }
 
     throw BadResponseFormatError(
-      response.error?.id,
-      '$name.exists: bad response format', 
-      response
-    );
+        response.error?.id, '$name.exists: bad response format', response);
   }
 
   /// Returns the complete list of data indexes.
@@ -58,19 +55,18 @@ class IndexController extends KuzzleController {
       action: 'list',
     ));
 
-    final result = response.result as Map<String, dynamic>;
+    final result = response.result as Map<String, dynamic>?;
 
     if (result != null && result.containsKey('indexes')) {
       if (result['indexes'] is List) {
-        return (result['indexes'] as List<dynamic>).map<String>((a) => a as String).toList();
+        return (result['indexes'] as List<dynamic>)
+            .map<String>((a) => a as String)
+            .toList();
       }
     }
 
     throw BadResponseFormatError(
-      response.error?.id,
-      '$name.list: bad response format', 
-      response
-    );
+        response.error?.id, '$name.list: bad response format', response);
   }
 
   /// Deletes multiple indexes.
@@ -81,7 +77,7 @@ class IndexController extends KuzzleController {
       body: <String, dynamic>{'indexes': indexes},
     ));
 
-    final result = response.result as Map<String, dynamic>;
+    final result = response.result as Map<String, dynamic>?;
 
     if (result != null && result.containsKey('deleted')) {
       if (result['deleted'] is List<dynamic>) {
@@ -90,9 +86,6 @@ class IndexController extends KuzzleController {
     }
 
     throw BadResponseFormatError(
-      response.error?.id,
-      '$name.mDelete: bad response format', 
-      response
-    );
+        response.error?.id, '$name.mDelete: bad response format', response);
   }
 }

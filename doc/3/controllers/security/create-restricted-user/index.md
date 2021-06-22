@@ -18,7 +18,7 @@ This method allows users with limited rights to create other accounts, but block
 
 ```dart
 Future<KuzzleUser> createRestrictedUser(Map<String, dynamic> body, String uid,
-      {bool waitForRefresh})
+      {bool? waitForRefresh})
 ```
 
 <br />
@@ -27,7 +27,7 @@ Future<KuzzleUser> createRestrictedUser(Map<String, dynamic> body, String uid,
 |--- |--- |--- |
 | `body` | <pre>Map<String, dynamic></pre> | User content &amp; credentials |
 | `kuid` | <pre>String</pre> | User [kuid](/core/2/guides/main-concepts/authentication#kuzzle-user-identifier-kuid). If not provided, a random kuid is automatically generated |
-| `waitForRefresh` | <pre>boolean</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the user is indexed |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the user is indexed |
 
 
 ### body

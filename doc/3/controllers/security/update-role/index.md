@@ -15,7 +15,7 @@ Updates a security role definition.
 
 ```dart
 Future<KuzzleRole> updateRole(String id, Map<String, dynamic> controllers,
-      {bool waitForRefresh, bool force})
+      {bool? waitForRefresh, bool? force})
 ```
 
 <br />
@@ -24,8 +24,8 @@ Future<KuzzleRole> updateRole(String id, Map<String, dynamic> controllers,
 |--- |--- |--- |
 | `id` | <pre>String</pre> | Role identifier |
 | `body` | <pre>Map<String, dynamic></pre> | Role definition content |
-| `waitForRefresh` | <pre>bool</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the updated role is indexed |
-| `force`   | <pre>bool</pre><br />(`null`) | If set to `true`, updates the role even if it gives access to non-existent plugins API routes |
+| `waitForRefresh` | <pre>bool?</pre><br />(`null`) | If set to `true`, Kuzzle will not respond until the updated role is indexed |
+| `force`   | <pre>bool?</pre><br />(`null`) | If set to `true`, updates the role even if it gives access to non-existent plugins API routes |
 
 ### body
 

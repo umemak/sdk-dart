@@ -1,3 +1,7 @@
+## [3.0.0]
+
+- Sound null safety compat
+
 ## [2.4.4]
 
 - Fix realtime
