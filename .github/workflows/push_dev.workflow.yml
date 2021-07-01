@@ -52,20 +52,20 @@ jobs:
   doc-dev:
     name: Deploy Doc to NEXT
     runs-on: ubuntu-latest
-    needs: [unit-tests] # doc-snippets,
+    # needs: [unit-tests] # doc-snippets,
     steps:
       - name: Extract version from context
         shell: bash
         id: extract-version
         run: |
-          echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.\)-dev/\1/p'
-          echo "::set-output name=version::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
+          echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.\)-dev/\1/p'
+          echo "::set-output name=version::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
       - name: Extract branch name from context
         shell: bash
         id: extract-branch
         run: |
-          echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.-dev\)/\1/p'
-          echo "::set-output name=branch::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.-dev\)/\1/p')"
+          echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.+\)/\1/p'
+          echo "::set-output name=branch::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.+\)/\1/p')"
       - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: kuzzleio
@@ -73,4 +73,5 @@ jobs:
           github_token: ${{ secrets.ACCESS_TOKEN_CI }}
           workflow_file_name: child_repo.workflow.yml
           ref: gha-ci
-          inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.outputs.branch }}", "version": "${{ steps.extract-version.outputs.version }}"}'
+          # inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.outputs.branch }}", "version": "${{ steps.extract-version.outputs.version }}"}'
+          inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.outputs.branch }}", "version": "3"}'
