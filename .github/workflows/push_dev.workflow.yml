@@ -5,6 +5,8 @@ on:
     branches:
       - 1-dev
       - 2-dev
+      - 3-dev
+      - ci/doc-workflow-trigger
 
 jobs:
   dead-links:
@@ -73,38 +75,23 @@ jobs:
       - uses: ./.github/actions/dart-doc
 
   doc-dev:
-    name: Deployment Doc Dev
+    name: Deploy Doc to NEXT
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    # needs: [dead-links, doc-snippets, tests]
-    needs: [doc-snippets, unit-tests, dart-doc]
+    needs: [doc-snippets, unit-tests]
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+      - name: Extract version from context
+        shell: bash
+        id: extract-version
+        run: echo "::set-output name=output::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
+      - name: Extract branch name from context
+        shell: bash
+        id: extract-branch
+        run: echo "::set-output name=output::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.-dev\)/\1/p')"
+      - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "12"
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-      - uses: ./.github/actions/deploy-doc
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
-        with:
-          S3_BUCKET: docs-next.kuzzle.io
-          CLOUDFRONT_ID: E2ZCCEK9GRB49U
-          REGION: us-west-2
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          FRAMEWORK_BRANCH: develop
+          owner: kuzzleio
+          repo: documentation
+          github_token: ${{ secrets.ACCESS_TOKEN_CI }}
+          workflow_file_name: child_repo.workflow.yml
+          ref: gha-ci
+          inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.output }}", "version": "${{ steps.extract-version.output }}"}'
