@@ -55,7 +55,7 @@ jobs:
           github_token: ${{ secrets.ACCESS_TOKEN_CI }}
           workflow_file_name: dead_links.workflow.yml
           ref: gha-ci
-          inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-refs.outputs.branch }}", "version": "${{ github.head_ref }}"}'
+          inputs: '{"repo_name": "sdk-dart", "branch": "${{ github.head_ref }}", "version": "${{ steps.extract-refs.outputs.branch }}"}'
 
   dart-doc:
     name: Generate DartDoc
