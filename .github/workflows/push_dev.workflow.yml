@@ -57,11 +57,15 @@ jobs:
       - name: Extract version from context
         shell: bash
         id: extract-version
-        run: echo "::set-output name=version::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
+        run: |
+          echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.\)-dev/\1/p'
+          echo "::set-output name=version::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
       - name: Extract branch name from context
         shell: bash
         id: extract-branch
-        run: echo "::set-output name=branch::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.-dev\)/\1/p')"
+        run: |
+          echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.-dev\)/\1/p'
+          echo "::set-output name=branch::$(echo ${{ github.ref }} | sed -n 's/refs\/heads\/\(.-dev\)/\1/p')"
       - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: kuzzleio
