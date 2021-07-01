@@ -38,13 +38,15 @@ jobs:
     name: Check dead-links
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Extract version and branch from context
+      - name: Extract version from context
         shell: bash
         id: extract-refs
         run: |
+          git describe --abbrev=0 --tags | cut -d. -f 1
+          echo $GITHUB_REF
+          echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.*\)/\1/p'
           echo "::set-output name=version::$(git describe --abbrev=0 --tags | cut -d. -f 1)"
-          echo "::set-output name=branch::$(echo $GITHUB_REF | cut -d/ -f 3)"
+          echo "::set-output name=branch::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.*\)/\1/p')"
       - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: kuzzleio
