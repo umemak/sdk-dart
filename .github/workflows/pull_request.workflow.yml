@@ -38,7 +38,8 @@ jobs:
     name: Check dead-links
     runs-on: ubuntu-latest
     steps:
-      - name: Extract version from context
+      - uses: actions/checkout@v2
+      - name: Extract version and branch from context
         shell: bash
         id: extract-refs
         run: |
