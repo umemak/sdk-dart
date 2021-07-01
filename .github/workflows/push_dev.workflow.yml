@@ -53,19 +53,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: [doc-snippets, unit-tests]
     steps:
-      - name: Extract version from context
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Extract references from context
         shell: bash
-        id: extract-version
-        run: echo "::set-output name=version::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
-      - name: Extract branch name from context
-        shell: bash
-        id: extract-branch
-        run: echo "::set-output name=branch::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.*\)/\1/p')"
+        id: extract-refs
+        run: |
+          echo "::set-output name=version::$(git describe --abbrev=0 --tags | cut -d. -f 1)"
+          echo "::set-output name=repo::$(echo $GITHUB_REPOSITORY | cut -d/ -f 2)"
       - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: kuzzleio
           repo: documentation
           github_token: ${{ secrets.ACCESS_TOKEN_CI }}
           workflow_file_name: child_repo.workflow.yml
-          ref: gha-ci # TODO put develop here
-          inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.outputs.branch }}", "version": "${{ steps.extract-version.outputs.version }}"}'
+          ref: develop
+          inputs: '{"repo_name": "${{ steps.extract-refs.outputs.repo }}", "branch": "${{ github.head_ref }}", "version": "${{ steps.extract-refs.outputs.version }}"}'
