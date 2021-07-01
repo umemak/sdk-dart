@@ -34,6 +34,27 @@ jobs:
       - uses: cedx/setup-dart@v2
       - uses: ./.github/actions/unit-tests
 
+  doc-dead-links:
+    name: Check dead-links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract version from context
+        shell: bash
+        id: extract-version
+        run: echo "::set-output name=version::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.\)-dev/\1/p')"
+      - name: Extract branch name from context
+        shell: bash
+        id: extract-branch
+        run: echo "::set-output name=branch::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.*\)/\1/p')"
+      - uses: convictional/trigger-workflow-and-wait@v1.3.0
+        with:
+          owner: kuzzleio
+          repo: documentation
+          github_token: ${{ secrets.ACCESS_TOKEN_CI }}
+          workflow_file_name: dead_links.workflow.yml
+          ref: gha-ci
+          inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.outputs.branch }}", "version": "3"}'
+
   dart-doc:
     name: Generate DartDoc
     runs-on: ubuntu-latest
