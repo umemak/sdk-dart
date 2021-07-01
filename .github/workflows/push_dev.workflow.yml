@@ -65,7 +65,7 @@ jobs:
         id: extract-branch
         run: |
           echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.+\)/\1/p'
-          echo "::set-output name=branch::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.+\)/\1/p')"
+          echo "::set-output name=branch::$(echo $GITHUB_REF | sed -n 's/refs\/heads\/\(.*\)/\1/p')"
       - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: kuzzleio
