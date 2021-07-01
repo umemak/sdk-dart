@@ -67,5 +67,5 @@ jobs:
           repo: documentation
           github_token: ${{ secrets.ACCESS_TOKEN_CI }}
           workflow_file_name: child_repo.workflow.yml
-          ref: gha-ci
+          ref: gha-ci # TODO put develop here
           inputs: '{"repo_name": "sdk-dart", "branch": "${{ steps.extract-branch.outputs.branch }}", "version": "${{ steps.extract-version.outputs.version }}"}'

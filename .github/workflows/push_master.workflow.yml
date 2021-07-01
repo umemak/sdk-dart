@@ -53,6 +53,10 @@ jobs:
     timeout-minutes: 30
     needs: [doc-snippets, unit-tests]
     steps:
+      - name: Extract version from context
+        shell: bash
+        id: extract-refs
+        run: echo "::set-output name=version::$(git describe --abbrev=0 --tags | cut -d. -f 1)"
       - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: kuzzleio
@@ -60,7 +64,7 @@ jobs:
           github_token: ${{ secrets.ACCESS_TOKEN_CI }}
           workflow_file_name: child_repo.workflow.yml
           ref: master
-          inputs: '{"repo_name": "sdk-dart", "branch": "master", "version": "3"}'
+          inputs: '{"repo_name": "sdk-dart", "branch": "master", "version": "${{ steps.extract-refs.outputs.version }}"}'
 
   deploy-package:
     name: Publish Package
