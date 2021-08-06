@@ -7,30 +7,28 @@ on:
       - 1-stable
 
 jobs:
-  dead-links:
-    name: Dead links
+  doc-dead-links:
+    name: Check dead-links
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1.4.4
+          fetch-depth: 0
+      - name: Extract references from context
+        shell: bash
+        id: extract-refs
+        run: |
+          echo "::set-output name=version::$(git describe --abbrev=0 --tags | cut -d. -f 1)"
+          echo "::set-output name=repo::$(echo $GITHUB_REPOSITORY | cut -d/ -f 2)"
+          echo "::set-output name=fw-branch::$(if [ $BASE_BRANCH == master ]; then echo master; else echo develop; fi)"
+      - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
-          node-version: "12"
-      - uses: webfactory/ssh-agent@v0.5.2
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-      - uses: ./.github/actions/dead-links
+          owner: kuzzleio
+          repo: documentation
+          github_token: ${{ secrets.ACCESS_TOKEN_CI }}
+          workflow_file_name: dead_links.workflow.yml
+          ref: ${{ steps.extract-refs.outputs.fw-branch }}
+          inputs: '{"repo_name": "${{ steps.extract-refs.outputs.repo }}", "branch": "${{ github.head_ref }}", "version": "${{ steps.extract-refs.outputs.version }}"}'
 
   doc-snippets:
     name: Doc Snippets
@@ -63,42 +61,28 @@ jobs:
       - uses: cedx/setup-dart@v2
       - uses: ./.github/actions/tests
 
-  doc-prod:
-    name: Deployment Doc Prod
+  doc-deploy:
+    name: Deploy Doc to Prod
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    # needs: [dead-links, doc-snippets]
-    needs: [doc-snippets]
+    needs: [doc-snippets, tests, doc-dead-links]
     steps:
       - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1
+          fetch-depth: 0
+      - name: Extract references from context
+        shell: bash
+        id: extract-refs
+        run: |
+          echo "::set-output name=version::$(git describe --abbrev=0 --tags | cut -d. -f 1)"
+          echo "::set-output name=repo::$(echo $GITHUB_REPOSITORY | cut -d/ -f 2)"
+      - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
-          node-version: "12"
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-      - uses: ./.github/actions/deploy-doc
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
-        with:
-          FRAMEWORK_BRANCH: master
-          S3_BUCKET: docs.kuzzle.io
-          CLOUDFRONT_ID: E3D6RP0POLCJMM
-          REGION: us-west-2
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          owner: kuzzleio
+          repo: documentation
+          github_token: ${{ secrets.ACCESS_TOKEN_CI }}
+          workflow_file_name: child_repo.workflow.yml
+          ref: develop
+          inputs: '{"repo_name": "${{ steps.extract-refs.outputs.repo }}", "branch": "${{ github.head_ref }}", "version": "${{ steps.extract-refs.outputs.version }}"}'
 
   deploy-package:
     name: Publish Package
