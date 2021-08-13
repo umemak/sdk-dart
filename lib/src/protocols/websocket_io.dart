@@ -76,9 +76,6 @@ class KuzzleWebSocket extends KuzzleProtocol {
       final _json = json.decode(payload as String) as Map<String, dynamic>;
       final response = KuzzleResponse.fromJson(_json);
 
-      if (_json['type'] == 'TokenExpired') {
-        emit(KuzzleEvents.TOKEN_EXPIRED);
-      }
       if (response.room != null && response.room!.isNotEmpty) {
         emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
       } else {
