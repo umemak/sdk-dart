@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:kuzzle/src/kuzzle/events.dart';
 import 'package:kuzzle/src/kuzzle/response.dart';
 
 import '../kuzzle/errors.dart';
@@ -46,8 +47,8 @@ class KuzzleWebSocket extends KuzzleProtocol {
 
     _webSocket!.pingInterval = pingInterval;
 
-    _subscription = _webSocket!.listen(_handlePayload,
-        onError: _handleError, onDone: _handleDone);
+    _subscription = _webSocket!
+        .listen(_handlePayload, onError: _handleError, onDone: _handleDone);
   }
 
   @override
@@ -75,6 +76,9 @@ class KuzzleWebSocket extends KuzzleProtocol {
       final _json = json.decode(payload as String) as Map<String, dynamic>;
       final response = KuzzleResponse.fromJson(_json);
 
+      if (_json['type'] == 'TokenExpired') {
+        emit(KuzzleEvents.TOKEN_EXPIRED);
+      }
       if (response.room != null && response.room!.isNotEmpty) {
         emit(ProtocolEvents.NETWORK_ON_RESPONSE_RECEIVED, [response]);
       } else {
@@ -98,8 +102,8 @@ class KuzzleWebSocket extends KuzzleProtocol {
     if (_webSocket!.closeCode == 1000) {
       clientDisconnected();
     } else if (state == KuzzleProtocolState.connected) {
-      clientNetworkError(KuzzleError(
-          'clientNetworkError', _webSocket!.closeReason, _webSocket!.closeCode));
+      clientNetworkError(KuzzleError('clientNetworkError',
+          _webSocket!.closeReason, _webSocket!.closeCode));
     }
   }
 }
