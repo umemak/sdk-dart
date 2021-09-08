@@ -95,10 +95,11 @@ abstract class KuzzleProtocol extends KuzzleEventEmitter {
       return;
     }
 
-    emit(protocolState == KuzzleProtocolState.reconnecting
+    final protocolStateCpy = protocolState;
+    protocolState = KuzzleProtocolState.connected;
+    emit(protocolStateCpy == KuzzleProtocolState.reconnecting
         ? ProtocolEvents.RECONNECT
         : ProtocolEvents.CONNECT);
-    protocolState = KuzzleProtocolState.connected;
   }
 
   /// Called when the client's connection is closed

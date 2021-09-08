@@ -21,16 +21,6 @@ You can access the Kuzzle repository on [Github](https://github.com/kuzzleio/kuz
 * [Documentation and Samples](#documentation-and-samples)
 * [Contribution](#contribution)
 
-## Installation
-
-Include this in your pubspec.yaml
-
-```yaml
-dependencies:
-  kuzzle: ^3.0.0
-
-```
-
 ## Documentation and Samples
 
 * [https://docs.kuzzle.io/sdk/dart/2/](https://docs.kuzzle.io/sdk/dart/2/) - 

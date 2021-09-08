@@ -1,3 +1,7 @@
+## [3.0.1]
+
+- Bug fix: Fix a bug where the reconnect event would be emited before actually being reconnected
+
 ## [3.0.0]
 
 - Sound null safety compat
