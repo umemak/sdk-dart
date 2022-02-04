@@ -1,3 +1,7 @@
+## [3.0.2]
+
+- Bug fix: Use proper HTTP method with query in the HTTP protocol connection
+
 ## [3.0.1]
 
 - Bug fix: Fix a bug where the reconnect event would be emited before actually being reconnected
