@@ -86,3 +86,4 @@ jobs:
           refreshToken: ${{ secrets.PUB_REFRESH_TOKEN }}
           skipTests: true
           suppressBuildRunner: true
+          force: true
