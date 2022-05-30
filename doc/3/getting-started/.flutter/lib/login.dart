@@ -61,7 +61,9 @@ class _LoginPage extends State<LoginPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Chat(_loginController.text)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Chat(_loginController.text)),
                           );
                         },
                         child: Text('Next'),

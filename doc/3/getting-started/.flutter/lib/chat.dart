@@ -74,7 +74,7 @@ class _ChatPage extends State<ChatPage> {
       // If not, create 'chat' index and 'messages' collection
       await _kuzzle.index.create('chat');
       await _kuzzle.collection.create('chat', 'messages');
-  }
+    }
   }
 /* snippet:end */
 
@@ -82,21 +82,20 @@ class _ChatPage extends State<ChatPage> {
   void _fetchMessages() async {
     // Call the search method of the document controller
     final results = await this._kuzzle.document.search(
-      'chat', // Name of the index
-      'messages', // Name of the collection
-      query: {
-        'sort': {
-          '_kuzzle_info.createdAt': {'order': 'asc'}
-        }
-      }, // Query => Sort the messages by creation date
-      size: 100, // Options => get a maximum of 100 messages
-    );
+          'chat', // Name of the index
+          'messages', // Name of the collection
+          query: {
+            'sort': {
+              '_kuzzle_info.createdAt': {'order': 'asc'}
+            }
+          }, // Query => Sort the messages by creation date
+          size: 100, // Options => get a maximum of 100 messages
+        );
     // Add messages to our array after formating them
     setState(() {
       /* snippet:start:6 */
-      this._messages = results.hits
-        .map((message) => Message.fromJson(message))
-        .toList();
+      this._messages =
+          results.hits.map((message) => Message.fromJson(message)).toList();
       /* snippet:end:6 */
     });
   }
@@ -107,10 +106,10 @@ class _ChatPage extends State<ChatPage> {
     // Call the subscribe method of the realtime controller and receive the roomId
     // Save the id of our subscription (we could need it to unsubscribe)
     _roomId = await _kuzzle.realtime.subscribe(
-      'chat', // Name of the index
-      'messages', // Name of the collection
-      {}, // Filter
-      (notification) {
+        'chat', // Name of the index
+        'messages', // Name of the collection
+        {}, // Filter
+        (notification) {
       if (notification.action != 'create') return;
       if (notification.controller != 'document') return;
       setState(() {
@@ -171,6 +170,6 @@ class _ChatPage extends State<ChatPage> {
             ],
           ),
         ),
-  );
+      );
 /* snippet:end */
 }
